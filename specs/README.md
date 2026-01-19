@@ -30,12 +30,22 @@ Persistent component library with REPL workflow. Done when:
 - Components persist to EDN, load on restart
 
 ### Milestone 4: Component Navigation
-**Spec:** [005-component-navigation](./005-component-navigation.md)
+**Spec:** [005-component-navigation](./005-component-navigation.md) ✓
 
 Previous/Next navigation on single component views. Done when:
 - Previous/Next buttons on `/sandbox/c/:name` view
 - Navigation wraps around (last → first)
 - Alphabetical ordering matches gallery
+
+### Milestone 5: Dynamic Components
+**Spec:** [006-dynamic-components](./006-dynamic-components.md)
+
+Support for stateful Datastar components. Done when:
+- Chassis aliases in `sandbox/ui.clj` define structure (attrs pass-through)
+- `components.edn` supports `:examples` with multiple configs per component
+- Sandbox UI shows dropdown to switch between examples
+- `patch-signals!` broadcasts signal patches for REPL testing
+- Component-iterate skill documents the full workflow
 
 ## Spec Index
 
@@ -46,5 +56,6 @@ Previous/Next navigation on single component views. Done when:
 | [003-css-hot-reload](./003-css-hot-reload.md) | Complete | Plain CSS file with file watcher and SSE-based hot-reload |
 | [004-component-library](./004-component-library.md) | Complete | Persistent component library with browser gallery and REPL workflow |
 | [005-component-navigation](./005-component-navigation.md) | Complete | Previous/Next navigation on single component views |
+| [006-dynamic-components](./006-dynamic-components.md) | Draft | Stateful Datastar components with multiple example configs |
 
 Status values: Draft, Active, Complete, Archived
