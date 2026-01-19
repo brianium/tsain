@@ -16,4 +16,55 @@
    [:p "Join thousands of users who have already made the switch."]
    [:button.cta-button "Start Free Trial"]],
   :description "Simple call to action with headline, text, and button",
-  :created-at #inst "2026-01-19T21:50:32.533-00:00"}}
+  :created-at #inst "2026-01-19T21:50:32.533-00:00"},
+ :testimonial
+ {:hiccup
+  [:div.testimonial
+   [:p.quote
+    "\"This product completely transformed how our team works. We've seen a 3x improvement in productivity.\""]
+   [:div.author
+    [:div.avatar "JD"]
+    [:div.info
+     [:div.name "Jane Doe"]
+     [:div.title "VP of Engineering, Acme Corp"]]]],
+  :description "Testimonial card with quote, avatar, name and title",
+  :created-at #inst "2026-01-19T21:58:52.195-00:00"},
+ :pricing-card
+ {:hiccup
+  [:div.pricing-card.featured
+   [:div.badge "Most Popular"]
+   [:div.tier "Pro"]
+   [:div.price "$29" [:span.period "/month"]]
+   [:p.description "Perfect for growing teams"]
+   [:ul.features
+    [:li [:span.check "✓"] "Unlimited projects"]
+    [:li [:span.check "✓"] "50GB storage"]
+    [:li [:span.check "✓"] "Priority support"]
+    [:li [:span.check "✓"] "Advanced analytics"]]
+   [:button.cta-btn "Get Started"]],
+  :description
+  "Featured pricing tier card with badge, features list, and CTA button",
+  :created-at #inst "2026-01-19T22:22:30.055-00:00"},
+ :stats-card
+ {:hiccup
+  [:div.stats-card
+   [:div.header
+    [:div [:div.label "Total Revenue"] [:div.value "$48,592"]]
+    [:div.icon "💰"]]
+   [:div.footer
+    [:span.trend.up "↑ 12.5%"]
+    [:span.comparison "vs last month"]]],
+  :description
+  "Dashboard metrics card with value, trend indicator, and icon",
+  :created-at #inst "2026-01-19T22:23:31.025-00:00"},
+ :feature-card
+ {:hiccup
+  [:div.feature-card
+   [:div.icon "⚡"]
+   [:h3 "Lightning Fast"]
+   [:p
+    "Our platform processes requests in milliseconds, ensuring your users never wait."]
+   [:a.link {:href "#"} "Learn more" [:span "→"]]],
+  :description
+  "Landing page feature highlight with icon, title, description and link",
+  :created-at #inst "2026-01-19T22:24:37.260-00:00"}}
