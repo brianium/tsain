@@ -24,7 +24,7 @@ Add file watcher for CSS. Done when:
 | Spec | Status | Description |
 |------|--------|-------------|
 | [001-claude-md-documentation](./001-claude-md-documentation.md) | Complete | Comprehensive CLAUDE.md documentation for sandestin, twk, sfere, and kaiin |
-| [002-dev-sandbox](./002-dev-sandbox.md) | Active | Reloadable dev sandbox for REPL-driven hiccup component development |
+| [002-dev-sandbox](./002-dev-sandbox.md) | Complete | Reloadable dev sandbox for REPL-driven hiccup component development |
 | [003-css-hot-reload](./003-css-hot-reload.md) | Draft | Plain CSS file with file watcher and SSE-based hot-reload |
 
 Status values: Draft, Active, Complete, Archived

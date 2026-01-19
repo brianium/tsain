@@ -1,6 +1,6 @@
 # 002: Development Sandbox
 
-## Status: Active
+## Status: Complete
 
 ## Overview
 
@@ -139,11 +139,38 @@ dev/src/clj/
 
 ;; Dispatch access for REPL use
 (defn dispatch
-  "Dispatch effects via the running system.
-   Convenience wrapper around system dispatch."
-  [& args]
-  (when-let [d (:dispatch system/*system*)]
-    (apply d args)))
+  "Dispatch effects via the running system."
+  ([effects]
+   (when-let [d (:dispatch system/*system*)]
+     (d effects)))
+  ([system effects]
+   (when-let [d (:dispatch system/*system*)]
+     (d system effects)))
+  ([system dispatch-data effects]
+   (when-let [d (:dispatch system/*system*)]
+     (d system dispatch-data effects))))
+
+;; Preview helpers for component development
+(defn preview!
+  "Replace the sandbox preview area with new hiccup content.
+   Broadcasts to all connected browsers/devices."
+  [hiccup]
+  (dispatch {} {}
+    [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
+      [::twk/patch-elements [:div#preview hiccup]]]]))
+
+(defn preview-append!
+  "Append hiccup content to the sandbox preview area."
+  [hiccup]
+  (dispatch {} {}
+    [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
+      [::twk/patch-elements hiccup
+       {twk/selector "#preview" twk/patch-mode twk/pm-append}]]]))
+
+(defn preview-clear!
+  "Clear the sandbox preview area."
+  []
+  (preview! [:p {:style "color: #999"} "Preview area"]))
 ```
 
 ### 3. sandbox/system.clj - System State
@@ -172,7 +199,7 @@ dev/src/clj/
 
 (defn- create-store []
   (sfere/store {:type :caffeine
-                :duration-ms 60000  ;; 1 minute TTL
+                :duration-ms 1800000  ;; 30 minutes for dev
                 :expiry-mode :sliding}))
 
 (defn- create-dispatch [store]
@@ -198,8 +225,7 @@ dev/src/clj/
    can view the sandbox simultaneously (like browser-sync)."
   {::sfere/key [:sandbox (str (random-uuid))]
    ::twk/fx [[::twk/patch-elements
-              [:div#status "Connected - ready for REPL updates"]
-              {twk/selector "#status"}]]})
+              [:div#status "Connected - ready for REPL updates"]]]})
 
 ;; Routes
 (def routes
@@ -282,40 +308,33 @@ dev=> (start)
 
 ### REPL-Driven Component Development
 
-Use sandestin dispatch directly with twk and sfere effects:
+Use the preview helper functions for rapid iteration:
 
 ```clojure
-;; Patch hiccup to the preview area
+;; Replace preview with new content
+(preview! [:h1 "Hello World"])
+
+;; Build up multiple components
+(preview-clear!)
+(preview-append! [:div.card [:h3 "Card 1"] [:p "First component"]])
+(preview-append! [:div.card [:h3 "Card 2"] [:p "Second component"]])
+
+;; Complex component with inline styles
+(preview!
+  [:div {:style "background: white; padding: 1.5rem; border-radius: 8px;"}
+   [:h2 "User Profile"]
+   [:p {:style "color: #666;"} "Component description"]])
+```
+
+For lower-level control, use dispatch directly:
+
+```clojure
+;; Direct dispatch with twk effects
 (dispatch {} {}
   [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
-    [::twk/patch-elements [:h1 "Hello World"]
-     {twk/selector "#preview"}]]])
+    [::twk/patch-elements [:div#preview [:h1 "Hello"]]]]])
 
-;; Complex component
-(dispatch {} {}
-  [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
-    [::twk/patch-elements
-     [:div
-      [:h2 "User Card"]
-      [:div.card
-       [:img {:src "https://via.placeholder.com/100" :alt "Avatar"}]
-       [:h3 "John Doe"]
-       [:p "Developer"]]]
-     {twk/selector "#preview"}]]])
-
-;; Append mode
-(dispatch {} {}
-  [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
-    [::twk/patch-elements [:p "New item"]
-     {twk/selector "#preview"
-      twk/patch-mode twk/pm-append}]]])
-
-;; Update status
-(dispatch {} {}
-  [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
-    [::twk/patch-elements [:div#status "Rendering..."]]]])
-
-;; Execute script
+;; Execute script in browser
 (dispatch {} {}
   [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
     [::twk/execute-script "console.log('hello from REPL')"]]])
@@ -342,14 +361,14 @@ Use sandestin dispatch directly with twk and sfere effects:
 
 ## Success Criteria
 
-- [ ] `clj -M:dev` starts cleanly with all dependencies
-- [ ] `(dev)` loads the dev namespace and opens Portal
-- [ ] `(start)` launches server at localhost:3000
-- [ ] Browser shows sandbox page with SSE connection
-- [ ] Dispatch with twk effects updates the browser instantly
-- [ ] Multiple browsers/tabs all receive updates simultaneously
-- [ ] `(reload)` hot-reloads code without losing connection
-- [ ] `(restart)` cleanly restarts the entire system
+- [x] `clj -M:dev` starts cleanly with all dependencies
+- [x] `(dev)` loads the dev namespace and opens Portal
+- [x] `(start)` launches server at localhost:3000
+- [x] Browser shows sandbox page with SSE connection
+- [x] Dispatch with twk effects updates the browser instantly
+- [x] Multiple browsers/tabs all receive updates simultaneously
+- [x] `(reload)` hot-reloads code without losing connection
+- [x] `(restart)` cleanly restarts the entire system
 
 ## Future Enhancements
 

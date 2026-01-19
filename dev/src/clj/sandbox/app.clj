@@ -10,7 +10,7 @@
 
 (defn- create-store []
   (sfere/store {:type :caffeine
-                :duration-ms 60000
+                :duration-ms 1800000  ;; 30 minutes for dev
                 :expiry-mode :sliding}))
 
 (defn- create-dispatch [store]
@@ -32,8 +32,7 @@
 (defn sse-connect [_request]
   {::sfere/key [:sandbox (str (random-uuid))]
    ::twk/fx [[::twk/patch-elements
-              [:div#status "Connected - ready for REPL updates"]
-              {twk/selector "#status"}]]})
+              [:div#status "Connected - ready for REPL updates"]]]})
 
 (def routes
   [["/" {:name ::index :get index}]

@@ -71,14 +71,44 @@ This starts a REPL with development dependencies loaded.
 5. Reload: `(reload)`
 
 The `dev` namespace provides:
-- `(start)` - Start the development system
-- `(stop)` - Stop the system
+- `(start)` - Start the sandbox server at localhost:3000
+- `(stop)` - Stop the server
 - `(reload)` - Reload changed namespaces via clj-reload
 - `(restart)` - Stop, reload, and start
+- `(preview! hiccup)` - Replace preview area with hiccup content
+- `(preview-append! hiccup)` - Append hiccup to preview area
+- `(preview-clear!)` - Clear the preview area
 
 ### Portal
 
 Portal opens automatically when the dev namespace loads. Any `(tap> data)` calls will appear in the Portal UI.
+
+### Component Preview (REPL-Driven UI Development)
+
+The sandbox provides a browser-based preview area for rapidly iterating on hiccup components. Open `localhost:3000` in a browser, then use these functions from the REPL:
+
+```clojure
+;; Replace preview with new content
+(preview! [:h1 "Hello World"])
+
+;; Build up content by appending
+(preview-clear!)
+(preview-append! [:div.card [:h3 "Card 1"] [:p "First card"]])
+(preview-append! [:div.card [:h3 "Card 2"] [:p "Second card"]])
+
+;; Complex component with inline styles
+(preview!
+  [:div {:style "background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"}
+   [:h2 {:style "margin: 0 0 1rem 0;"} "User Profile"]
+   [:p {:style "color: #666;"} "Component description here"]])
+```
+
+**Key points:**
+- All preview functions broadcast to ALL connected browsers/devices simultaneously
+- Use `preview!` to reset and show a single component
+- Use `preview-append!` to build up multiple components for comparison
+- Use `preview-clear!` to reset to empty state
+- Inline styles work well for prototyping; extract to CSS classes later
 
 ## Project Structure
 
