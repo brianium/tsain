@@ -1,6 +1,6 @@
 # 003: File Watcher and CSS Hot-Reload
 
-## Status: Draft
+## Status: Complete
 
 ## Overview
 
@@ -309,12 +309,12 @@ Edit CSS → Save → Browser updates automatically.
 
 ## Success Criteria
 
-- [ ] CSS file served at `/styles.css`
-- [ ] Watcher starts with system, stops cleanly
-- [ ] CSS changes trigger automatic browser reload
-- [ ] Multiple browser tabs all receive updates
-- [ ] `(watcher/reload-css!)` works as manual fallback
-- [ ] ext-fx map allows adding new file types
+- [x] CSS file served at `/styles.css`
+- [x] Watcher starts with system, stops cleanly
+- [x] CSS changes trigger automatic browser reload
+- [x] Multiple browser tabs all receive updates
+- [x] `(watcher/reload-css!)` works as manual fallback
+- [x] ext-fx map allows adding new file types
 
 ## Relationship to Other Specs
 

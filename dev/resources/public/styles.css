@@ -1,0 +1,152 @@
+/* Modern vanilla CSS for sandbox components */
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+/* Card component - retro style */
+.card {
+  background: #fffef0;
+  border: 3px solid #222;
+  border-radius: 0;
+  padding: 1.5rem;
+  max-width: 320px;
+  box-shadow: 6px 6px 0 #222;
+  font-family: "Courier New", Courier, monospace;
+
+  & h2, & h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  & p {
+    color: #444;
+    margin: 0 0 1rem 0;
+    line-height: 1.6;
+  }
+
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 #222;
+  }
+}
+
+/* Grid layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+/* Container queries */
+.responsive-card {
+  container-type: inline-size;
+
+  @container (min-width: 300px) {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 1rem;
+
+  & label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  & input, & textarea {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+
+  & input:focus, & textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &:has(:invalid) {
+    & input, & textarea {
+      border-color: #ef4444;
+    }
+  }
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+
+  &:hover {
+    background: #2563eb;
+  }
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+/* Hero section */
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 3rem 2rem;
+  text-align: center;
+  border-radius: 8px;
+
+  & h1 {
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+  }
+
+  & p {
+    opacity: 0.9;
+    margin: 0 0 1.5rem 0;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Utility classes */
+.text-muted {
+  color: #6b7280;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
