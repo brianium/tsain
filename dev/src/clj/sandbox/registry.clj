@@ -50,17 +50,44 @@
        (broadcast-view! dispatch state-atom))}
 
     ::commit
-    {::s/description "Commit current preview to library"
-     ::s/schema [:tuple [:= ::commit] :keyword [:maybe :string]]
+    {::s/description "Commit component to library with optional examples"
+     ::s/schema [:tuple [:= ::commit] :keyword [:maybe [:or :string :map]]]
      ::s/handler
-     (fn [{:keys [dispatch]} _system component-name description]
+     (fn [{:keys [dispatch]} _system component-name opts]
        (let [{:keys [preview]} @state-atom
-             hiccup (:hiccup preview)]
-         (when hiccup
-           (swap! state-atom assoc-in [:library component-name]
-                  {:hiccup hiccup
-                   :description (or description "")
-                   :created-at (java.util.Date.)})
+             hiccup (:hiccup preview)
+             ;; Handle different opts formats:
+             ;; - nil -> use current preview as single example
+             ;; - string -> description, use current preview as single example
+             ;; - map with :examples -> use provided examples
+             ;; - map without :examples -> description only, use current preview
+             component-data
+             (cond
+               ;; Map with explicit examples
+               (and (map? opts) (:examples opts))
+               {:description (or (:description opts) "")
+                :examples (:examples opts)
+                :created-at (java.util.Date.)}
+
+               ;; String description (old API)
+               (string? opts)
+               {:description opts
+                :examples [{:label "Default" :hiccup hiccup}]
+                :created-at (java.util.Date.)}
+
+               ;; Map without examples (description only)
+               (map? opts)
+               {:description (or (:description opts) "")
+                :examples [{:label "Default" :hiccup hiccup}]
+                :created-at (java.util.Date.)}
+
+               ;; nil - no description, use preview
+               :else
+               {:description ""
+                :examples [{:label "Default" :hiccup hiccup}]
+                :created-at (java.util.Date.)})]
+         (when (or hiccup (:examples opts))
+           (swap! state-atom assoc-in [:library component-name] component-data)
            (state/save-library! (:library @state-atom))
            (broadcast-view! dispatch state-atom))))}
 
@@ -74,11 +101,13 @@
        (broadcast-view! dispatch state-atom))}
 
     ::show
-    {::s/description "Show a single component"
-     ::s/schema [:tuple [:= ::show] :keyword]
+    {::s/description "Show a single component with optional example index"
+     ::s/schema [:tuple [:= ::show] :keyword [:maybe :int]]
      ::s/handler
-     (fn [{:keys [dispatch]} _system component-name]
-       (swap! state-atom assoc :view {:type :component :name component-name})
+     (fn [{:keys [dispatch]} _system component-name example-idx]
+       (swap! state-atom assoc :view {:type :component
+                                      :name component-name
+                                      :example-idx (or example-idx 0)})
        (broadcast-view! dispatch state-atom))}
 
     ::show-gallery
@@ -103,4 +132,13 @@
      ::s/handler
      (fn [_ctx _system]
        ;; Returns effects to be sent to the connecting client
-       [[::twk/patch-elements (views/render-view @state-atom)]])}}})
+       [[::twk/patch-elements (views/render-view @state-atom)]])}
+
+    ::patch-signals
+    {::s/description "Patch Datastar signals and broadcast to all clients"
+     ::s/schema [:tuple [:= ::patch-signals] :map]
+     ::s/handler
+     (fn [{:keys [dispatch]} _system signals]
+       (dispatch {} {}
+                 [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
+                   [::twk/patch-signals signals]]]))}}})

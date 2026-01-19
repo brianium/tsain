@@ -68,9 +68,11 @@
   (dispatch [[::registry/show-gallery]])
   {::twk/with-open-sse? true})
 
-(defn view-component [{{:keys [name]} :path-params :keys [dispatch]}]
-  (dispatch [[::registry/show (keyword name)]])
-  {::twk/with-open-sse? true})
+(defn view-component [{{:keys [name]} :path-params :keys [dispatch query-params]}]
+  (let [idx (when-let [idx-str (get query-params "idx")]
+              (try (Integer/parseInt idx-str) (catch Exception _ 0)))]
+    (dispatch [[::registry/show (keyword name) idx]])
+    {::twk/with-open-sse? true}))
 
 ;; Action handlers
 (defn commit-handler [{:keys [signals dispatch]}]

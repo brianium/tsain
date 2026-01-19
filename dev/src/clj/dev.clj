@@ -108,16 +108,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn commit!
-  "Commit current preview to the component library.
+  "Commit component to the library.
    Saves to both memory and components.edn for persistence.
 
-   Usage:
-     (commit! :primary-button)
-     (commit! :primary-button \"Primary action button\")"
+   Simple (current preview as single example):
+     (commit! :my-card)
+     (commit! :my-card \"Card component\")
+
+   With multiple examples:
+     (commit! :my-card
+       {:description \"Card component\"
+        :examples [{:label \"Basic\" :hiccup [:div.card \"Basic\"]}
+                   {:label \"With image\" :hiccup [:div.card ...]}]})"
   ([component-name]
    (commit! component-name nil))
-  ([component-name description]
-   (dispatch [[::registry/commit component-name description]])))
+  ([component-name opts]
+   (dispatch [[::registry/commit component-name opts]])))
 
 (defn uncommit!
   "Remove a component from the library.
@@ -133,9 +139,12 @@
    Broadcasts view change to all connected clients.
 
    Usage:
-     (show! :primary-button)"
-  [component-name]
-  (dispatch [[::registry/show component-name]]))
+     (show! :primary-button)
+     (show! :primary-button 1)  ;; Show second example"
+  ([component-name]
+   (show! component-name 0))
+  ([component-name example-idx]
+   (dispatch [[::registry/show component-name example-idx]])))
 
 (defn show-all!
   "Show the component gallery in the browser.
@@ -152,3 +161,18 @@
   []
   (when-let [state (:state system/*system*)]
     (keys (:library @state))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Signal Testing
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn patch-signals!
+  "Patch Datastar signals on all connected browsers.
+   Useful for testing interactive components from the REPL.
+
+   Usage:
+     (patch-signals! {:count 42})
+     (patch-signals! {:open true})
+     (patch-signals! {:form {:email \"test@example.com\"}})"
+  [signals]
+  (dispatch [[::registry/patch-signals signals]]))
