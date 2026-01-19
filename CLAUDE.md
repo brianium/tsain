@@ -113,11 +113,14 @@ The sandbox provides a browser-based preview area for rapidly iterating on hiccu
 ## Project Structure
 
 ```
-src/clj/          # Clojure source files
-dev/src/clj/      # Development-only source (user.clj, dev.clj)
-test/src/clj/     # Test files
-resources/        # Resource files
-specs/            # Living specification documents
+src/clj/                            # Clojure source files
+dev/src/clj/                        # Development-only source (user.clj, dev.clj)
+dev/resources/public/sandbox.css    # Sandbox chrome styles (hot-reloadable)
+dev/resources/public/styles.css     # Component styles (hot-reloadable)
+test/src/clj/                       # Test files
+resources/                          # Resource files
+resources/components.edn            # Persisted component library
+specs/                              # Living specification documents
 ```
 
 ## REPL Evaluation
