@@ -9,16 +9,15 @@
    h1 { margin-top: 0; }")
 
 (defn sandbox-page []
-  (c/html
-   [c/doctype-html5
-    [:html {:lang "en"}
-     [:head
-      [:meta {:charset "UTF-8"}]
-      [:title "Component Sandbox"]
-      [:script {:src twk/CDN-url :type "module"}]
-      [:style styles]]
-     [:body {:data-init "@post('/sse')"}
-      [:h1 "Component Sandbox"]
-      [:div#status "Connecting..."]
-      [:div#preview
-       [:p {:style "color: #999"} "Preview area"]]]]]))
+  [c/doctype-html5
+   [:html {:lang "en"}
+    [:head
+     [:meta {:charset "UTF-8"}]
+     [:title "Component Sandbox"]
+     [:script {:src twk/CDN-url :type "module"}]
+     [:style styles]]
+    [:body {:data-init "@post('/sse')"}
+     [:h1 "Component Sandbox"]
+     [:div#status "Connecting..."]
+     [:div#preview
+      [:p {:style "color: #999"} "Preview area"]]]]])

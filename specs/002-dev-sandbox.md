@@ -164,7 +164,7 @@ dev/src/clj/
   (:require [ascolais.sandestin :as s]
             [ascolais.twk :as twk]
             [ascolais.sfere :as sfere]
-            [dev.data-star.http-kit :as ds-hk]
+            [starfederation.datastar.clojure.adapter.http-kit :as ds-hk]
             [org.httpkit.server :as hk]
             [reitit.ring :as rr]
             [sandbox.system :as system]
@@ -198,7 +198,8 @@ dev/src/clj/
    can view the sandbox simultaneously (like browser-sync)."
   {::sfere/key [:sandbox (str (random-uuid))]
    ::twk/fx [[::twk/patch-elements
-              [:div#status "Connected - ready for REPL updates"]]]})
+              [:div#status "Connected - ready for REPL updates"]
+              {twk/selector "#status"}]]})
 
 ;; Routes
 (def routes
@@ -251,19 +252,18 @@ dev/src/clj/
    h1 { margin-top: 0; }")
 
 (defn sandbox-page []
-  (c/html
-   [c/doctype-html5
-    [:html {:lang "en"}
-     [:head
-      [:meta {:charset "UTF-8"}]
-      [:title "Component Sandbox"]
-      [:script {:src twk/CDN-url :type "module"}]
-      [:style styles]]
-     [:body {:data-init "@post('/sse')"}
-      [:h1 "Component Sandbox"]
-      [:div#status "Connecting..."]
-      [:div#preview
-       [:p {:style "color: #999"} "Preview area"]]]]]))
+  [c/doctype-html5
+   [:html {:lang "en"}
+    [:head
+     [:meta {:charset "UTF-8"}]
+     [:title "Component Sandbox"]
+     [:script {:src twk/CDN-url :type "module"}]
+     [:style styles]]
+    [:body {:data-init "@post('/sse')"}
+     [:h1 "Component Sandbox"]
+     [:div#status "Connecting..."]
+     [:div#preview
+      [:p {:style "color: #999"} "Preview area"]]]]])
 ```
 
 ## Usage

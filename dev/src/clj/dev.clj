@@ -54,6 +54,12 @@
 (defn dispatch
   "Dispatch effects via the running system.
    Convenience wrapper around system dispatch."
-  [& args]
-  (when-let [d (:dispatch system/*system*)]
-    (apply d args)))
+  ([effects]
+   (when-let [d (:dispatch system/*system*)]
+     (d effects)))
+  ([system effects]
+   (when-let [d (:dispatch system/*system*)]
+     (d system effects)))
+  ([system dispatch-data effects]
+   (when-let [d (:dispatch system/*system*)]
+     (d system dispatch-data effects))))

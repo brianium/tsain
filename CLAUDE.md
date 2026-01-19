@@ -320,6 +320,26 @@ Compose registries into a dispatch function:
 
 ## TWK (Datastar) Patterns
 
+### Hiccup in TWK
+
+TWK understands hiccup directly - you do not need to pre-render it to HTML strings. Return hiccup data structures in `:body` and TWK will render them automatically.
+
+```clojure
+;; CORRECT - return hiccup directly
+(defn my-page []
+  [c/doctype-html5
+   [:html [:body [:h1 "Hello"]]]])
+
+{:body (my-page)}
+
+;; WRONG - don't wrap with c/html
+;; This returns an encoded HTML string which then requires c/raw
+(defn my-page-wrong []
+  (c/html  ;; <-- Don't do this
+   [c/doctype-html5
+    [:html [:body [:h1 "Hello"]]]]))
+```
+
 ### Handler Response Patterns
 
 ```clojure
@@ -535,7 +555,7 @@ Add kaiin metadata to actions/effects to auto-generate HTTP routes:
             [ascolais.sfere :as sfere]
             [ascolais.kaiin :as kaiin]
             [reitit.ring :as rr]
-            [dev.data-star.http-kit :as ds-hk]))
+            [starfederation.datastar.clojure.adapter.http-kit :as ds-hk]))
 
 ;; Application registry with kaiin metadata
 (def app-registry

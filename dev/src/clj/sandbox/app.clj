@@ -2,7 +2,7 @@
   (:require [ascolais.sandestin :as s]
             [ascolais.twk :as twk]
             [ascolais.sfere :as sfere]
-            [dev.data-star.http-kit :as ds-hk]
+            [starfederation.datastar.clojure.adapter.http-kit :as ds-hk]
             [org.httpkit.server :as hk]
             [reitit.ring :as rr]
             [sandbox.system :as system]
@@ -32,7 +32,8 @@
 (defn sse-connect [_request]
   {::sfere/key [:sandbox (str (random-uuid))]
    ::twk/fx [[::twk/patch-elements
-              [:div#status "Connected - ready for REPL updates"]]]})
+              [:div#status "Connected - ready for REPL updates"]
+              {twk/selector "#status"}]]})
 
 (def routes
   [["/" {:name ::index :get index}]
