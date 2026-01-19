@@ -45,6 +45,6 @@ Previous/Next navigation on single component views. Done when:
 | [002-dev-sandbox](./002-dev-sandbox.md) | Complete | Reloadable dev sandbox for REPL-driven hiccup component development |
 | [003-css-hot-reload](./003-css-hot-reload.md) | Complete | Plain CSS file with file watcher and SSE-based hot-reload |
 | [004-component-library](./004-component-library.md) | Complete | Persistent component library with browser gallery and REPL workflow |
-| [005-component-navigation](./005-component-navigation.md) | Draft | Previous/Next navigation on single component views |
+| [005-component-navigation](./005-component-navigation.md) | Complete | Previous/Next navigation on single component views |
 
 Status values: Draft, Active, Complete, Archived

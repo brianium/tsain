@@ -1,6 +1,6 @@
 # 005: Component Navigation
 
-## Status: Draft
+## Status: Complete
 
 ## Overview
 
@@ -169,13 +169,13 @@ Optional additions to dev namespace:
 
 ## Success Criteria
 
-- [ ] Previous/Next buttons appear on single component view
-- [ ] Clicking Previous navigates to alphabetically earlier component
-- [ ] Clicking Next navigates to alphabetically later component
-- [ ] Navigation wraps around (last → first, first → last)
-- [ ] Buttons show destination component name
-- [ ] Single-component library shows no navigation buttons
-- [ ] Navigation broadcasts to all connected clients
+- [x] Previous/Next buttons appear on single component view
+- [x] Clicking Previous navigates to alphabetically earlier component
+- [x] Clicking Next navigates to alphabetically later component
+- [x] Navigation wraps around (last → first, first → last)
+- [x] Buttons show destination component name
+- [x] Single-component library shows no navigation buttons
+- [x] Navigation broadcasts to all connected clients
 - [ ] (Optional) Arrow keys navigate when viewing component
 
 ## Relationship to Other Specs
