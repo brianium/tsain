@@ -77,10 +77,10 @@
         has-preview? (some? (:hiccup preview))]
     [:nav.sandbox-nav
      [:a {:class (when (= view-type :preview) "active")
-          :data-on-click "@post('/sandbox/view/preview')"}
+          :data-on:click "@post('/sandbox/view/preview')"}
       "Preview"]
      [:a {:class (when (= view-type :gallery) "active")
-          :data-on-click "@post('/sandbox/view/gallery')"}
+          :data-on:click "@post('/sandbox/view/gallery')"}
       "Gallery"]
      [:div.spacer]
      (when (and (= view-type :preview) has-preview?)
@@ -91,11 +91,11 @@
          [:input {:type "text"
                   :placeholder "component-name"
                   :data-bind "commitName"}]
-         [:button {:data-on-click "@post('/sandbox/commit')"
+         [:button {:data-on:click "@post('/sandbox/commit')"
                    :data-attr-disabled "!$commitName"}
           "Commit"]]])
      (when (= view-type :preview)
-       [:button {:data-on-click "@post('/sandbox/clear')"}
+       [:button {:data-on:click "@post('/sandbox/clear')"}
         "Clear"])]))
 
 (defn preview-view
@@ -116,7 +116,7 @@
       (for [[component-name {:keys [hiccup description]}] (sort-by key library)]
         [:div.gallery-item
          {:key (str component-name)
-          :data-on-click (str "@post('/sandbox/view/component/" (name component-name) "')")}
+          :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")}
          [:div.gallery-item-preview hiccup]
          [:div.gallery-item-footer
           (name component-name)
@@ -139,9 +139,9 @@
         hiccup
         [:p.empty-state "Component not found"])]
      [:div.component-actions
-      [:button {:data-on-click "@post('/sandbox/view/gallery')"}
+      [:button {:data-on:click "@post('/sandbox/view/gallery')"}
        "Back to Gallery"]
-      [:button {:data-on-click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
+      [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
        "Delete"]]]))
 
 (defn render-view

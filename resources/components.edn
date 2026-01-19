@@ -1,0 +1,19 @@
+{:playing-card
+ {:hiccup
+  [:div.playing-card
+   [:div.mana-cost "3"]
+   [:div.card-title "Mysterious Jester"]
+   [:div.card-image "🃏"]
+   [:div.card-text
+    [:p
+     "When this card enters play, draw two cards and discard one."]]],
+  :description "Card with title, mana cost, image area, and text box",
+  :created-at #inst "2026-01-19T21:44:31.720-00:00"},
+ :cta
+ {:hiccup
+  [:div.cta
+   [:h2 "Ready to get started?"]
+   [:p "Join thousands of users who have already made the switch."]
+   [:button.cta-button "Start Free Trial"]],
+  :description "Simple call to action with headline, text, and button",
+  :created-at #inst "2026-01-19T21:50:32.533-00:00"}}
