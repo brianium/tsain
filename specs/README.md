@@ -56,6 +56,6 @@ Support for stateful Datastar components. Done when:
 | [003-css-hot-reload](./003-css-hot-reload.md) | Complete | Plain CSS file with file watcher and SSE-based hot-reload |
 | [004-component-library](./004-component-library.md) | Complete | Persistent component library with browser gallery and REPL workflow |
 | [005-component-navigation](./005-component-navigation.md) | Complete | Previous/Next navigation on single component views |
-| [006-dynamic-components](./006-dynamic-components.md) | Draft | Stateful Datastar components with multiple example configs |
+| [006-dynamic-components](./006-dynamic-components.md) | Complete | Stateful Datastar components with multiple example configs |
 
 Status values: Draft, Active, Complete, Archived
