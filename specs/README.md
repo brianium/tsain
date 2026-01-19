@@ -29,6 +29,14 @@ Persistent component library with REPL workflow. Done when:
 - `/sandbox/c/:name` renders single component (deep linkable)
 - Components persist to EDN, load on restart
 
+### Milestone 4: Component Navigation
+**Spec:** [005-component-navigation](./005-component-navigation.md)
+
+Previous/Next navigation on single component views. Done when:
+- Previous/Next buttons on `/sandbox/c/:name` view
+- Navigation wraps around (last → first)
+- Alphabetical ordering matches gallery
+
 ## Spec Index
 
 | Spec | Status | Description |
@@ -37,5 +45,6 @@ Persistent component library with REPL workflow. Done when:
 | [002-dev-sandbox](./002-dev-sandbox.md) | Complete | Reloadable dev sandbox for REPL-driven hiccup component development |
 | [003-css-hot-reload](./003-css-hot-reload.md) | Complete | Plain CSS file with file watcher and SSE-based hot-reload |
 | [004-component-library](./004-component-library.md) | Complete | Persistent component library with browser gallery and REPL workflow |
+| [005-component-navigation](./005-component-navigation.md) | Draft | Previous/Next navigation on single component views |
 
 Status values: Draft, Active, Complete, Archived

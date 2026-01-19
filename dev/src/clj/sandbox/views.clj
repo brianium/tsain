@@ -68,7 +68,28 @@
      padding: 0.5rem; border: 1px solid #ccc;
      border-radius: 4px; width: 150px;
    }
-   .commit-form input::placeholder { color: #999; }")
+   .commit-form input::placeholder { color: #999; }
+   .component-nav {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 1rem;
+     margin-bottom: 1rem;
+   }
+   .component-nav h2 { margin: 0; flex: 1; text-align: center; }
+   .component-nav .nav-placeholder { width: 140px; }
+   .nav-prev, .nav-next {
+     padding: 0.5rem 1rem;
+     cursor: pointer;
+     background: #f5f5f5;
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     min-width: 140px;
+   }
+   .nav-prev:hover, .nav-next:hover { background: #e5e5e5; }
+   .nav-prev { text-align: left; }
+   .nav-next { text-align: right; }
+   .component-desc { color: #666; margin: 0 0 1rem 0; text-align: center; }")
 
 (defn nav-bar
   "Navigation bar with view controls."
@@ -124,23 +145,45 @@
             [:div.gallery-item-desc description])]])]
      [:p.empty-state "No components yet - commit some from the preview!"])])
 
+(defn component-neighbors
+  "Get previous and next component names for navigation.
+   Returns {:prev keyword-or-nil :next keyword-or-nil}."
+  [library current-name]
+  (let [sorted-names (vec (sort (keys library)))
+        idx (.indexOf sorted-names current-name)
+        total (count sorted-names)]
+    (when (and (>= idx 0) (> total 1))
+      {:prev (nth sorted-names (mod (dec idx) total))
+       :next (nth sorted-names (mod (inc idx) total))})))
+
 (defn component-view
-  "Render single component view."
+  "Render single component view with prev/next navigation."
   [{:keys [library view]}]
   (let [component-name (:name view)
-        {:keys [hiccup description]} (get library component-name)]
+        {:keys [hiccup description]} (get library component-name)
+        {:keys [prev next]} (component-neighbors library component-name)]
     [:div.component-view
-     [:div.component-header
+     [:div.component-nav
+      (if prev
+        [:button.nav-prev
+         {:data-on:click (str "@post('/sandbox/view/component/" (name prev) "')")}
+         "← " (name prev)]
+        [:span.nav-placeholder])
       [:h2 (name component-name)]
-      (when (seq description)
-        [:p description])]
+      (if next
+        [:button.nav-next
+         {:data-on:click (str "@post('/sandbox/view/component/" (name next) "')")}
+         (name next) " →"]
+        [:span.nav-placeholder])]
+     (when (seq description)
+       [:p.component-desc description])
      [:div.component-render
       (if hiccup
         hiccup
         [:p.empty-state "Component not found"])]
      [:div.component-actions
       [:button {:data-on:click "@post('/sandbox/view/gallery')"}
-       "Back to Gallery"]
+       "← Back to Gallery"]
       [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
        "Delete"]]]))
 
