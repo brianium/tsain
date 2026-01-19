@@ -1,6 +1,6 @@
 # 004: Component Library
 
-## Status: Draft
+## Status: Complete
 
 ## Overview
 
@@ -554,16 +554,16 @@ When navigating via SSE actions, the URL doesn't change (SPA-style). Direct URL 
 
 ## Success Criteria
 
-- [ ] `(preview!)` sets content and broadcasts to all clients
-- [ ] `(commit! :name)` saves to library atom and `components.edn`
-- [ ] `(show!)` and `(show-all!)` switch views across all clients
-- [ ] Components persist across server restarts
-- [ ] Browser shows "uncommitted" badge when previewing
-- [ ] Browser "Commit" button prompts for name and commits
-- [ ] Gallery renders grid of all committed components
-- [ ] Single component view shows component in isolation
-- [ ] `/sandbox/c/:name` deep links work for new tabs
-- [ ] Everything reloads cleanly via `(reload)`
+- [x] `(preview!)` sets content and broadcasts to all clients
+- [x] `(commit! :name)` saves to library atom and `components.edn`
+- [x] `(show!)` and `(show-all!)` switch views across all clients
+- [x] Components persist across server restarts
+- [x] Browser shows "uncommitted" badge when previewing
+- [x] Browser "Commit" button prompts for name and commits
+- [x] Gallery renders grid of all committed components
+- [x] Single component view shows component in isolation
+- [x] `/sandbox/c/:name` deep links work for new tabs
+- [x] Everything reloads cleanly via `(reload)`
 
 ## Future Enhancements
 

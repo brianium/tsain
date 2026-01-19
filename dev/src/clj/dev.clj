@@ -5,6 +5,7 @@
             [ascolais.twk :as twk]
             [ascolais.sfere :as sfere]
             [sandbox.app :as app]
+            [sandbox.registry :as registry]
             [sandbox.system :as system]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -81,9 +82,7 @@
    The hiccup is rendered inside #preview, replacing any existing content.
    Use preview-append! to add content without clearing."
   [hiccup]
-  (dispatch {} {}
-            [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
-              [::twk/patch-elements [:div#preview hiccup]]]]))
+  (dispatch [[::registry/preview hiccup]]))
 
 (defn preview-append!
   "Append hiccup content to the sandbox preview area.
@@ -96,13 +95,60 @@
    Content is appended to #preview without clearing existing content.
    Use preview! to reset/replace all content."
   [hiccup]
-  (dispatch {} {}
-            [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
-              [::twk/patch-elements hiccup
-               {twk/selector "#preview" twk/patch-mode twk/pm-append}]]]))
+  (dispatch [[::registry/preview-append hiccup]]))
 
 (defn preview-clear!
   "Clear the sandbox preview area.
    Broadcasts to all connected browsers/devices."
   []
-  (preview! [:p {:style "color: #999"} "Preview area"]))
+  (dispatch [[::registry/preview-clear]]))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Component Library
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn commit!
+  "Commit current preview to the component library.
+   Saves to both memory and components.edn for persistence.
+
+   Usage:
+     (commit! :primary-button)
+     (commit! :primary-button \"Primary action button\")"
+  ([component-name]
+   (commit! component-name nil))
+  ([component-name description]
+   (dispatch [[::registry/commit component-name description]])))
+
+(defn uncommit!
+  "Remove a component from the library.
+   Deletes from both memory and components.edn.
+
+   Usage:
+     (uncommit! :primary-button)"
+  [component-name]
+  (dispatch [[::registry/uncommit component-name]]))
+
+(defn show!
+  "Show a single component in the browser.
+   Broadcasts view change to all connected clients.
+
+   Usage:
+     (show! :primary-button)"
+  [component-name]
+  (dispatch [[::registry/show component-name]]))
+
+(defn show-all!
+  "Show the component gallery in the browser.
+   Broadcasts view change to all connected clients."
+  []
+  (dispatch [[::registry/show-gallery]]))
+
+(defn components
+  "List all committed component names.
+
+   Usage:
+     (components)
+     ;; => (:primary-button :user-card)"
+  []
+  (when-let [state (:state system/*system*)]
+    (keys (:library @state))))
