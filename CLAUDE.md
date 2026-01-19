@@ -348,6 +348,216 @@ Compose registries into a dispatch function:
 
 ---
 
+## Datastar Frontend Framework
+
+Datastar is a lightweight frontend framework combining backend-driven reactivity with frontend interactivity. It uses HTML `data-*` attributes for declarative behavior and Server-Sent Events (SSE) for backend communication.
+
+### Core Concepts
+
+1. **Backend drives state** - The server is the source of truth; it pushes state to the frontend via SSE
+2. **Signals** - Reactive variables prefixed with `$` that auto-propagate changes
+3. **Attributes** - `data-*` attributes declare reactive behavior in HTML
+4. **Actions** - `@get()`, `@post()`, etc. send requests that return SSE streams
+
+### Signals
+
+Signals are reactive variables accessible throughout the DOM using `$signalName` syntax.
+
+**Creating signals:**
+
+```html
+<!-- Via data-bind (two-way binding on form elements) -->
+<input data-bind:username />
+<!-- Creates signal $username -->
+
+<!-- Via data-signals (direct initialization) -->
+<div data-signals:count="0"></div>
+<div data-signals="{count: 0, user: {name: 'Alice'}}"></div>
+
+<!-- Via data-computed (derived read-only signals) -->
+<div data-computed:doubled="$count * 2"></div>
+```
+
+**Naming convention:** Hyphenated attributes become camelCase signals:
+- `data-bind:foo-bar` → `$fooBar`
+- `data-signals:user-name` → `$userName`
+
+**Nested signals:** Use dot notation for object properties:
+```html
+<div data-signals:form.email="''"></div>
+<span data-text="$form.email"></span>
+```
+
+### Attribute Plugins
+
+| Attribute | Purpose | Example |
+|-----------|---------|---------|
+| `data-text` | Set element text content | `<span data-text="$count"></span>` |
+| `data-show` | Toggle visibility | `<div data-show="$isVisible"></div>` |
+| `data-class` | Toggle CSS classes | `<div data-class:active="$isActive"></div>` |
+| `data-attr` | Set HTML attributes | `<button data-attr:disabled="$loading"></button>` |
+| `data-style` | Set inline styles | `<div data-style:color="$textColor"></div>` |
+| `data-bind` | Two-way form binding | `<input data-bind:email />` |
+| `data-signals` | Initialize signals | `<div data-signals:count="0"></div>` |
+| `data-computed` | Derived signals | `<div data-computed:total="$a + $b"></div>` |
+| `data-on` | Event handlers | `<button data-on:click="$count++"></button>` |
+| `data-ref` | Element references | `<div data-ref:myDiv></div>` |
+| `data-indicator` | Loading state tracking | `<button data-indicator:loading></button>` |
+
+**Multiple values syntax:**
+```html
+<div data-class="{active: $isActive, hidden: $isHidden}"></div>
+<div data-attr="{disabled: $loading, 'aria-busy': $loading}"></div>
+```
+
+### Event Handling with data-on
+
+```html
+<!-- Basic click handler -->
+<button data-on:click="$count++">Increment</button>
+
+<!-- Call backend action -->
+<button data-on:click="@post('/api/save')">Save</button>
+
+<!-- Multiple expressions -->
+<button data-on:click="$loading = true; @post('/api/save')">Save</button>
+
+<!-- With modifiers -->
+<input data-on:input__debounce.300ms="@get('/search')" />
+<button data-on:click__once="@post('/init')">Initialize</button>
+```
+
+**Common modifiers:**
+- `__debounce.Nms` - Debounce by N milliseconds
+- `__throttle.Nms` - Throttle by N milliseconds
+- `__once` - Fire only once
+- `__prevent` - preventDefault()
+- `__stop` - stopPropagation()
+
+### Lifecycle Attributes
+
+```html
+<!-- Run on element load -->
+<div data-on-load="@post('/sse')"></div>
+
+<!-- Alternative: data-init -->
+<div data-init="$count = 0"></div>
+
+<!-- Run when signals change -->
+<div data-effect="console.log('count is', $count)"></div>
+
+<!-- Run on interval -->
+<div data-on-interval__duration.1000ms="@get('/poll')"></div>
+```
+
+### Backend Actions
+
+Actions send HTTP requests and process SSE responses:
+
+```html
+<!-- GET with signals as query params -->
+<button data-on:click="@get('/api/data')">Load</button>
+
+<!-- POST with signals as JSON body -->
+<button data-on:click="@post('/api/save')">Save</button>
+
+<!-- Other methods -->
+<button data-on:click="@put('/api/update')">Update</button>
+<button data-on:click="@patch('/api/partial')">Patch</button>
+<button data-on:click="@delete('/api/remove')">Delete</button>
+```
+
+**Action options:**
+```html
+<button data-on:click="@post('/api', {
+  headers: {'X-Custom': 'value'},
+  contentType: 'form'
+})">Submit</button>
+```
+
+### SSE Events (Backend → Frontend)
+
+The backend sends SSE events that Datastar processes:
+
+**`datastar-patch-elements`** - Update DOM:
+```
+event: datastar-patch-elements
+data: elements <div id="content">New content</div>
+```
+
+With options:
+```
+event: datastar-patch-elements
+data: selector #target
+data: mode append
+data: elements <div>Appended content</div>
+```
+
+Patch modes: `morph` (default), `inner`, `outer`, `prepend`, `append`, `before`, `after`, `remove`
+
+**`datastar-patch-signals`** - Update signals:
+```
+event: datastar-patch-signals
+data: signals {count: 42, user: {name: "Bob"}}
+```
+
+Delete signals by setting to null:
+```
+event: datastar-patch-signals
+data: signals {oldSignal: null}
+```
+
+**`datastar-execute-script`** - Run JavaScript:
+```
+event: datastar-execute-script
+data: script console.log('Hello from server')
+```
+
+### Common Patterns
+
+**Form with validation:**
+```html
+<form data-signals="{email: '', valid: false}">
+  <input data-bind:email
+         data-on:input="$valid = $email.includes('@')" />
+  <button data-attr:disabled="!$valid"
+          data-on:click__prevent="@post('/submit')">
+    Submit
+  </button>
+</form>
+```
+
+**Loading states:**
+```html
+<button data-on:click="@post('/api/save')"
+        data-indicator:saving
+        data-attr:disabled="$saving">
+  <span data-show="!$saving">Save</span>
+  <span data-show="$saving">Saving...</span>
+</button>
+```
+
+**Conditional rendering:**
+```html
+<div data-show="$items.length > 0">
+  <!-- content -->
+</div>
+<div data-show="$items.length === 0">
+  No items found
+</div>
+```
+
+**Real-time updates via SSE:**
+```html
+<body data-on-load="@get('/sse/connect')">
+  <div id="messages">
+    <!-- Server pushes updates here -->
+  </div>
+</body>
+```
+
+---
+
 ## TWK (Datastar) Patterns
 
 ### Hiccup in TWK
@@ -392,12 +602,15 @@ TWK understands hiccup directly - you do not need to pre-render it to HTML strin
 
 ### Available TWK Effects
 
-| Effect | Purpose |
-|--------|---------|
-| `::twk/patch-elements` | Update DOM elements with hiccup |
-| `::twk/patch-signals` | Update Datastar client signals |
-| `::twk/execute-script` | Run JavaScript in browser |
-| `::twk/close-sse` | Close SSE connection |
+| Effect | SSE Event | Purpose |
+|--------|-----------|---------|
+| `::twk/patch-elements` | `datastar-patch-elements` | Update DOM elements with hiccup |
+| `::twk/patch-signals` | `datastar-patch-signals` | Update Datastar client signals |
+| `::twk/execute-script` | `datastar-execute-script` | Run JavaScript in browser |
+| `::twk/close-sse` | - | Close SSE connection |
+
+**patch-elements** sends hiccup that gets rendered to HTML and morphed into the DOM.
+**patch-signals** sends a Clojure map that becomes the JSON signal patch.
 
 ### Patch Modes
 
