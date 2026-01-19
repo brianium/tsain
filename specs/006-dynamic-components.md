@@ -1,6 +1,6 @@
 # 006: Dynamic Component Iteration
 
-## Status: Draft
+## Status: Complete
 
 ## Overview
 
@@ -247,12 +247,12 @@ clj-nrepl-eval -p 7888 "(dev/commit! :accordion
 
 ## Success Criteria
 
-- [ ] Chassis aliases in `sandbox/ui.clj` accept and pass through `attrs`
-- [ ] `components.edn` supports `:examples` vector with `:label` and `:hiccup`
-- [ ] Sandbox UI shows config dropdown when component has multiple examples
-- [ ] `patch-signals!` broadcasts signal patches to all clients
-- [ ] `commit!` accepts `:examples` in opts
-- [ ] Component-iterate skill updated with this workflow
+- [x] Chassis aliases in `sandbox/ui.clj` accept and pass through `attrs`
+- [x] `components.edn` supports `:examples` vector with `:label` and `:hiccup`
+- [x] Sandbox UI shows config dropdown when component has multiple examples
+- [x] `patch-signals!` broadcasts signal patches to all clients
+- [x] `commit!` accepts `:examples` in opts
+- [x] Component-iterate skill updated with this workflow
 
 ## File Changes
 
