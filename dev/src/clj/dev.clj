@@ -1,8 +1,11 @@
 (ns dev
-  (:require [clojure.pprint :refer [pprint]]
-            [clj-reload.core :as reload]
+  (:require [clj-reload.core :as reload]
             [portal.api :as p]
-            [ascolais.tsain :as tsain]))
+            [ascolais.sandestin :as s]
+            [ascolais.twk :as twk]
+            [ascolais.sfere :as sfere]
+            [sandbox.app :as app]
+            [sandbox.system :as system]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Portal Setup (reload-safe)
@@ -15,43 +18,18 @@
 ;; System Lifecycle
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def config
-  "System configuration."
-  {:environment "development"})
-
 (defn start
-  "Start the development system."
-  ([]
-   (start config))
-  ([c]
-   (tap> {:event :system/start :config c})
-   :started))
+  "Start the sandbox server."
+  ([] (start 3000))
+  ([port] (app/start-system port)))
 
 (defn stop
-  "Stop the development system."
+  "Stop the sandbox server."
   []
-  (tap> {:event :system/stop})
-  :stopped)
-
-(defn suspend
-  "Suspend the system before namespace reload."
-  []
-  (tap> {:event :system/suspend}))
-
-(defn resume
-  "Resume the system after namespace reload."
-  [c]
-  (tap> {:event :system/resume :config c}))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Reloading
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (app/stop-system))
 
 (defn reload
-  "Reload changed namespaces.
-
-  This is the preferred way to reload during development. Consider binding
-  this to a keyboard shortcut in your editor (e.g., C-c r in Emacs)."
+  "Reload changed namespaces."
   []
   (reload/reload))
 
@@ -64,16 +42,18 @@
 
 ;; clj-reload hooks
 (defn before-ns-unload []
-  (suspend))
+  (stop))
 
 (defn after-ns-reload []
-  (resume config))
+  (start))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Development Utilities
+;; Dispatch Access
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn show-config
-  "Display current configuration."
-  []
-  (pprint config))
+(defn dispatch
+  "Dispatch effects via the running system.
+   Convenience wrapper around system dispatch."
+  [& args]
+  (when-let [d (:dispatch system/*system*)]
+    (apply d args)))

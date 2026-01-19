@@ -5,8 +5,22 @@
  :aliases
  {:dev
   {:extra-paths ["dev/src/clj" "dev/resources"]
-   :extra-deps {djblue/portal {:mvn/version "0.62.2"}
-                io.github.tonsky/clj-reload {:mvn/version "1.0.0"}}
+   :extra-deps {;; Development tools
+                djblue/portal {:mvn/version "0.62.2"}
+                io.github.tonsky/clj-reload {:mvn/version "1.0.0"}
+
+                ;; Sandestin ecosystem
+                io.github.brianium/sandestin {:git/tag "v0.5.0" :git/sha "526d4c5"}
+                io.github.brianium/twk {:git/tag "v0.2.1" :git/sha "e3c5011"}
+                io.github.brianium/sfere {:git/tag "v0.6.0" :git/sha "2114511"}
+                io.github.brianium/kaiin {:git/tag "v0.1.0" :git/sha "088a6af"}
+
+                ;; Web infrastructure
+                http-kit/http-kit {:mvn/version "2.8.0"}
+                dev.data-star.clojure/http-kit {:mvn/version "1.0.0-RC7"}
+                dev.onionpancakes/chassis {:mvn/version "1.0.365"}
+                metosin/reitit {:mvn/version "0.10.0"}
+                metosin/malli {:mvn/version "0.20.0"}}
    :jvm-opts ["-Djdk.attach.allowAttachSelf"]}
 
   :test
