@@ -100,9 +100,11 @@
       [:div.component-title
        [:h2 (name component-name)]
        ;; Example selector dropdown when multiple examples exist
+       ;; Unique ID forces recreation on component change (avoids stale morph state)
        (when (and examples (> (count examples) 1))
          [:select.config-selector
-          {:data-on:change (str "@post('/sandbox/view/component/" (name component-name) "?idx=' + this.value)")}
+          {:id (str "variant-" (name component-name))
+           :data-on:change (str "@post('/sandbox/view/component/" (name component-name) "?idx=' + evt.target.value)")}
           (for [[idx {:keys [label]}] (map-indexed vector examples)]
             [:option {:value idx :selected (= idx example-idx)} (or label (str "Example " (inc idx)))])])]
       (if next

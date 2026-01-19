@@ -3,6 +3,7 @@
             [ascolais.twk :as twk]
             [ascolais.sfere :as sfere]
             [ring.middleware.resource :refer [wrap-resource]]
+            [ring.middleware.params :refer [wrap-params]]
             [starfederation.datastar.clojure.adapter.http-kit :as ds-hk]
             [org.httpkit.server :as hk]
             [reitit.ring :as rr]
@@ -127,6 +128,7 @@
   (-> (rr/ring-handler
        (create-router dispatch)
        (rr/create-default-handler))
+      wrap-params
       (wrap-resource "public")
       wrap-request-logging))
 

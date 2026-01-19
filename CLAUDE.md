@@ -437,6 +437,31 @@ Signals are reactive variables accessible throughout the DOM using `$signalName`
 - `__prevent` - preventDefault()
 - `__stop` - stopPropagation()
 
+**Event object shorthand (`evt`):**
+
+Datastar provides an `evt` shorthand to access the DOM event object within `data-on` handlers. Use `evt` instead of `this` or `event`:
+
+```html
+<!-- Access select/input values -->
+<select data-on:change="@post('/api/update?value=' + evt.target.value)">
+  <option value="a">A</option>
+  <option value="b">B</option>
+</select>
+
+<!-- Access checkbox state -->
+<input type="checkbox" data-on:change="$checked = evt.target.checked" />
+
+<!-- Access key codes -->
+<input data-on:keydown="if (evt.key === 'Enter') @post('/submit')" />
+
+<!-- Pass event target value to backend -->
+<select data-on:change="@post('/sandbox/view/component/card?idx=' + evt.target.value)">
+  ...
+</select>
+```
+
+**IMPORTANT:** Do NOT use `this.value` in Datastar expressions. Always use `evt.target.value` to access form element values.
+
 ### Lifecycle Attributes
 
 ```html
