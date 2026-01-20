@@ -466,7 +466,7 @@ body {
 }
 
 .component-detail {
-  max-width: 900px;
+  width: 100%;
 }
 
 /* Responsive: auto-collapse on narrow screens */
