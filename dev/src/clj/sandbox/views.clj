@@ -1,6 +1,7 @@
 (ns sandbox.views
   (:require [ascolais.twk :as twk]
-            [dev.onionpancakes.chassis.core :as c]))
+            [dev.onionpancakes.chassis.core :as c]
+            [sandbox.ui]))
 
 (defn nav-bar
   "Navigation bar with view controls."
