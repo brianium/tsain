@@ -153,9 +153,16 @@ Added a **required first step**: define the chassis alias before iterating.
 
 The copy functionality reads from `components.edn` (the stored alias form) directly via `get-example-hiccup` in `app.clj`.
 
-### 3. Add Namespace Require Pattern
+### 3. Add Namespace Require Pattern ✓
 
-The sandbox views require `chassis.core` which resolves aliases. The `sandbox.ui` namespace is loaded when needed.
+The `sandbox.views` namespace requires `sandbox.ui` to ensure aliases are registered before rendering:
+
+```clojure
+(ns sandbox.views
+  (:require [ascolais.twk :as twk]
+            [dev.onionpancakes.chassis.core :as c]
+            [sandbox.ui]))  ;; Ensures aliases are loaded
+```
 
 ### 4. Update CLAUDE.md ✓
 
@@ -194,7 +201,7 @@ All existing components in `components.edn` migrated:
 - [x] Copy button copies the alias form (lean snippet)
 - [x] component-iterate skill documents alias-first workflow
 - [x] CLAUDE.md has chassis alias conventions
-- [ ] Sandbox renders all components correctly after migration (requires browser verification)
+- [x] Sandbox renders all components correctly after migration
 
 ## Future: sandbox.edn Configuration
 

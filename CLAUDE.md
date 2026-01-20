@@ -1054,6 +1054,9 @@ Chassis automatically elides namespaced attributes from HTML output. **Conventio
 | `dev/src/clj/sandbox/ui.clj` | Chassis aliases (component structure) |
 | `resources/components.edn` | Lean alias invocations (config only) |
 | `dev/resources/public/styles.css` | Component CSS |
+| `dev/src/clj/sandbox/views.clj` | Requires `sandbox.ui` for alias resolution |
+
+**Note:** The `sandbox.views` namespace requires `sandbox.ui` to ensure aliases are registered before hiccup is rendered. Without this require, alias keywords like `:sandbox.ui/game-card` won't expand.
 
 ## Git Commits
 
