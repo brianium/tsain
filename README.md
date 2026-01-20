@@ -1,66 +1,136 @@
 # ascolais/tsain
 
-A Clojure project with Claude Code integration.
+A REPL-driven component sandbox for Clojure + Datastar applications. Design, iterate, and persist hiccup components with live browser preview and hot CSS reload.
+
+## Features
+
+### Component Sandbox
+- **Live Preview**: Push hiccup from REPL → instant browser update
+- **Multi-device Sync**: All connected browsers/devices update simultaneously via SSE
+- **CSS Hot Reload**: Edit `styles.css`, save → browser updates automatically
+- **Component Library**: Commit, browse, and copy components with storybook-style sidebar
+
+### REPL-Driven Workflow
+```clojure
+(dev)
+(start)  ;; Sandbox at localhost:3000
+
+;; Iterate on components
+(dispatch [[::tsain/preview [:div.card [:h2 "Title"] [:p "Content"]]]])
+
+;; Test Datastar signals
+(dispatch [[::tsain/patch-signals {:count 42}]])
+
+;; Commit to library
+(dispatch [[::tsain/commit :my-card {:description "Card component"}]])
+
+;; Browse library
+(dispatch [[::tsain/show-components :my-card]])
+```
+
+### Discoverable API
+All sandbox effects are discoverable via sandestin:
+```clojure
+(describe dispatch)                    ;; List all effects
+(describe dispatch ::tsain/preview)    ;; Inspect specific effect
+(sample dispatch ::tsain/preview)      ;; Generate example invocation
+(grep dispatch "component")            ;; Search by keyword
+```
+
+### Chassis Aliases
+Component structure lives in code, configuration in data:
+```clojure
+;; Structure in sandbox/ui.clj
+(defmethod c/resolve-alias ::game-card [_ attrs _]
+  (let [{:game-card/keys [title cost attack]} attrs]
+    [:div.game-card
+     [:div.game-card-cost cost]
+     [:div.game-card-title title]
+     ...]))
+
+;; Config in components.edn
+[:sandbox.ui/game-card
+ {:game-card/title "Neural Phantom"
+  :game-card/cost "4"
+  :game-card/attack "3"}]
+```
+
+## Component Library
+
+| Component | Description |
+|-----------|-------------|
+| `game-card` | Cyberpunk game card with attack/defense stats |
+| `combat-log` | Battle log with timestamped events |
+| `player-hud` | Player HUD with health/energy bars |
+| `player-portrait` | 16-bit pixel art character portrait |
+| `action-buttons` | Primary/secondary/small button variants |
+| `resource-display` | Energy orbs and credit chips |
+| `card-type-badges` | Badge and rarity indicators |
+| `toast` | System alert notifications |
 
 ## Prerequisites
 
 - [Clojure CLI](https://clojure.org/guides/install_clojure) 1.11+
 - [Babashka](https://github.com/babashka/babashka) v1.12.212+
 - [bbin](https://github.com/babashka/bbin)
-- Rust 1.83+ (for parinfer-rust)
 
-## Claude Code Setup
+## Setup
 
-This project uses [clojure-mcp-light](https://github.com/bhauman/clojure-mcp-light) for Claude Code REPL integration and automatic paren repair.
-
-### 1. Install parinfer-rust (optional but recommended)
+### 1. Install clojure-mcp-light tools (for Claude Code)
 
 ```bash
-cargo install --git https://github.com/eraserhd/parinfer-rust
-```
-
-### 2. Install clojure-mcp-light tools
-
-```bash
-# Paren repair hook for Claude Code
+# Paren repair hook
 bbin install https://github.com/bhauman/clojure-mcp-light.git --tag v0.2.1
 
 # nREPL evaluation CLI
 bbin install https://github.com/bhauman/clojure-mcp-light.git --tag v0.2.1 \
   --as clj-nrepl-eval --main-opts '["-m" "clojure-mcp-light.nrepl-eval"]'
-
-# On-demand paren repair
-bbin install https://github.com/bhauman/clojure-mcp-light.git --tag v0.2.1 \
-  --as clj-paren-repair --main-opts '["-m" "clojure-mcp-light.paren-repair"]'
 ```
 
-## Development
-
-### Start the REPL
+### 2. Start Development
 
 ```bash
 clj -M:dev
 ```
 
-### Development Workflow
-
 ```clojure
-;; Switch to dev namespace
-(dev)
-
-;; Start the system (opens Portal)
-(start)
-
-;; After making changes, reload namespaces
-(reload)
-
-;; Full restart if needed
-(restart)
+(dev)       ;; Switch to dev namespace
+(start)     ;; Start sandbox at localhost:3000
+(reload)    ;; Reload after code changes
+(restart)   ;; Full restart
 ```
 
-### Portal
+### 3. Open Sandbox
 
-Portal opens automatically and receives all `tap>` output. Use `(tap> data)` anywhere in your code for debugging.
+Navigate to http://localhost:3000/sandbox
+
+## Project Structure
+
+```
+tsain.edn                           # Configuration
+src/clj/ascolais/tsain.clj          # Registry factory with effects
+dev/src/clj/
+├── dev.clj                         # REPL entry point
+├── sandbox/
+│   ├── app.clj                     # HTTP routes and handlers
+│   ├── views.clj                   # Hiccup view templates
+│   └── ui.clj                      # Chassis aliases
+dev/resources/public/
+├── sandbox.css                     # Sandbox chrome styles
+└── styles.css                      # Component styles
+resources/components.edn            # Persisted component library
+specs/                              # Living specification documents
+```
+
+## Tech Stack
+
+| Library | Purpose |
+|---------|---------|
+| [sandestin](https://github.com/brianium/sandestin) | Effect dispatch with schema-driven discoverability |
+| [twk](https://github.com/brianium/twk) | Datastar SSE integration |
+| [sfere](https://github.com/brianium/sfere) | Connection management and broadcasting |
+| [chassis](https://github.com/onionpancakes/chassis) | Hiccup aliases for component structure |
+| [Datastar](https://data-star.dev/) | Frontend reactivity via HTML attributes |
 
 ## Testing
 
@@ -68,29 +138,9 @@ Portal opens automatically and receives all `tap>` output. Use `(tap> data)` any
 clj -X:test
 ```
 
-## REPL Evaluation (for Claude Code)
+## Specifications
 
-Discover running nREPL servers:
-
-```bash
-clj-nrepl-eval --discover-ports
-```
-
-Evaluate expressions:
-
-```bash
-clj-nrepl-eval -p <PORT> "(require '[ascolais.tsain] :reload)"
-clj-nrepl-eval -p <PORT> "(tsain/some-function)"
-```
-
-## Project Structure
-
-```
-src/clj/ascolais/      # Main source files
-dev/src/clj/               # Development namespace (user.clj, dev.clj)
-test/src/clj/ascolais/ # Test files
-resources/                 # Resource files
-```
+See [specs/README.md](specs/README.md) for living documentation of all implemented features.
 
 ## License
 
