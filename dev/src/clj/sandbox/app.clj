@@ -40,7 +40,7 @@
 (defn gallery-page [_request]
   {:status 200
    :headers {"content-type" "text/html"}
-   :body (views/sandbox-page :gallery)})
+   :body (views/sandbox-page :components)})
 
 (defn component-page [{{:keys [name]} :path-params}]
   {:status 200
@@ -52,10 +52,13 @@
   (let [state-atom (:state system/*system*)
         view-param (get query-params "view")
         name-param (get query-params "name")
+        library (:library @state-atom)
         ;; For deep links, temporarily set view for this connection
         initial-view (case view-param
                        "gallery" {:type :gallery}
-                       "component" {:type :component :name (keyword name-param)}
+                       "components" (let [first-component (first (sort (keys library)))]
+                                      {:type :components :name first-component :example-idx 0})
+                       "component" {:type :components :name (keyword name-param) :example-idx 0}
                        (:view @state-atom))
         render-state (assoc @state-atom :view initial-view)]
     {::sfere/key [:sandbox (str (random-uuid))]
@@ -70,11 +73,25 @@
   (dispatch [[::registry/show-gallery]])
   {::twk/with-open-sse? true})
 
+(defn view-components [{:keys [dispatch]}]
+  (dispatch [[::registry/show-components nil]])
+  {::twk/with-open-sse? true})
+
 (defn view-component [{{:keys [name]} :path-params :keys [dispatch query-params]}]
   (let [idx (when-let [idx-str (get query-params "idx")]
-              (try (Integer/parseInt idx-str) (catch Exception _ 0)))]
-    (dispatch [[::registry/show (keyword name) idx]])
+              (try (Integer/parseInt idx-str) (catch Exception _ 0)))
+        state-atom (:state system/*system*)
+        component-name (keyword name)]
+    ;; Update state with example index, then broadcast
+    (swap! state-atom assoc :view {:type :components
+                                   :name component-name
+                                   :example-idx (or idx 0)})
+    (dispatch [[::registry/show-components component-name]])
     {::twk/with-open-sse? true}))
+
+(defn toggle-sidebar [{:keys [dispatch]}]
+  (dispatch [[::registry/toggle-sidebar]])
+  {::twk/with-open-sse? true})
 
 ;; Action handlers
 (defn commit-handler [{:keys [signals dispatch]}]
@@ -88,8 +105,23 @@
   {::twk/with-open-sse? true})
 
 (defn uncommit-handler [{{:keys [name]} :path-params :keys [dispatch]}]
-  (dispatch [[::registry/uncommit (keyword name)]])
-  (dispatch [[::registry/show-gallery]])
+  (let [state-atom (:state system/*system*)
+        deleted-name (keyword name)
+        library (:library @state-atom)
+        current-view (:view @state-atom)
+        ;; If we're in components view and deleting the current component, select another
+        next-component (when (and (= :components (:type current-view))
+                                  (= deleted-name (:name current-view)))
+                         (let [sorted-names (vec (sort (keys library)))
+                               idx (.indexOf sorted-names deleted-name)
+                               remaining (remove #{deleted-name} sorted-names)]
+                           (when (seq remaining)
+                             (nth (vec remaining) (min idx (dec (count remaining)))))))]
+    (dispatch [[::registry/uncommit deleted-name]])
+    ;; Stay in components view, select next component if available
+    (if next-component
+      (dispatch [[::registry/show-components next-component]])
+      (dispatch [[::registry/show-components nil]])))
   {::twk/with-open-sse? true})
 
 (defn- get-example-hiccup
@@ -124,7 +156,7 @@
 (def routes
   [;; Page shells - each with appropriate initial view
    ["/sandbox" {:name ::sandbox :get preview-page}]
-   ["/sandbox/components" {:name ::gallery :get gallery-page}]
+   ["/sandbox/components" {:name ::components :get gallery-page}]
    ["/sandbox/c/:name" {:name ::component :get component-page}]
 
    ;; SSE connection
@@ -133,7 +165,11 @@
    ;; View switching (from browser nav)
    ["/sandbox/view/preview" {:name ::view-preview :post view-preview}]
    ["/sandbox/view/gallery" {:name ::view-gallery :post view-gallery}]
+   ["/sandbox/view/components" {:name ::view-components :post view-components}]
    ["/sandbox/view/component/:name" {:name ::view-component :post view-component}]
+
+   ;; Sidebar toggle
+   ["/sandbox/sidebar/toggle" {:name ::sidebar-toggle :post toggle-sidebar}]
 
    ;; Actions
    ["/sandbox/commit" {:name ::commit :post commit-handler}]

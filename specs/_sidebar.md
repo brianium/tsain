@@ -6,6 +6,7 @@
   - [003 CSS Hot Reload](003-css-hot-reload.md)
   - [004 Component Library](004-component-library.md)
   - [005 Component Navigation](005-component-navigation.md)
-
-- **Draft**
   - [006 Dynamic Components](006-dynamic-components.md)
+  - [007 Copy Hiccup](007-copy-hiccup.md)
+  - [008 CSS Extraction](008-css-extraction.md)
+  - [009 Storybook Sidebar](009-storybook-sidebar.md)

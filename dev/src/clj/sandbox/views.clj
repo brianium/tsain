@@ -11,9 +11,9 @@
      [:a {:class (when (= view-type :preview) "active")
           :data-on:click "@post('/sandbox/view/preview')"}
       "Preview"]
-     [:a {:class (when (= view-type :gallery) "active")
-          :data-on:click "@post('/sandbox/view/gallery')"}
-      "Gallery"]
+     [:a {:class (when (#{:gallery :components :component} view-type) "active")
+          :data-on:click "@post('/sandbox/view/components')"}
+      "Components"]
      [:div.spacer]
      (when (and (= view-type :preview) has-preview?)
        [:<>
@@ -119,8 +119,8 @@
         hiccup
         [:p.empty-state "Component not found"])]
      [:div.component-actions
-      [:button {:data-on:click "@post('/sandbox/view/gallery')"}
-       "← Back to Gallery"]
+      [:button {:data-on:click "@post('/sandbox/view/components')"}
+       "← Back"]
       [:button.copy-btn
        {:data-on:click (str "fetch('/sandbox/copy/" (name component-name) "?idx=" example-idx "')"
                             ".then(r => r.text())"
@@ -133,29 +133,111 @@
       [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
        "Delete"]]]))
 
+(defn component-detail
+  "Render component detail panel (used in sidebar layout)."
+  [{:keys [library view]}]
+  (let [component-name (:name view)
+        component-data (get library component-name)
+        {:keys [description examples]} component-data
+        example-idx (or (:example-idx view) 0)
+        selected-example (when examples (nth examples example-idx (first examples)))
+        hiccup (if examples
+                 (:hiccup selected-example)
+                 (get-component-hiccup component-data))
+        {:keys [prev next]} (component-neighbors library component-name)]
+    [:div.component-detail
+     [:div.component-nav
+      (if prev
+        [:button.nav-prev
+         {:data-on:click (str "@post('/sandbox/view/component/" (name prev) "')")}
+         "← " (name prev)]
+        [:span.nav-placeholder])
+      [:div.component-title
+       [:h2 (name component-name)]
+       (when (and examples (> (count examples) 1))
+         [:select.config-selector
+          {:id (str "variant-" (name component-name))
+           :data-on:change (str "@post('/sandbox/view/component/" (name component-name) "?idx=' + evt.target.value)")}
+          (for [[idx {:keys [label]}] (map-indexed vector examples)]
+            [:option {:value idx :selected (= idx example-idx)} (or label (str "Example " (inc idx)))])])]
+      (if next
+        [:button.nav-next
+         {:data-on:click (str "@post('/sandbox/view/component/" (name next) "')")}
+         (name next) " →"]
+        [:span.nav-placeholder])]
+     (when (seq description)
+       [:p.component-desc description])
+     [:div.component-render
+      (if hiccup
+        hiccup
+        [:p.empty-state "Component not found"])]
+     [:div.component-actions
+      [:button.copy-btn
+       {:data-on:click (str "fetch('/sandbox/copy/" (name component-name) "?idx=" example-idx "')"
+                            ".then(r => r.text())"
+                            ".then(t => {"
+                            "  navigator.clipboard.writeText(t);"
+                            "  evt.target.textContent = 'Copied!';"
+                            "  setTimeout(() => evt.target.textContent = 'Copy', 1500);"
+                            "})")}
+       "Copy"]
+      [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
+       "Delete"]]]))
+
+(defn components-view
+  "Render sidebar + component view layout."
+  [{:keys [library view sidebar-collapsed?]}]
+  (let [current-name (:name view)
+        sorted-components (sort-by key library)]
+    [:div.components-layout
+     {:class (when sidebar-collapsed? "sidebar-collapsed")}
+
+     ;; Sidebar
+     [:aside.sidebar
+      [:div.sidebar-header
+       [:span.sidebar-title "Components"]
+       [:button.sidebar-toggle
+        {:data-on:click "@post('/sandbox/sidebar/toggle')"}
+        (if sidebar-collapsed? "»" "«")]]
+
+      [:nav.sidebar-list
+       (for [[component-name _] sorted-components]
+         [:a.sidebar-item
+          {:key (str component-name)
+           :class (when (= component-name current-name) "active")
+           :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")}
+          (name component-name)])]]
+
+     ;; Main content
+     [:main.component-main
+      (if current-name
+        (component-detail {:library library :view view})
+        [:div.empty-state "Select a component from the sidebar"])]]))
+
 (defn render-view
   "Render the appropriate view based on state."
   [state]
   (let [view-type (get-in state [:view :type])]
     [:div#app
      (nav-bar state)
-     [:div#content
-      (case view-type
-        :preview   (preview-view state)
-        :gallery   (gallery-view state)
-        :component (component-view state)
-        (preview-view state))]]))
+     (case view-type
+       :preview   [:div#content (preview-view state)]
+       :gallery   [:div#content (gallery-view state)]
+       :component [:div#content (component-view state)]
+       :components (components-view state)
+       [:div#content (preview-view state)])]))
 
 (defn sandbox-page
   "Full page shell - content populated via SSE.
    Optional initial-view determines the starting view:
    - nil or :preview -> preview view (default)
-   - :gallery -> gallery view
-   - [:component name] -> specific component view"
+   - :gallery or :components -> components view with sidebar
+   - [:component name] -> specific component view with sidebar"
   ([] (sandbox-page nil))
   ([initial-view]
    (let [sse-url (case initial-view
-                   :gallery "/sandbox/sse?view=gallery"
+                   :gallery "/sandbox/sse?view=components"
+                   :components "/sandbox/sse?view=components"
                    (if (and (vector? initial-view) (= :component (first initial-view)))
                      (str "/sandbox/sse?view=component&name=" (name (second initial-view)))
                      "/sandbox/sse"))]

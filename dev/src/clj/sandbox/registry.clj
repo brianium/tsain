@@ -141,4 +141,33 @@
      (fn [{:keys [dispatch]} _system signals]
        (dispatch {} {}
                  [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
-                   [::twk/patch-signals signals]]]))}}})
+                   [::twk/patch-signals signals]]]))}
+
+    ::toggle-sidebar
+    {::s/description "Toggle sidebar collapsed state"
+     ::s/schema [:tuple [:= ::toggle-sidebar]]
+     ::s/handler
+     (fn [{:keys [dispatch]} _system]
+       (swap! state-atom update :sidebar-collapsed? not)
+       (broadcast-view! dispatch state-atom))}
+
+    ::show-components
+    {::s/description "Show components view (with sidebar)"
+     ::s/schema [:tuple [:= ::show-components] [:maybe :keyword]]
+     ::s/handler
+     (fn [{:keys [dispatch]} _system component-name]
+       (let [library (:library @state-atom)
+             current-view (:view @state-atom)
+             ;; Select first component if none specified or specified doesn't exist
+             target-name (if (and component-name (contains? library component-name))
+                           component-name
+                           (first (sort (keys library))))
+             ;; Preserve example-idx if viewing same component, otherwise reset to 0
+             example-idx (if (and (= (:name current-view) target-name)
+                                  (:example-idx current-view))
+                           (:example-idx current-view)
+                           0)]
+         (swap! state-atom assoc :view {:type :components
+                                        :name target-name
+                                        :example-idx example-idx})
+         (broadcast-view! dispatch state-atom)))}}})

@@ -67,6 +67,16 @@ Establish workflow where committed components use CSS classes. Done when:
 - CLAUDE.md includes component styling conventions
 - Copied hiccup is clean and readable
 
+### Milestone 8: Storybook Sidebar ✓
+**Spec:** [009-storybook-sidebar](./009-storybook-sidebar.md)
+
+Replace gallery grid with storybook-style sidebar navigation. Done when:
+- Collapsible sidebar lists all components
+- Clicking sidebar entry loads component in main area
+- Sidebar state persists across view changes
+- Preview tab preserved for REPL-driven development
+- Deep links (`/sandbox/c/:name`) highlight correct sidebar item
+
 ## Spec Index
 
 | Spec | Status | Description |
@@ -79,5 +89,6 @@ Establish workflow where committed components use CSS classes. Done when:
 | [006-dynamic-components](./006-dynamic-components.md) | Complete | Stateful Datastar components with multiple example configs |
 | [007-copy-hiccup](./007-copy-hiccup.md) | Complete | Copy hiccup to clipboard from single component view |
 | [008-css-extraction](./008-css-extraction.md) | Complete | CSS extraction workflow for clean, reusable component hiccup |
+| [009-storybook-sidebar](./009-storybook-sidebar.md) | Complete | Replace gallery grid with storybook-style sidebar navigation |
 
 Status values: Draft, Active, Complete, Archived

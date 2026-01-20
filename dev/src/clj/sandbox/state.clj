@@ -26,4 +26,5 @@
   []
   (atom {:preview {:hiccup nil}
          :view    {:type :preview}
-         :library (load-library)}))
+         :library (load-library)
+         :sidebar-collapsed? false}))
