@@ -87,6 +87,17 @@ Enforce alias-first component development. Done when:
 - component-iterate skill documents alias-first workflow
 - CLAUDE.md has chassis alias conventions for namespaced config props
 
+### Milestone 10: Discoverable Dev Registry
+**Spec:** [011-discoverable-dev-registry](./011-discoverable-dev-registry.md)
+
+Make sandbox API discoverable via sandestin. Done when:
+- All effects use `::tsain/` namespace with rich schemas and descriptions
+- dev.clj simplified to dispatch + lifecycle (no ad-hoc wrapper functions)
+- `(s/describe dispatch)` shows useful API overview
+- `(s/sample dispatch ::tsain/preview)` generates usable examples
+- component-iterate skill uses discovery workflow
+- Unit tests pass for registry factory, config loading, and schema validation
+
 ## Spec Index
 
 | Spec | Status | Description |
@@ -101,5 +112,6 @@ Enforce alias-first component development. Done when:
 | [008-css-extraction](./008-css-extraction.md) | Complete | CSS extraction workflow for clean, reusable component hiccup |
 | [009-storybook-sidebar](./009-storybook-sidebar.md) | Complete | Replace gallery grid with storybook-style sidebar navigation |
 | [010-chassis-alias-workflow](./010-chassis-alias-workflow.md) | Complete | Enforce alias-first component development for lean components.edn |
+| [011-discoverable-dev-registry](./011-discoverable-dev-registry.md) | Draft | Make sandbox API discoverable via sandestin registry |
 
 Status values: Draft, Active, Complete, Archived
