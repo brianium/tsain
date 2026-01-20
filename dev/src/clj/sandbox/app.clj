@@ -2,6 +2,7 @@
   (:require [ascolais.sandestin :as s]
             [ascolais.twk :as twk]
             [ascolais.sfere :as sfere]
+            [clojure.pprint :as pprint]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.params :refer [wrap-params]]
             [starfederation.datastar.clojure.adapter.http-kit :as ds-hk]
@@ -91,6 +92,30 @@
   (dispatch [[::registry/show-gallery]])
   {::twk/with-open-sse? true})
 
+(defn- get-example-hiccup
+  "Get hiccup from component data, supporting both old and new formats."
+  [component-data example-idx]
+  (if-let [examples (:examples component-data)]
+    (:hiccup (nth examples (or example-idx 0) (first examples)))
+    (:hiccup component-data)))
+
+(defn copy-hiccup-handler
+  "Return formatted hiccup for a component as plain text."
+  [{{:keys [name]} :path-params :keys [query-params]}]
+  (let [state-atom (:state system/*system*)
+        component-name (keyword name)
+        idx (when-let [idx-str (get query-params "idx")]
+              (try (Integer/parseInt idx-str) (catch Exception _ 0)))
+        component-data (get-in @state-atom [:library component-name])
+        hiccup (when component-data (get-example-hiccup component-data idx))]
+    (if hiccup
+      {:status 200
+       :headers {"Content-Type" "text/plain; charset=utf-8"}
+       :body (with-out-str (pprint/pprint hiccup))}
+      {:status 404
+       :headers {"Content-Type" "text/plain"}
+       :body "Component not found"})))
+
 (defn- add-dispatch-to-request [dispatch]
   (fn [handler]
     (fn [request]
@@ -114,6 +139,7 @@
    ["/sandbox/commit" {:name ::commit :post commit-handler}]
    ["/sandbox/clear" {:name ::clear :post clear-handler}]
    ["/sandbox/uncommit/:name" {:name ::uncommit :post uncommit-handler}]
+   ["/sandbox/copy/:name" {:name ::copy :get copy-hiccup-handler}]
 
    ;; Redirect root to sandbox
    ["/" {:get (fn [_] {:status 302 :headers {"location" "/sandbox"}})}]])

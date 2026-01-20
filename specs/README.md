@@ -38,7 +38,7 @@ Previous/Next navigation on single component views. Done when:
 - Alphabetical ordering matches gallery
 
 ### Milestone 5: Dynamic Components
-**Spec:** [006-dynamic-components](./006-dynamic-components.md)
+**Spec:** [006-dynamic-components](./006-dynamic-components.md) ✓
 
 Support for stateful Datastar components. Done when:
 - Chassis aliases in `sandbox/ui.clj` define structure (attrs pass-through)
@@ -46,6 +46,15 @@ Support for stateful Datastar components. Done when:
 - Sandbox UI shows dropdown to switch between examples
 - `patch-signals!` broadcasts signal patches for REPL testing
 - Component-iterate skill documents the full workflow
+
+### Milestone 6: Copy Hiccup
+**Spec:** [007-copy-hiccup](./007-copy-hiccup.md) ✓
+
+One-click copy of component hiccup to clipboard. Done when:
+- Copy button on single component view (`/sandbox/c/:name`)
+- Copies formatted hiccup for currently visible variant
+- Visual "Copied!" feedback after successful copy
+- Works for components with and without variants
 
 ## Spec Index
 
@@ -57,5 +66,6 @@ Support for stateful Datastar components. Done when:
 | [004-component-library](./004-component-library.md) | Complete | Persistent component library with browser gallery and REPL workflow |
 | [005-component-navigation](./005-component-navigation.md) | Complete | Previous/Next navigation on single component views |
 | [006-dynamic-components](./006-dynamic-components.md) | Complete | Stateful Datastar components with multiple example configs |
+| [007-copy-hiccup](./007-copy-hiccup.md) | Complete | Copy hiccup to clipboard from single component view |
 
 Status values: Draft, Active, Complete, Archived

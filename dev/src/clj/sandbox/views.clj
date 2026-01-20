@@ -121,6 +121,15 @@
      [:div.component-actions
       [:button {:data-on:click "@post('/sandbox/view/gallery')"}
        "← Back to Gallery"]
+      [:button.copy-btn
+       {:data-on:click (str "fetch('/sandbox/copy/" (name component-name) "?idx=" example-idx "')"
+                            ".then(r => r.text())"
+                            ".then(t => {"
+                            "  navigator.clipboard.writeText(t);"
+                            "  evt.target.textContent = 'Copied!';"
+                            "  setTimeout(() => evt.target.textContent = 'Copy', 1500);"
+                            "})")}
+       "Copy"]
       [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
        "Delete"]]]))
 
