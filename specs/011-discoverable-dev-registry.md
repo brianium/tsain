@@ -1,6 +1,6 @@
 # Spec 011: Discoverable Dev Registry
 
-## Status: Draft
+## Status: Complete
 
 ## Problem
 
@@ -499,21 +499,21 @@ Run tests with: `clj -X:test`
 
 ## Done When
 
-- [ ] `tsain.edn` exists at project root with configuration
-- [ ] `src/clj/ascolais/tsain.clj` exists with registry factory
-- [ ] Registry factory reads `tsain.edn` and returns registry map
-- [ ] All effects use `::tsain/` namespace (`:ascolais.tsain/*`)
-- [ ] All effects have rich schemas with `:description` and `:gen/elements`
-- [ ] All effects have multi-line descriptions explaining what/when/how
-- [ ] dev.clj uses `(tsain/registry)` in dispatch composition
-- [ ] dev.clj exports `describe`, `sample`, `grep` aliases
-- [ ] dev.clj removes ad-hoc helper functions
-- [ ] component-iterate skill reads `tsain.edn` for file paths
-- [ ] component-iterate skill documents discovery workflow
-- [ ] `(s/describe dispatch)` shows useful API overview
-- [ ] `(s/sample dispatch ::tsain/preview)` generates usable hiccup
-- [ ] CLAUDE.md updated with registry-first dev workflow
-- [ ] Unit tests pass for registry factory, config loading, and schema validation
+- [x] `tsain.edn` exists at project root with configuration
+- [x] `src/clj/ascolais/tsain.clj` exists with registry factory
+- [x] Registry factory reads `tsain.edn` and returns registry map
+- [x] All effects use `::tsain/` namespace (`:ascolais.tsain/*`)
+- [x] All effects have rich schemas with `:description` and `:gen/elements`
+- [x] All effects have multi-line descriptions explaining what/when/how
+- [x] dev.clj uses `(tsain/registry)` in dispatch composition
+- [x] dev.clj exports `describe`, `sample`, `grep` aliases
+- [x] dev.clj removes ad-hoc helper functions
+- [x] component-iterate skill reads `tsain.edn` for file paths
+- [x] component-iterate skill documents discovery workflow
+- [x] `(s/describe dispatch)` shows useful API overview
+- [x] `(s/sample dispatch ::tsain/preview)` generates usable hiccup
+- [x] CLAUDE.md updated with registry-first dev workflow
+- [x] Unit tests pass for registry factory, config loading, and schema validation
 
 ## File Changes
 
@@ -521,23 +521,24 @@ Run tests with: `clj -X:test`
 tsain.edn                      # NEW: Shared config for library + Claude
 
 src/clj/ascolais/
-└── tsain.clj                  # NEW: Registry factory + effects
+└── tsain.clj                  # UPDATED: Registry factory + effects (was stub)
 
 test/src/clj/ascolais/
-└── tsain_test.clj             # NEW: Unit tests for registry factory
+└── tsain_test.clj             # UPDATED: Unit tests for registry factory
 
 dev/src/clj/
 ├── dev.clj                    # Simplified: dispatch + lifecycle + discovery aliases
 └── sandbox/
+    ├── app.clj                # UPDATED: Uses tsain/registry
     ├── views.clj              # Keep: view rendering
-    ├── state.clj              # Keep: persistence (used by tsain.clj)
-    └── registry.clj           # REMOVE: effects move to ascolais/tsain.clj
+    ├── state.clj              # REMOVED: persistence moved to tsain.clj
+    └── registry.clj           # REMOVED: effects moved to ascolais/tsain.clj
 
 .claude/skills/
 └── component-iterate/
-    └── SKILL.md               # Updated: tsain.edn + discovery workflow
+    └── SKILL.md               # UPDATED: tsain.edn + discovery workflow
 
-CLAUDE.md                      # Registry-first dev workflow section
+CLAUDE.md                      # UPDATED: Registry-first dev workflow section
 ```
 
 ## Relationship to Other Specs

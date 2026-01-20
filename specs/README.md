@@ -112,6 +112,6 @@ Make sandbox API discoverable via sandestin. Done when:
 | [008-css-extraction](./008-css-extraction.md) | Complete | CSS extraction workflow for clean, reusable component hiccup |
 | [009-storybook-sidebar](./009-storybook-sidebar.md) | Complete | Replace gallery grid with storybook-style sidebar navigation |
 | [010-chassis-alias-workflow](./010-chassis-alias-workflow.md) | Complete | Enforce alias-first component development for lean components.edn |
-| [011-discoverable-dev-registry](./011-discoverable-dev-registry.md) | Draft | Make sandbox API discoverable via sandestin registry |
+| [011-discoverable-dev-registry](./011-discoverable-dev-registry.md) | Complete | Make sandbox API discoverable via sandestin registry |
 
 Status values: Draft, Active, Complete, Archived

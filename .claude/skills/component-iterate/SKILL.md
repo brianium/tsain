@@ -7,17 +7,49 @@ description: Iterate on hiccup components with live preview, CSS styling, and li
 
 Drive component development through an **alias-first** REPL-powered iteration loop. Component structure lives in `sandbox/ui.clj` as chassis aliases, while `components.edn` stores lean alias invocations with config props.
 
+## Configuration
+
+Read `tsain.edn` at project root for file locations:
+
+```clojure
+;; tsain.edn
+{:ui-namespace sandbox.ui          ;; Where chassis aliases live
+ :components-file "resources/components.edn"  ;; Component library persistence
+ :stylesheet "dev/resources/public/styles.css"  ;; CSS for hot reload
+ :port 3000}
+```
+
 ## Prerequisites
 
 1. **nREPL running** on port 7888 (use `clj-nrepl-eval --discover-ports` to verify)
 2. **Sandbox started** - if not running, evaluate `(dev)` then `(start)` in the REPL
 3. **Browser open** at `http://localhost:3000/sandbox`
 
+## Discovering the API
+
+Use sandestin discovery to explore available effects:
+
+```clojure
+(require '[ascolais.tsain :as tsain])
+
+;; List all tsain effects
+(describe dispatch)
+
+;; See schema and docs for an effect
+(describe dispatch ::tsain/preview)
+
+;; Generate example invocation
+(sample dispatch ::tsain/preview)
+
+;; Search by keyword
+(grep dispatch "component")
+```
+
 ## Alias-First Workflow
 
 ### Step 0: Define the Chassis Alias (Required First Step)
 
-Before iterating on visuals, define the component structure in `sandbox/ui.clj`.
+Before iterating on visuals, define the component structure in `sandbox/ui.clj` (or the namespace specified in `:ui-namespace`).
 
 **Key conventions:**
 - **Namespaced attrs** (`:game-card/title`) = config props (elided from HTML output)
@@ -47,11 +79,11 @@ clj-nrepl-eval -p 7888 "(reload)"
 Use the alias with config props:
 
 ```bash
-clj-nrepl-eval -p 7888 "(dev/preview!
+clj-nrepl-eval -p 7888 "(dispatch [[::tsain/preview
   [:sandbox.ui/my-component
    {:my-component/title \"Hello World\"
     :my-component/subtitle \"A simple example\"
-    :my-component/icon \"🎉\"}])"
+    :my-component/icon \"🎉\"}]]])"
 ```
 
 ### Step 2: Iterate on Structure and CSS
@@ -64,7 +96,7 @@ clj-nrepl-eval -p 7888 "(dev/preview!
 ### Step 3: Commit the Lean Example
 
 ```bash
-clj-nrepl-eval -p 7888 "(dev/commit! :my-component
+clj-nrepl-eval -p 7888 "(dispatch [[::tsain/commit :my-component
   {:description \"Card with icon and title\"
    :examples
    [{:label \"Dark\"
@@ -78,7 +110,7 @@ clj-nrepl-eval -p 7888 "(dev/commit! :my-component
               [:sandbox.ui/my-component
                {:my-component/title \"Hello World\"
                 :my-component/subtitle \"A simple example\"
-                :my-component/icon \"🎉\"}]]}]})"
+                :my-component/icon \"🎉\"}]]}]}]])"
 ```
 
 **Result:** `components.edn` stores the lean alias form. Copying from the sandbox UI gives you clean, portable hiccup.
@@ -101,26 +133,49 @@ The alias handler receives both, but chassis automatically elides namespaced key
 
 ## REPL API Reference
 
+All sandbox functionality is available via dispatch effects:
+
+| Effect | Purpose |
+|--------|---------|
+| `[::tsain/preview hiccup]` | Replace preview with new content |
+| `[::tsain/preview-append hiccup]` | Append to existing preview |
+| `[::tsain/preview-clear]` | Clear the preview area |
+| `[::tsain/commit :name]` | Save preview to library |
+| `[::tsain/commit :name "desc"]` | Save with description |
+| `[::tsain/commit :name {:description "..." :examples [...]}]` | Save with multiple examples |
+| `[::tsain/uncommit :name]` | Remove from library |
+| `[::tsain/show :name]` | View single component (legacy) |
+| `[::tsain/show :name idx]` | View specific example (0-indexed) |
+| `[::tsain/show-components :name]` | View component with sidebar |
+| `[::tsain/show-gallery]` | View gallery grid |
+| `[::tsain/show-preview]` | Return to preview view |
+| `[::tsain/patch-signals {:key val}]` | Patch Datastar signals on all clients |
+| `[::tsain/toggle-sidebar]` | Toggle sidebar collapsed state |
+
+Invoke effects via dispatch:
+
+```clojure
+(dispatch [[::tsain/preview [:div "Hello"]]])
+(dispatch [[::tsain/commit :my-card {:description "Card component"}]])
+```
+
+## Discovery Functions
+
+Available in the dev namespace:
+
 | Function | Purpose |
 |----------|---------|
-| `(dev/preview! hiccup)` | Replace preview with new content |
-| `(dev/preview-append! hiccup)` | Append to existing preview |
-| `(dev/preview-clear!)` | Clear the preview area |
-| `(dev/commit! :name)` | Save preview to library |
-| `(dev/commit! :name "desc")` | Save with description |
-| `(dev/commit! :name {:description "..." :examples [...]})` | Save with multiple examples |
-| `(dev/uncommit! :name)` | Remove from library |
-| `(dev/show! :name)` | View single component |
-| `(dev/show! :name idx)` | View specific example (0-indexed) |
-| `(dev/show-all!)` | View gallery |
-| `(dev/components)` | List committed component names |
-| `(dev/patch-signals! {:key val})` | Patch Datastar signals on all clients |
+| `(describe dispatch)` | List all registered effects |
+| `(describe dispatch ::tsain/preview)` | Inspect specific effect |
+| `(sample dispatch ::tsain/preview)` | Generate example invocation |
+| `(grep dispatch "pattern")` | Search by pattern |
 | `(reload)` | Reload changed namespaces (includes alias changes) |
 
 ## File Locations
 
 | File | Purpose |
 |------|---------|
+| `tsain.edn` | **Configuration** (paths, port) |
 | `dev/resources/public/styles.css` | Component CSS (hot-reloads) |
 | `dev/src/clj/sandbox/ui.clj` | **Chassis aliases (component structure)** |
 | `resources/components.edn` | **Lean alias invocations (config only)** |
@@ -144,17 +199,17 @@ The alias handler receives both, but chassis automatically elides namespaced key
 clj-nrepl-eval -p 7888 "(reload)"
 
 # 3. Preview with config
-clj-nrepl-eval -p 7888 "(dev/preview!
+clj-nrepl-eval -p 7888 "(dispatch [[::tsain/preview
   [:sandbox.ui/status-badge
    {:status-badge/label \"Online\"
-    :status-badge/status :active}])"
+    :status-badge/status :active}]]])"
 
 # 4. Add CSS to styles.css
 # .status-badge { ... }
 # .status-badge--active { ... }
 
 # 5. Commit with dark/light variants
-clj-nrepl-eval -p 7888 "(dev/commit! :status-badge
+clj-nrepl-eval -p 7888 "(dispatch [[::tsain/commit :status-badge
   {:description \"Status indicator badge\"
    :examples
    [{:label \"Dark\"
@@ -162,7 +217,7 @@ clj-nrepl-eval -p 7888 "(dev/commit! :status-badge
               [:sandbox.ui/status-badge {:status-badge/label \"Online\" :status-badge/status :active}]]}
     {:label \"Light\"
      :hiccup [:div.theme-light {:style \"padding: 20px; background: #f0f4f8;\"}
-              [:sandbox.ui/status-badge {:status-badge/label \"Online\" :status-badge/status :active}]]}]})"
+              [:sandbox.ui/status-badge {:status-badge/label \"Online\" :status-badge/status :active}]]}]}]])"
 ```
 
 ## Dynamic Components with Datastar
@@ -188,7 +243,7 @@ For interactive components, Datastar attrs pass through to HTML:
 Test interactivity from REPL:
 
 ```bash
-clj-nrepl-eval -p 7888 "(dev/patch-signals! {:open true})"
+clj-nrepl-eval -p 7888 "(dispatch [[::tsain/patch-signals {:open true}]])"
 ```
 
 ## CSS Extraction (Required Before Commit)

@@ -75,9 +75,10 @@ The `dev` namespace provides:
 - `(stop)` - Stop the server
 - `(reload)` - Reload changed namespaces via clj-reload
 - `(restart)` - Stop, reload, and start
-- `(preview! hiccup)` - Replace preview area with hiccup content
-- `(preview-append! hiccup)` - Append hiccup to preview area
-- `(preview-clear!)` - Clear the preview area
+- `(dispatch effects)` - Dispatch sandestin effects
+- `(describe dispatch)` - List all registered effects/actions
+- `(sample dispatch key)` - Generate sample invocations
+- `(grep dispatch pattern)` - Search registry
 
 ### Portal
 
@@ -85,35 +86,43 @@ Portal opens automatically when the dev namespace loads. Any `(tap> data)` calls
 
 ### Component Preview (REPL-Driven UI Development)
 
-The sandbox provides a browser-based preview area for rapidly iterating on hiccup components. Open `localhost:3000` in a browser, then use these functions from the REPL:
+The sandbox provides a browser-based preview area for rapidly iterating on hiccup components. Open `localhost:3000` in a browser, then use the tsain registry effects via dispatch:
 
 ```clojure
+(require '[ascolais.tsain :as tsain])
+
 ;; Replace preview with new content
-(preview! [:h1 "Hello World"])
+(dispatch [[::tsain/preview [:h1 "Hello World"]]])
 
 ;; Build up content by appending
-(preview-clear!)
-(preview-append! [:div.card [:h3 "Card 1"] [:p "First card"]])
-(preview-append! [:div.card [:h3 "Card 2"] [:p "Second card"]])
+(dispatch [[::tsain/preview-clear]])
+(dispatch [[::tsain/preview-append [:div.card [:h3 "Card 1"] [:p "First card"]]]])
+(dispatch [[::tsain/preview-append [:div.card [:h3 "Card 2"] [:p "Second card"]]]])
 
-;; Complex component with inline styles
-(preview!
-  [:div {:style "background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"}
-   [:h2 {:style "margin: 0 0 1rem 0;"} "User Profile"]
-   [:p {:style "color: #666;"} "Component description here"]])
+;; Commit a component to the library
+(dispatch [[::tsain/commit :my-card {:description "Card component"}]])
+
+;; Show a specific component
+(dispatch [[::tsain/show-components :my-card]])
+
+;; Patch Datastar signals for testing interactivity
+(dispatch [[::tsain/patch-signals {:count 42}]])
 ```
 
 **Key points:**
-- All preview functions broadcast to ALL connected browsers/devices simultaneously
-- Use `preview!` to reset and show a single component
-- Use `preview-append!` to build up multiple components for comparison
-- Use `preview-clear!` to reset to empty state
+- All effects broadcast to ALL connected browsers/devices simultaneously
+- Use `::tsain/preview` to reset and show a single component
+- Use `::tsain/preview-append` to build up multiple components for comparison
+- Use `::tsain/preview-clear` to reset to empty state
+- Discover all available effects with `(describe dispatch)`
+- Generate sample invocations with `(sample dispatch ::tsain/preview)`
 - Inline styles work well for prototyping; extract to CSS classes later
 
 ## Project Structure
 
 ```
-src/clj/                            # Clojure source files
+tsain.edn                           # Configuration for library and Claude/skills
+src/clj/ascolais/tsain.clj          # Tsain registry factory with effects
 dev/src/clj/                        # Development-only source (user.clj, dev.clj)
 dev/resources/public/sandbox.css    # Sandbox chrome styles (hot-reloadable)
 dev/resources/public/styles.css     # Component styles (hot-reloadable)

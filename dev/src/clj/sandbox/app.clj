@@ -2,14 +2,13 @@
   (:require [ascolais.sandestin :as s]
             [ascolais.twk :as twk]
             [ascolais.sfere :as sfere]
+            [ascolais.tsain :as tsain]
             [clojure.pprint :as pprint]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.params :refer [wrap-params]]
             [starfederation.datastar.clojure.adapter.http-kit :as ds-hk]
             [org.httpkit.server :as hk]
             [reitit.ring :as rr]
-            [sandbox.state :as state]
-            [sandbox.registry :as registry]
             [sandbox.system :as system]
             [sandbox.views :as views]
             [sandbox.watcher :as watcher]))
@@ -19,11 +18,11 @@
                 :duration-ms 1800000  ;; 30 minutes for dev
                 :expiry-mode :sliding}))
 
-(defn- create-dispatch [store state-atom]
+(defn- create-dispatch [store tsain-registry]
   (s/create-dispatch
    [(twk/registry)
     (sfere/registry store)
-    (registry/registry state-atom)]))
+    tsain-registry]))
 
 (defn- wrap-request-logging [handler]
   (fn [request]
@@ -66,15 +65,15 @@
 
 ;; View switching handlers
 (defn view-preview [{:keys [dispatch]}]
-  (dispatch [[::registry/show-preview]])
+  (dispatch [[::tsain/show-preview]])
   {::twk/with-open-sse? true})
 
 (defn view-gallery [{:keys [dispatch]}]
-  (dispatch [[::registry/show-gallery]])
+  (dispatch [[::tsain/show-gallery]])
   {::twk/with-open-sse? true})
 
 (defn view-components [{:keys [dispatch]}]
-  (dispatch [[::registry/show-components nil]])
+  (dispatch [[::tsain/show-components nil]])
   {::twk/with-open-sse? true})
 
 (defn view-component [{{:keys [name]} :path-params :keys [dispatch query-params]}]
@@ -86,22 +85,22 @@
     (swap! state-atom assoc :view {:type :components
                                    :name component-name
                                    :example-idx (or idx 0)})
-    (dispatch [[::registry/show-components component-name]])
+    (dispatch [[::tsain/show-components component-name]])
     {::twk/with-open-sse? true}))
 
 (defn toggle-sidebar [{:keys [dispatch]}]
-  (dispatch [[::registry/toggle-sidebar]])
+  (dispatch [[::tsain/toggle-sidebar]])
   {::twk/with-open-sse? true})
 
 ;; Action handlers
 (defn commit-handler [{:keys [signals dispatch]}]
   (let [component-name (keyword (:commitName signals))]
     (when (and component-name (not= component-name (keyword "")))
-      (dispatch [[::registry/commit component-name nil]])))
+      (dispatch [[::tsain/commit component-name nil]])))
   {::twk/with-open-sse? true})
 
 (defn clear-handler [{:keys [dispatch]}]
-  (dispatch [[::registry/preview-clear]])
+  (dispatch [[::tsain/preview-clear]])
   {::twk/with-open-sse? true})
 
 (defn uncommit-handler [{{:keys [name]} :path-params :keys [dispatch]}]
@@ -117,11 +116,11 @@
                                remaining (remove #{deleted-name} sorted-names)]
                            (when (seq remaining)
                              (nth (vec remaining) (min idx (dec (count remaining)))))))]
-    (dispatch [[::registry/uncommit deleted-name]])
+    (dispatch [[::tsain/uncommit deleted-name]])
     ;; Stay in components view, select next component if available
     (if next-component
-      (dispatch [[::registry/show-components next-component]])
-      (dispatch [[::registry/show-components nil]])))
+      (dispatch [[::tsain/show-components next-component]])
+      (dispatch [[::tsain/show-components nil]])))
   {::twk/with-open-sse? true})
 
 (defn- get-example-hiccup
@@ -197,9 +196,10 @@
 (defn start-system
   ([] (start-system 3000))
   ([port]
-   (let [state-atom (state/initial-state)
+   (let [tsain-reg (tsain/registry {:port port})
+         state-atom (::s/state tsain-reg)
          store      (create-store)
-         dispatch   (create-dispatch store state-atom)
+         dispatch   (create-dispatch store tsain-reg)
          handler    (create-app dispatch)
          server     (hk/run-server handler {:port port})
          watch      (watcher/watcher
