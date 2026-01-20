@@ -249,6 +249,81 @@ clj-nrepl-eval -p 7888 "(dev/preview!
    [:button {:data-on:click \"\\$count++\"} \"+\"]])"
 ```
 
+## Creating Theme Variants (Dark/Light Mode)
+
+When building components that need multiple theme variants, establish a color palette first, then create each variant and commit together:
+
+### 1. Define Your Palette
+
+```
+Dark Mode:
+- Backgrounds: #0a0a12, #1a1d23
+- Primary accent: #0ff, #00cccc
+- Secondary accent: #ff00ff, #ff0066
+- Text: #fff, #ddd, #999
+
+Light Mode:
+- Backgrounds: #ffffff, #f0f4f8
+- Primary accent: #00cccc, #009999
+- Secondary accent: #cc00cc, #cc0066
+- Text: #333, #555, #888
+```
+
+### 2. Create Dark Variant First
+
+```bash
+clj-nrepl-eval -p 7888 "(dev/preview!
+  [:div {:style \"background: #0a0a12; padding: 2rem; color: #0ff;\"}
+   [:h2 \"Title\"]
+   [:p {:style \"color: #ddd;\"} \"Content here\"]])"
+```
+
+### 3. Create Light Variant
+
+```bash
+clj-nrepl-eval -p 7888 "(dev/preview!
+  [:div {:style \"background: #f0f4f8; padding: 2rem; color: #007777;\"}
+   [:h2 \"Title\"]
+   [:p {:style \"color: #555;\"} \"Content here\"]])"
+```
+
+### 4. Commit Both as Examples
+
+```bash
+clj-nrepl-eval -p 7888 "
+(let [dark-hiccup [:div {:style \"background: #0a0a12; ...\"} ...]
+      light-hiccup [:div {:style \"background: #f0f4f8; ...\"} ...]]
+  (dev/commit! :my-component
+    {:description \"Component with theme variants\"
+     :examples [{:label \"Dark\" :hiccup dark-hiccup}
+                {:label \"Light\" :hiccup light-hiccup}]}))"
+```
+
+The sandbox dropdown lets you toggle between variants.
+
+### When to Use Inline Styles
+
+**Use CSS classes for:**
+- Reusable patterns (buttons, cards, layouts)
+- Hover/focus states
+- Media queries
+- Animations
+
+**Use inline styles for:**
+- One-off complex components with many unique visual elements
+- Rapid prototyping before patterns emerge
+- Components where every element has distinct styling (like game UI)
+- Theme-specific values that vary per variant
+
+## Browser Verification
+
+Use the Chrome extension to visually verify components during iteration:
+
+1. Take screenshots to see current state
+2. Test interactive elements (dropdowns, buttons)
+3. Verify responsive behavior by resizing
+4. Check both theme variants render correctly
+
 ## Related Skills
 
 - **clojure-eval**: General REPL evaluation
