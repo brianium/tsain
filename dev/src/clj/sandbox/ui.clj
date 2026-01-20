@@ -285,7 +285,7 @@
 (defmethod c/resolve-alias ::player-portrait
   [_ attrs _]
   (let [{:player-portrait/keys [name class level theme active? pixels stats]} attrs
-        theme-class (str "player-portrait--" (name (or theme :cyan)))]
+        theme-class (str "player-portrait--" (clojure.core/name (or theme :cyan)))]
     [:div.player-portrait {:class theme-class}
      [:div.player-portrait-scanlines]
      [:div.player-portrait-corner.player-portrait-corner--tl]
