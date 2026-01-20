@@ -333,4 +333,102 @@
               :label "COMPLETE",
               :message "Operation completed successfully.",
               :icon "✓"}]]}],
-  :created-at #inst "2026-01-20T02:43:09.680-00:00"}}
+  :created-at #inst "2026-01-20T02:43:09.680-00:00"},
+ :player-portrait
+ {:description
+  "16-bit cyberpunk player portrait with pixel art character, stats bars, and theme variants",
+  :examples
+  [{:label "Default",
+    :hiccup
+    [:div
+     {:style
+      {:display "flex",
+       :gap "1.5rem",
+       :padding "2rem",
+       :flex-wrap "wrap"}}
+     [:div.player-portrait.player-portrait--cyan
+      [:div.player-portrait-scanlines]
+      [:div.player-portrait-corner.player-portrait-corner--tl]
+      [:div.player-portrait-corner.player-portrait-corner--tr]
+      [:div.player-portrait-corner.player-portrait-corner--bl]
+      [:div.player-portrait-corner.player-portrait-corner--br]
+      [:div.player-portrait-art
+       [:div.player-portrait-pixels
+        {:style
+         "box-shadow: 6px -30px 0 #0ff, 12px -30px 0 #0ff, 18px -30px 0 #0ff, 0px -24px 0 #0dd, 6px -24px 0 #0ff, 12px -24px 0 #5ff, 18px -24px 0 #0ff, 24px -24px 0 #0dd, 6px -18px 0 #0dd, 12px -18px 0 #0ff, 18px -18px 0 #0dd, 0px -12px 0 #d4a878, 6px -12px 0 #e8c4a0, 12px -12px 0 #e8c4a0, 18px -12px 0 #e8c4a0, 24px -12px 0 #d4a878, 0px -6px 0 #d4a878, 6px -6px 0 #e8c4a0, 12px -6px 0 #e8c4a0, 18px -6px 0 #e8c4a0, 24px -6px 0 #d4a878, 0px 0px 0 #c49868, 6px 0px 0 #f0f, 12px 0px 0 #222, 18px 0px 0 #fff, 24px 0px 0 #c49868, 0px 6px 0 #b08058, 6px 6px 0 #c49868, 12px 6px 0 #d4a878, 18px 6px 0 #c49868, 24px 6px 0 #b08058, 6px 12px 0 #b08058, 12px 12px 0 #c49868, 18px 12px 0 #b08058, 0px 18px 0 #1a1a2e, 6px 18px 0 #252538, 12px 18px 0 #252538, 18px 18px 0 #252538, 24px 18px 0 #1a1a2e, -6px 24px 0 #1a1a2e, 0px 24px 0 #0ff, 6px 24px 0 #1a1a2e, 12px 24px 0 #1a1a2e, 18px 24px 0 #1a1a2e, 24px 24px 0 #0ff, 30px 24px 0 #1a1a2e"}]]
+      [:div.player-portrait-name
+       [:span.player-portrait-name-text "ZERO_COOL"]]
+      [:div.player-portrait-stats
+       [:div.player-portrait-stat.player-portrait-stat--hp
+        [:span.player-portrait-stat-label "HP"]
+        [:div.player-portrait-stat-track
+         [:div.player-portrait-stat-fill {:style "width: 78%"}]
+         [:div.player-portrait-stat-segments]]
+        [:span.player-portrait-stat-value "78"]]
+       [:div.player-portrait-stat.player-portrait-stat--nrg
+        [:span.player-portrait-stat-label "NRG"]
+        [:div.player-portrait-stat-track
+         [:div.player-portrait-stat-fill {:style "width: 60%"}]
+         [:div.player-portrait-stat-segments]]
+        [:span.player-portrait-stat-value "36"]]
+       [:div.player-portrait-footer
+        [:span.player-portrait-level "LV.12"]
+        [:span.player-portrait-class "RUNNER"]]]]
+     [:div.player-portrait.player-portrait--red
+      [:div.player-portrait-scanlines]
+      [:div.player-portrait-corner.player-portrait-corner--tl]
+      [:div.player-portrait-corner.player-portrait-corner--tr]
+      [:div.player-portrait-corner.player-portrait-corner--bl]
+      [:div.player-portrait-corner.player-portrait-corner--br]
+      [:div.player-portrait-art
+       [:div.player-portrait-pixels
+        {:style
+         "box-shadow: 0px -30px 0 #f00, 6px -30px 0 #f00, 12px -30px 0 #f00, 18px -30px 0 #f00, 24px -30px 0 #f00, 6px -24px 0 #222, 12px -24px 0 #333, 18px -24px 0 #222, 0px -18px 0 #222, 6px -18px 0 #333, 12px -18px 0 #444, 18px -18px 0 #333, 24px -18px 0 #222, 0px -12px 0 #c49868, 6px -12px 0 #d4a878, 12px -12px 0 #d4a878, 18px -12px 0 #d4a878, 24px -12px 0 #c49868, 0px -6px 0 #b08058, 6px -6px 0 #d4a878, 12px -6px 0 #d4a878, 18px -6px 0 #d4a878, 24px -6px 0 #b08058, 0px 0px 0 #a07048, 6px 0px 0 #a00, 12px 0px 0 #222, 18px 0px 0 #fff, 24px 0px 0 #a07048, 0px 6px 0 #a07048, 6px 6px 0 #b08058, 12px 6px 0 #c49868, 18px 6px 0 #b08058, 24px 6px 0 #a07048, 6px 12px 0 #a07048, 12px 12px 0 #b08058, 18px 12px 0 #a07048, 0px 18px 0 #333, 6px 18px 0 #444, 12px 18px 0 #444, 18px 18px 0 #444, 24px 18px 0 #333, -6px 24px 0 #333, 0px 24px 0 #f50, 6px 24px 0 #333, 12px 24px 0 #333, 18px 24px 0 #333, 24px 24px 0 #f50, 30px 24px 0 #333"}]]
+      [:div.player-portrait-name
+       [:span.player-portrait-name-text "RAZR_BLADE"]]
+      [:div.player-portrait-stats
+       [:div.player-portrait-stat.player-portrait-stat--red
+        [:span.player-portrait-stat-label "HP"]
+        [:div.player-portrait-stat-track
+         [:div.player-portrait-stat-fill {:style "width: 92%"}]
+         [:div.player-portrait-stat-segments]]
+        [:span.player-portrait-stat-value "92"]]
+       [:div.player-portrait-stat.player-portrait-stat--stm
+        [:span.player-portrait-stat-label "STM"]
+        [:div.player-portrait-stat-track
+         [:div.player-portrait-stat-fill {:style "width: 45%"}]
+         [:div.player-portrait-stat-segments]]
+        [:span.player-portrait-stat-value "27"]]
+       [:div.player-portrait-footer
+        [:span.player-portrait-level "LV.18"]
+        [:span.player-portrait-class "SAMURAI"]]]]
+     [:div.player-portrait.player-portrait--green
+      [:div.player-portrait-scanlines]
+      [:div.player-portrait-corner.player-portrait-corner--tl]
+      [:div.player-portrait-corner.player-portrait-corner--tr]
+      [:div.player-portrait-corner.player-portrait-corner--bl]
+      [:div.player-portrait-corner.player-portrait-corner--br]
+      [:div.player-portrait-active]
+      [:div.player-portrait-art
+       [:div.player-portrait-pixels
+        {:style
+         "box-shadow: 0px -30px 0 #444, 6px -30px 0 #0f0, 12px -30px 0 #0f0, 18px -30px 0 #0f0, 24px -30px 0 #444, 0px -24px 0 #654, 6px -24px 0 #765, 12px -24px 0 #876, 18px -24px 0 #765, 24px -24px 0 #654, 0px -18px 0 #543, 6px -18px 0 #654, 12px -18px 0 #765, 18px -18px 0 #654, 24px -18px 0 #543, 0px -12px 0 #e8d0b8, 6px -12px 0 #f0dcc0, 12px -12px 0 #f0dcc0, 18px -12px 0 #f0dcc0, 24px -12px 0 #e8d0b8, 0px -6px 0 #d8c0a8, 6px -6px 0 #e8d0b8, 12px -6px 0 #f0dcc0, 18px -6px 0 #e8d0b8, 24px -6px 0 #d8c0a8, 0px 0px 0 #333, 6px 0px 0 #0f0, 12px 0px 0 #333, 18px 0px 0 #0f0, 24px 0px 0 #333, 0px 6px 0 #c8b098, 6px 6px 0 #d8c0a8, 12px 6px 0 #e8d0b8, 18px 6px 0 #d8c0a8, 24px 6px 0 #c8b098, 6px 12px 0 #c8b098, 12px 12px 0 #d8c0a8, 18px 12px 0 #c8b098, 0px 18px 0 #252, 6px 18px 0 #363, 12px 18px 0 #252, 18px 18px 0 #363, 24px 18px 0 #252, -6px 24px 0 #252, 0px 24px 0 #0f0, 6px 24px 0 #363, 12px 24px 0 #363, 18px 24px 0 #363, 24px 24px 0 #0f0, 30px 24px 0 #252"}]]
+      [:div.player-portrait-name
+       [:span.player-portrait-name-text "GL1TCH_3R"]]
+      [:div.player-portrait-stats
+       [:div.player-portrait-stat.player-portrait-stat--green
+        [:span.player-portrait-stat-label "HP"]
+        [:div.player-portrait-stat-track
+         [:div.player-portrait-stat-fill {:style "width: 55%"}]
+         [:div.player-portrait-stat-segments]]
+        [:span.player-portrait-stat-value "55"]]
+       [:div.player-portrait-stat.player-portrait-stat--pwr
+        [:span.player-portrait-stat-label "PWR"]
+        [:div.player-portrait-stat-track
+         [:div.player-portrait-stat-fill {:style "width: 100%"}]
+         [:div.player-portrait-stat-segments]]
+        [:span.player-portrait-stat-value "99"]]
+       [:div.player-portrait-footer
+        [:span.player-portrait-level "LV.07"]
+        [:span.player-portrait-class "TECHIE"]]]]]}],
+  :created-at #inst "2026-01-20T13:21:46.921-00:00"}}

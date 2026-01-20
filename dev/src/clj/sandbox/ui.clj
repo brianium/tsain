@@ -266,3 +266,45 @@
       [:div.toast-label (str "◆ " label)]
       [:div.toast-message message]]
      [:button.toast-dismiss "✕"]]))
+
+;; =============================================================================
+;; Player Portrait Component (16-bit Cyberpunk)
+;; =============================================================================
+
+(defmethod c/resolve-alias ::player-portrait-stat
+  [_ attrs _]
+  (let [{:player-portrait-stat/keys [label value percent type]} attrs
+        type-class (str "player-portrait-stat--" (name type))]
+    [:div.player-portrait-stat {:class type-class}
+     [:span.player-portrait-stat-label label]
+     [:div.player-portrait-stat-track
+      [:div.player-portrait-stat-fill {:style (str "width: " percent)}]
+      [:div.player-portrait-stat-segments]]
+     [:span.player-portrait-stat-value value]]))
+
+(defmethod c/resolve-alias ::player-portrait
+  [_ attrs _]
+  (let [{:player-portrait/keys [name class level theme active? pixels stats]} attrs
+        theme-class (str "player-portrait--" (name (or theme :cyan)))]
+    [:div.player-portrait {:class theme-class}
+     [:div.player-portrait-scanlines]
+     [:div.player-portrait-corner.player-portrait-corner--tl]
+     [:div.player-portrait-corner.player-portrait-corner--tr]
+     [:div.player-portrait-corner.player-portrait-corner--bl]
+     [:div.player-portrait-corner.player-portrait-corner--br]
+     (when active?
+       [:div.player-portrait-active])
+     [:div.player-portrait-art
+      [:div.player-portrait-pixels {:style (str "box-shadow: " pixels)}]]
+     [:div.player-portrait-name
+      [:span.player-portrait-name-text name]]
+     [:div.player-portrait-stats
+      (for [{:keys [label value percent type]} stats]
+        [::player-portrait-stat
+         {:player-portrait-stat/label label
+          :player-portrait-stat/value value
+          :player-portrait-stat/percent percent
+          :player-portrait-stat/type type}])
+      [:div.player-portrait-footer
+       [:span.player-portrait-level (str "LV." level)]
+       [:span.player-portrait-class class]]]]))

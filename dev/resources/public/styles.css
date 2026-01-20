@@ -1969,3 +1969,321 @@
   background: rgba(0, 255, 136, 0.2);
   color: #00ff88;
 }
+
+/* --------------------------------------------------------------------------
+   Player Portrait (16-bit Cyberpunk)
+   -------------------------------------------------------------------------- */
+.player-portrait {
+  width: 160px;
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+  font-family: "Courier New", monospace;
+}
+
+/* Theme variants via border color */
+.player-portrait--cyan {
+  border: 3px solid var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);
+}
+
+.player-portrait--red {
+  border: 3px solid #ff5500;
+  box-shadow: 0 0 15px rgba(255, 85, 0, 0.25);
+}
+
+.player-portrait--green {
+  border: 3px solid #00ff00;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.35), 0 0 40px rgba(0, 255, 0, 0.15);
+}
+
+.player-portrait--magenta {
+  border: 3px solid var(--accent-magenta);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.25);
+}
+
+.theme-light .player-portrait {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Scanline overlay */
+.player-portrait-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.2) 2px,
+    rgba(0, 0, 0, 0.2) 4px
+  );
+}
+
+/* Corner brackets */
+.player-portrait-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  z-index: 15;
+}
+
+.player-portrait-corner--tl {
+  top: 0;
+  left: 0;
+  border-left: 2px solid var(--corner-color, var(--accent-magenta));
+  border-top: 2px solid var(--corner-color, var(--accent-magenta));
+}
+
+.player-portrait-corner--tr {
+  top: 0;
+  right: 0;
+  border-right: 2px solid var(--corner-color, var(--accent-magenta));
+  border-top: 2px solid var(--corner-color, var(--accent-magenta));
+}
+
+.player-portrait-corner--bl {
+  bottom: 0;
+  left: 0;
+  border-left: 2px solid var(--corner-color, var(--accent-magenta));
+  border-bottom: 2px solid var(--corner-color, var(--accent-magenta));
+}
+
+.player-portrait-corner--br {
+  bottom: 0;
+  right: 0;
+  border-right: 2px solid var(--corner-color, var(--accent-magenta));
+  border-bottom: 2px solid var(--corner-color, var(--accent-magenta));
+}
+
+/* Corner color variants */
+.player-portrait--cyan .player-portrait-corner { --corner-color: var(--accent-magenta); }
+.player-portrait--red .player-portrait-corner { --corner-color: #ff0000; }
+.player-portrait--green .player-portrait-corner { --corner-color: #00ff00; box-shadow: 0 0 6px #00ff00; }
+.player-portrait--magenta .player-portrait-corner { --corner-color: var(--accent-cyan); }
+
+/* Active indicator (for selected state) */
+.player-portrait-active {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: #00ff00;
+  border-radius: 50%;
+  z-index: 25;
+  box-shadow: 0 0 8px #00ff00;
+}
+
+.theme-light .player-portrait-active {
+  box-shadow: 0 0 4px #00cc00;
+}
+
+/* Pixel art container */
+.player-portrait-art {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.player-portrait--cyan .player-portrait-art {
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #12121a 100%);
+}
+
+.player-portrait--red .player-portrait-art {
+  background: linear-gradient(180deg, #120808 0%, #1a1012 100%);
+}
+
+.player-portrait--green .player-portrait-art {
+  background: linear-gradient(180deg, #080c08 0%, #0a120a 100%);
+}
+
+.player-portrait--magenta .player-portrait-art {
+  background: linear-gradient(180deg, #120812 0%, #1a101a 100%);
+}
+
+.theme-light .player-portrait-art {
+  background: linear-gradient(180deg, #f4f8f8 0%, #e8f0f0 100%);
+}
+
+/* Pixel art element (box-shadow technique) */
+.player-portrait-pixels {
+  width: 6px;
+  height: 6px;
+  image-rendering: pixelated;
+}
+
+/* Name plate */
+.player-portrait-name {
+  padding: 6px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-portrait--cyan .player-portrait-name {
+  background: rgba(0, 255, 255, 0.06);
+  border-top-color: rgba(0, 255, 255, 0.2);
+}
+
+.player-portrait--red .player-portrait-name {
+  background: rgba(255, 85, 0, 0.06);
+  border-top-color: rgba(255, 85, 0, 0.2);
+}
+
+.player-portrait--green .player-portrait-name {
+  background: rgba(0, 255, 0, 0.06);
+  border-top-color: rgba(0, 255, 0, 0.2);
+}
+
+.player-portrait--magenta .player-portrait-name {
+  background: rgba(255, 0, 255, 0.06);
+  border-top-color: rgba(255, 0, 255, 0.2);
+}
+
+.player-portrait-name-text {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.player-portrait--cyan .player-portrait-name-text {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.player-portrait--red .player-portrait-name-text {
+  color: #ff5500;
+  text-shadow: 0 0 8px #ff5500;
+}
+
+.player-portrait--green .player-portrait-name-text {
+  color: #00ff00;
+  text-shadow: 0 0 8px #00ff00, 0 0 16px #00ff00;
+}
+
+.player-portrait--magenta .player-portrait-name-text {
+  color: var(--accent-magenta);
+  text-shadow: 0 0 8px var(--accent-magenta);
+}
+
+.theme-light .player-portrait-name-text {
+  text-shadow: none;
+}
+
+/* Stats container */
+.player-portrait-stats {
+  padding: 8px 10px;
+  background: #08080c;
+}
+
+.theme-light .player-portrait-stats {
+  background: #f8f8fc;
+}
+
+/* Stat bar row */
+.player-portrait-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.player-portrait-stat:last-child {
+  margin-bottom: 0;
+}
+
+.player-portrait-stat-label {
+  font-size: 9px;
+  width: 26px;
+  font-weight: bold;
+}
+
+.player-portrait-stat-track {
+  flex: 1;
+  height: 8px;
+  background: #1a1a2e;
+  position: relative;
+}
+
+.theme-light .player-portrait-stat-track {
+  background: #e8e8f0;
+}
+
+.player-portrait-stat-fill {
+  height: 100%;
+}
+
+.player-portrait-stat-segments {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 4px,
+    #08080c 4px 5px
+  );
+}
+
+.theme-light .player-portrait-stat-segments {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 4px,
+    rgba(255, 255, 255, 0.5) 4px 5px
+  );
+}
+
+.player-portrait-stat-value {
+  font-size: 8px;
+  opacity: 0.6;
+}
+
+/* Stat color variants */
+.player-portrait-stat--hp .player-portrait-stat-label { color: var(--accent-magenta); }
+.player-portrait-stat--hp .player-portrait-stat-fill { background: linear-gradient(90deg, var(--accent-magenta), #ff6090); }
+.player-portrait-stat--hp .player-portrait-stat-value { color: var(--accent-magenta); }
+
+.player-portrait-stat--nrg .player-portrait-stat-label { color: var(--accent-cyan); }
+.player-portrait-stat--nrg .player-portrait-stat-fill { background: linear-gradient(90deg, var(--accent-cyan), #00ffaa); }
+.player-portrait-stat--nrg .player-portrait-stat-value { color: var(--accent-cyan); }
+
+.player-portrait-stat--red .player-portrait-stat-label { color: #ff0000; }
+.player-portrait-stat--red .player-portrait-stat-fill { background: linear-gradient(90deg, #ff0000, #ff5500); }
+.player-portrait-stat--red .player-portrait-stat-value { color: #ff0000; }
+
+.player-portrait-stat--stm .player-portrait-stat-label { color: #ff8800; }
+.player-portrait-stat--stm .player-portrait-stat-fill { background: linear-gradient(90deg, #ff8800, #ffaa00); }
+.player-portrait-stat--stm .player-portrait-stat-value { color: #ff8800; }
+
+.player-portrait-stat--green .player-portrait-stat-label { color: #00ff00; }
+.player-portrait-stat--green .player-portrait-stat-fill { background: linear-gradient(90deg, #00ff00, #00ffaa); }
+.player-portrait-stat--green .player-portrait-stat-value { color: #00ff00; }
+
+.player-portrait-stat--pwr .player-portrait-stat-label { color: #00aaff; }
+.player-portrait-stat--pwr .player-portrait-stat-fill { background: linear-gradient(90deg, #00aaff, var(--accent-cyan)); }
+.player-portrait-stat--pwr .player-portrait-stat-value { color: #00aaff; }
+
+/* Level/class footer */
+.player-portrait-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.player-portrait-level {
+  font-size: 9px;
+  color: var(--accent-yellow);
+  text-shadow: 0 0 4px var(--accent-yellow);
+}
+
+.theme-light .player-portrait-level {
+  color: var(--accent-yellow-dim);
+  text-shadow: none;
+}
+
+.player-portrait-class {
+  font-size: 8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
