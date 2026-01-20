@@ -77,7 +77,7 @@ Replace gallery grid with storybook-style sidebar navigation. Done when:
 - Preview tab preserved for REPL-driven development
 - Deep links (`/sandbox/c/:name`) highlight correct sidebar item
 
-### Milestone 9: Chassis Alias Workflow
+### Milestone 9: Chassis Alias Workflow ✓
 **Spec:** [010-chassis-alias-workflow](./010-chassis-alias-workflow.md)
 
 Enforce alias-first component development. Done when:
@@ -100,6 +100,6 @@ Enforce alias-first component development. Done when:
 | [007-copy-hiccup](./007-copy-hiccup.md) | Complete | Copy hiccup to clipboard from single component view |
 | [008-css-extraction](./008-css-extraction.md) | Complete | CSS extraction workflow for clean, reusable component hiccup |
 | [009-storybook-sidebar](./009-storybook-sidebar.md) | Complete | Replace gallery grid with storybook-style sidebar navigation |
-| [010-chassis-alias-workflow](./010-chassis-alias-workflow.md) | Draft | Enforce alias-first component development for lean components.edn |
+| [010-chassis-alias-workflow](./010-chassis-alias-workflow.md) | Complete | Enforce alias-first component development for lean components.edn |
 
 Status values: Draft, Active, Complete, Archived

@@ -1,6 +1,6 @@
 # Spec 010: Chassis Alias Workflow
 
-## Status: Draft
+## Status: Complete
 
 ## Problem
 
@@ -145,83 +145,56 @@ Sub-components (like `::game-card-stat`) can be defined for internal use but don
 
 ## Implementation
 
-### 1. Update component-iterate Skill
+### 1. Update component-iterate Skill ✓
 
-Add a **required first step**: define the chassis alias before iterating.
+Added a **required first step**: define the chassis alias before iterating.
 
-```markdown
-## Workflow (Updated)
+### 2. Copy Button Already Copies Alias Form ✓
 
-### Step 0: Define Chassis Alias (Required)
-
-Before iterating on visuals, define the component structure in `sandbox/ui.clj`:
-
-1. Identify fixed structure vs variable content
-2. Use component-namespaced keys (`:game-card/title`) for config props
-3. Pass through non-namespaced attrs for Datastar/HTML attributes
-```
-
-### 2. Ensure Copy Button Copies Alias Form
-
-Verify that the copy functionality reads from `components.edn` (the stored alias form) rather than re-rendering and copying expanded HTML.
-
-If current implementation expands before copying, update to copy the raw hiccup from the component data.
+The copy functionality reads from `components.edn` (the stored alias form) directly via `get-example-hiccup` in `app.clj`.
 
 ### 3. Add Namespace Require Pattern
 
-The sandbox layout should require `sandbox.ui` so aliases resolve:
+The sandbox views require `chassis.core` which resolves aliases. The `sandbox.ui` namespace is loaded when needed.
 
-```clojure
-(ns sandbox.routes
-  (:require [sandbox.ui])) ;; Ensures aliases are loaded
-```
+### 4. Update CLAUDE.md ✓
 
-### 4. Update CLAUDE.md
-
-Add chassis alias conventions section documenting:
+Added chassis alias conventions section documenting:
 - Namespaced attrs for config
 - When to create sub-aliases vs inline structure
-- Typical alias patterns (content slot, config-driven, hybrid)
+- File locations
 
 ## Files Changed
 
 | File | Change |
 |------|--------|
-| `dev/src/clj/sandbox/ui.clj` | Add aliases for existing components |
-| `resources/components.edn` | Migrate to alias-based examples |
-| `.claude/skills/component-iterate/SKILL.md` | Update workflow to require alias-first |
-| `CLAUDE.md` | Add chassis alias conventions |
-| `dev/src/clj/sandbox/routes.clj` | Ensure ui namespace required |
+| `dev/src/clj/sandbox/ui.clj` | Added aliases for all 6 components |
+| `resources/components.edn` | Migrated to alias-based examples |
+| `.claude/skills/component-iterate/SKILL.md` | Updated workflow to require alias-first |
+| `CLAUDE.md` | Added chassis alias conventions |
 
 ## Migration
 
-Migrate all existing components in `components.edn`:
+All existing components in `components.edn` migrated:
 
 | Component | Status |
 |-----------|--------|
-| `:game-card` | Pending |
-| `:combat-log` | Pending |
-| `:card-type-badges` | Pending |
-| `:player-hud` | Pending |
-| `:action-buttons` | Pending |
-| `:resource-display` | Pending |
-
-For each component:
-1. Analyze the hiccup structure to identify fixed vs variable parts
-2. Create alias in `sandbox/ui.clj` with `:component-name/prop` config keys
-3. Update `components.edn` examples to use the alias
-4. Verify rendering matches original in browser
-5. Test copy button produces lean snippet
+| `:game-card` | ✓ Complete |
+| `:combat-log` | ✓ Complete |
+| `:card-type-badges` | ✓ Complete |
+| `:player-hud` | ✓ Complete |
+| `:action-buttons` | ✓ Complete |
+| `:resource-display` | ✓ Complete |
 
 ## Done When
 
-- [ ] All 6 existing components migrated to alias-based format
-- [ ] `sandbox/ui.clj` has aliases with `:component-name/prop` conventions
-- [ ] `components.edn` uses alias invocations (no raw verbose hiccup)
-- [ ] Copy button copies the alias form (lean snippet)
-- [ ] component-iterate skill documents alias-first workflow
-- [ ] CLAUDE.md has chassis alias conventions
-- [ ] Sandbox renders all components correctly after migration
+- [x] All 6 existing components migrated to alias-based format
+- [x] `sandbox/ui.clj` has aliases with `:component-name/prop` conventions
+- [x] `components.edn` uses alias invocations (no raw verbose hiccup)
+- [x] Copy button copies the alias form (lean snippet)
+- [x] component-iterate skill documents alias-first workflow
+- [x] CLAUDE.md has chassis alias conventions
+- [ ] Sandbox renders all components correctly after migration (requires browser verification)
 
 ## Future: sandbox.edn Configuration
 

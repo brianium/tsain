@@ -1,11 +1,11 @@
 ---
 name: component-iterate
-description: Iterate on hiccup components with live preview, CSS styling, and library commits. Supports both static and dynamic Datastar components with multiple example configurations. Use when building UI components, prototyping designs, or adding to the component library. Keywords: component, preview, iterate, css, hiccup, design, ui, commit, datastar, signals, interactive.
+description: Iterate on hiccup components with live preview, CSS styling, and library commits. Use alias-first workflow where structure lives in sandbox/ui.clj and examples use lean config props. Keywords: component, preview, iterate, css, hiccup, design, ui, commit, datastar, signals, interactive, alias.
 ---
 
 # Component Iteration Skill
 
-Drive component development through a REPL-powered iteration loop with live browser preview, CSS hot-reload, and persistent component library commits. Supports both static components and interactive Datastar components with signal testing from the REPL.
+Drive component development through an **alias-first** REPL-powered iteration loop. Component structure lives in `sandbox/ui.clj` as chassis aliases, while `components.edn` stores lean alias invocations with config props.
 
 ## Prerequisites
 
@@ -13,93 +13,91 @@ Drive component development through a REPL-powered iteration loop with live brow
 2. **Sandbox started** - if not running, evaluate `(dev)` then `(start)` in the REPL
 3. **Browser open** at `http://localhost:3000/sandbox`
 
-## Core Workflow
+## Alias-First Workflow
 
-### 1. Preview a Component
+### Step 0: Define the Chassis Alias (Required First Step)
 
-Start with a rough sketch using inline styles if needed for rapid exploration:
+Before iterating on visuals, define the component structure in `sandbox/ui.clj`.
+
+**Key conventions:**
+- **Namespaced attrs** (`:game-card/title`) = config props (elided from HTML output)
+- **Regular attrs** (`:data-on:click`, `:class`) = pass through to HTML
+- **Namespace by component name** for self-documenting code
+
+```clojure
+;; In dev/src/clj/sandbox/ui.clj
+(defmethod c/resolve-alias ::my-component
+  [_ attrs _]
+  (let [{:my-component/keys [title subtitle icon]} attrs]
+    [:div.my-component attrs  ;; namespaced keys auto-elided by chassis
+     [:div.my-component-header
+      [:span.my-component-icon icon]
+      [:h3.my-component-title title]]
+     [:p.my-component-subtitle subtitle]]))
+```
+
+After adding the alias, reload the namespace:
+
+```bash
+clj-nrepl-eval -p 7888 "(reload)"
+```
+
+### Step 1: Preview with Alias Invocation
+
+Use the alias with config props:
 
 ```bash
 clj-nrepl-eval -p 7888 "(dev/preview!
-  [:div.my-component
-   [:h2 \"Title\"]
-   [:p \"Description text\"]])"
+  [:sandbox.ui/my-component
+   {:my-component/title \"Hello World\"
+    :my-component/subtitle \"A simple example\"
+    :my-component/icon \"🎉\"}])"
 ```
 
-The component appears instantly in all connected browsers.
+### Step 2: Iterate on Structure and CSS
 
-### 2. Iterate Based on Feedback
+1. **Modify the alias** in `sandbox/ui.clj` to adjust structure
+2. **Reload**: `clj-nrepl-eval -p 7888 "(reload)"`
+3. **Re-preview** to see changes
+4. **Add CSS** to `dev/resources/public/styles.css` (hot-reloads automatically)
 
-Make changes and re-preview. Each `preview!` call replaces the previous content:
+### Step 3: Commit the Lean Example
 
 ```bash
-clj-nrepl-eval -p 7888 "(dev/preview!
-  [:div.my-component
-   [:h2 \"Better Title\"]
-   [:p \"Improved description\"]
-   [:button \"Take Action\"]])"
+clj-nrepl-eval -p 7888 "(dev/commit! :my-component
+  {:description \"Card with icon and title\"
+   :examples
+   [{:label \"Dark\"
+     :hiccup [:div {:style \"padding: 40px;\"}
+              [:sandbox.ui/my-component
+               {:my-component/title \"Hello World\"
+                :my-component/subtitle \"A simple example\"
+                :my-component/icon \"🎉\"}]]}
+    {:label \"Light\"
+     :hiccup [:div.theme-light {:style \"padding: 40px; background: #f0f4f8;\"}
+              [:sandbox.ui/my-component
+               {:my-component/title \"Hello World\"
+                :my-component/subtitle \"A simple example\"
+                :my-component/icon \"🎉\"}]]}]})"
 ```
 
-### 3. Add CSS to styles.css
+**Result:** `components.edn` stores the lean alias form. Copying from the sandbox UI gives you clean, portable hiccup.
 
-**Important:** Inline styles are for exploration only. Before committing, extract styles to CSS.
+## Config Props vs HTML Attrs
 
-Edit `dev/resources/public/styles.css` to add component styles:
+```clojure
+[:sandbox.ui/game-card
+ {;; Config props (namespaced) - elided from HTML output
+  :game-card/title "Neural Phantom"
+  :game-card/attack "3"
 
-```css
-/* My component */
-.my-component {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  max-width: 400px;
-
-  & h2 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.25rem;
-  }
-
-  & p {
-    color: #666;
-    margin: 0 0 1rem 0;
-  }
-
-  & button {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-}
+  ;; HTML/Datastar attrs (not namespaced) - pass through to HTML
+  :data-signals:selected "false"
+  :data-on:click "$selected = !$selected"
+  :class "highlighted"}]
 ```
 
-CSS changes hot-reload automatically - no need to refresh or re-preview.
-
-### 4. Refactor Component to Use Classes
-
-Update the component to use CSS classes instead of inline styles:
-
-```bash
-clj-nrepl-eval -p 7888 "(dev/preview!
-  [:div.my-component
-   [:h2 \"Better Title\"]
-   [:p \"Improved description\"]
-   [:button \"Take Action\"]])"
-```
-
-### 5. Commit the Component
-
-When satisfied, commit to the library:
-
-```bash
-clj-nrepl-eval -p 7888 "(dev/commit! :my-component \"Short description of the component\")"
-```
-
-This saves to:
-- **Memory:** Available via `(dev/components)` and gallery view
-- **Disk:** Persisted to `resources/components.edn`
+The alias handler receives both, but chassis automatically elides namespaced keys from the rendered HTML.
 
 ## REPL API Reference
 
@@ -117,298 +115,127 @@ This saves to:
 | `(dev/show-all!)` | View gallery |
 | `(dev/components)` | List committed component names |
 | `(dev/patch-signals! {:key val})` | Patch Datastar signals on all clients |
+| `(reload)` | Reload changed namespaces (includes alias changes) |
 
 ## File Locations
 
 | File | Purpose |
 |------|---------|
 | `dev/resources/public/styles.css` | Component CSS (hot-reloads) |
-| `dev/src/clj/sandbox/ui.clj` | Chassis alias definitions (structure only) |
-| `resources/components.edn` | Persisted component library |
+| `dev/src/clj/sandbox/ui.clj` | **Chassis aliases (component structure)** |
+| `resources/components.edn` | **Lean alias invocations (config only)** |
 
 ## Best Practices
 
-1. **Start rough, refine iteratively** - Use inline styles initially to explore, then extract to CSS
-2. **CSS classes over inline styles** - Committed components should use CSS classes for reusability and hot-reload
-3. **Use nested CSS** - The stylesheet supports CSS nesting (`& .child`) for cleaner organization
-4. **Descriptive names** - Use kebab-case names like `:user-card`, `:pricing-table`
-5. **Add descriptions** - Help future you remember what the component is for
-6. **BEM-like naming** - Use `.component-name`, `.component-name-element`, `.component-name--modifier`
-7. **Use CSS custom properties** - Leverage theme variables for colors that vary by theme
+1. **Alias-first** - Always define structure in `sandbox/ui.clj` before committing
+2. **Config by component name** - Use `:component-name/prop` for config props
+3. **CSS classes over inline styles** - Extract to styles.css before committing
+4. **Use CSS custom properties** - Leverage theme variables (`--accent-cyan`, `--bg-primary`)
+5. **BEM-like naming** - `.component-name`, `.component-name-element`, `.component-name--modifier`
+6. **Sub-components are internal** - Only top-level components get `components.edn` entries
 
-## Example Session: Static Component
+## Example: Creating a New Component
 
 ```bash
-# Start with rough component
-clj-nrepl-eval -p 7888 "(dev/preview! [:div.alert [:p \"Something happened\"]])"
+# 1. Add alias to sandbox/ui.clj (using Edit tool)
+# Structure: [:div.status-badge attrs [:span.status-badge-dot] [:span.status-badge-label label]]
 
-# User: "add an icon and make it a warning style"
+# 2. Reload
+clj-nrepl-eval -p 7888 "(reload)"
 
-# Iterate
+# 3. Preview with config
 clj-nrepl-eval -p 7888 "(dev/preview!
-  [:div.alert.alert-warning
-   [:span.alert-icon \"⚠️\"]
-   [:p \"Something happened\"]])"
+  [:sandbox.ui/status-badge
+   {:status-badge/label \"Online\"
+    :status-badge/status :active}])"
 
-# Add CSS to styles.css (Edit tool)
-# ... add .alert, .alert-warning, .alert-icon styles ...
+# 4. Add CSS to styles.css
+# .status-badge { ... }
+# .status-badge--active { ... }
 
-# Verify it looks right (CSS hot-reloads)
-
-# Commit when satisfied
-clj-nrepl-eval -p 7888 "(dev/commit! :alert-warning \"Warning alert with icon\")"
+# 5. Commit with dark/light variants
+clj-nrepl-eval -p 7888 "(dev/commit! :status-badge
+  {:description \"Status indicator badge\"
+   :examples
+   [{:label \"Dark\"
+     :hiccup [:div {:style \"padding: 20px;\"}
+              [:sandbox.ui/status-badge {:status-badge/label \"Online\" :status-badge/status :active}]]}
+    {:label \"Light\"
+     :hiccup [:div.theme-light {:style \"padding: 20px; background: #f0f4f8;\"}
+              [:sandbox.ui/status-badge {:status-badge/label \"Online\" :status-badge/status :active}]]}]})"
 ```
 
 ## Dynamic Components with Datastar
 
-For interactive components using Datastar signals:
-
-### 1. Start with Structure
-
-```bash
-clj-nrepl-eval -p 7888 "(dev/preview!
-  [:div.accordion
-   [:button.accordion-header \"Section Title\"]
-   [:div.accordion-content \"Hidden content\"]])"
-```
-
-### 2. Add CSS for States
-
-Edit `dev/resources/public/styles.css`:
-
-```css
-.accordion-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-}
-
-.accordion-content.open {
-  max-height: 200px;
-}
-```
-
-### 3. Add Datastar Attributes
-
-```bash
-clj-nrepl-eval -p 7888 "(dev/preview!
-  [:div.accordion {:data-signals:open \"false\"}
-   [:button.accordion-header {:data-on:click \"\\$open = !\\$open\"}
-    \"Section Title\"]
-   [:div.accordion-content {:data-class:open \"\\$open\"}
-    \"Hidden content\"]])"
-```
-
-### 4. Test Interactivity from REPL
-
-```bash
-# Open the accordion programmatically
-clj-nrepl-eval -p 7888 "(dev/patch-signals! {:open true})"
-
-# Close it
-clj-nrepl-eval -p 7888 "(dev/patch-signals! {:open false})"
-```
-
-### 5. Commit with Multiple Examples
-
-```bash
-clj-nrepl-eval -p 7888 "(dev/commit! :accordion
-  {:description \"Expandable content section\"
-   :examples
-   [{:label \"Static\"
-     :hiccup [:div.accordion
-              [:button.accordion-header \"Title\"]
-              [:div.accordion-content \"Content\"]]}
-    {:label \"Interactive\"
-     :hiccup [:div.accordion {:data-signals:open \"false\"}
-              [:button.accordion-header {:data-on:click \"$open = !$open\"} \"Title\"]
-              [:div.accordion-content {:data-class:open \"$open\"} \"Content\"]]}]})"
-```
-
-The sandbox UI will show a dropdown to switch between Static and Interactive examples.
-
-## Chassis Aliases
-
-For reusable component structure, define aliases in `dev/src/clj/sandbox/ui.clj`:
+For interactive components, Datastar attrs pass through to HTML:
 
 ```clojure
-(defmethod c/resolve-alias ::counter
-  [_ attrs _content]
-  [:div.counter attrs
-   [:button.counter-btn "−"]
-   [:span.counter-value "0"]
-   [:button.counter-btn "+"]])
+;; Alias handles structure
+(defmethod c/resolve-alias ::accordion
+  [_ attrs content]
+  (let [{:accordion/keys [title]} attrs]
+    [:div.accordion attrs  ;; data-signals, data-on pass through
+     [:button.accordion-header {:data-on:click "$open = !$open"} title]
+     [:div.accordion-content {:data-class:open "$open"} content]]))
+
+;; Usage with Datastar attrs
+[:sandbox.ui/accordion
+ {:accordion/title "Click to expand"
+  :data-signals:open "false"}
+ [:p "Hidden content"]]
 ```
 
-Use the alias with Datastar attributes passed through:
+Test interactivity from REPL:
 
 ```bash
-clj-nrepl-eval -p 7888 "(require '[sandbox.ui])"
-clj-nrepl-eval -p 7888 "(dev/preview!
-  [:sandbox.ui/counter {:data-signals:count \"0\"}
-   [:button {:data-on:click \"\\$count--\"} \"−\"]
-   [:span {:data-text \"\\$count\"}]
-   [:button {:data-on:click \"\\$count++\"} \"+\"]])"
+clj-nrepl-eval -p 7888 "(dev/patch-signals! {:open true})"
 ```
-
-## Creating Theme Variants (Dark/Light Mode)
-
-When building components that need multiple theme variants, establish a color palette first, then create each variant and commit together:
-
-### 1. Define Your Palette
-
-```
-Dark Mode:
-- Backgrounds: #0a0a12, #1a1d23
-- Primary accent: #0ff, #00cccc
-- Secondary accent: #ff00ff, #ff0066
-- Text: #fff, #ddd, #999
-
-Light Mode:
-- Backgrounds: #ffffff, #f0f4f8
-- Primary accent: #00cccc, #009999
-- Secondary accent: #cc00cc, #cc0066
-- Text: #333, #555, #888
-```
-
-### 2. Create Dark Variant First
-
-```bash
-clj-nrepl-eval -p 7888 "(dev/preview!
-  [:div {:style \"background: #0a0a12; padding: 2rem; color: #0ff;\"}
-   [:h2 \"Title\"]
-   [:p {:style \"color: #ddd;\"} \"Content here\"]])"
-```
-
-### 3. Create Light Variant
-
-```bash
-clj-nrepl-eval -p 7888 "(dev/preview!
-  [:div {:style \"background: #f0f4f8; padding: 2rem; color: #007777;\"}
-   [:h2 \"Title\"]
-   [:p {:style \"color: #555;\"} \"Content here\"]])"
-```
-
-### 4. Commit Both as Examples
-
-```bash
-clj-nrepl-eval -p 7888 "
-(let [dark-hiccup [:div {:style \"background: #0a0a12; ...\"} ...]
-      light-hiccup [:div {:style \"background: #f0f4f8; ...\"} ...]]
-  (dev/commit! :my-component
-    {:description \"Component with theme variants\"
-     :examples [{:label \"Dark\" :hiccup dark-hiccup}
-                {:label \"Light\" :hiccup light-hiccup}]}))"
-```
-
-The sandbox dropdown lets you toggle between variants.
 
 ## CSS Extraction (Required Before Commit)
 
-**IMPORTANT:** All committed components must use CSS classes, not inline styles. This ensures:
-- Copied hiccup is clean and immediately usable
-- Styles hot-reload during continued iteration
-- Consistent theming via CSS custom properties
+All committed components must use CSS classes. The copy button returns the lean alias form from `components.edn`, so keeping examples clean ensures portable snippets.
 
 ### Extraction Process
 
-1. **Identify repeated patterns** - Buttons, cards, containers get classes
-2. **Name classes semantically** - `.game-card`, `.game-card-header`, `.stat-badge`
-3. **Use BEM-like naming** - `.component-name-element--modifier`
-4. **Use CSS custom properties for themes** - Colors should reference `--accent-cyan`, `--bg-primary`, etc.
-5. **Move inline styles to CSS** - One section per component in `styles.css`
+1. **Define structure in alias** with semantic class names
+2. **Add CSS** for those classes in `styles.css`
+3. **Use CSS custom properties** for colors that vary by theme
+4. **Commit the lean alias invocation** with config props only
 
-### Example Extraction
+### Theme Variants
 
-**Before (inline styles - exploration phase):**
-```clojure
-[:div {:style "background: #0a0a12; padding: 16px; border: 1px solid #0ff;"}
- [:h2 {:style "color: #0ff; font-size: 14px;"} "Title"]]
-```
-
-**After (CSS classes - commit-ready):**
-```clojure
-[:div.game-card
- [:h2.game-card-title "Title"]]
-```
-
-```css
-/* In styles.css */
-.game-card {
-  background: var(--bg-primary);
-  padding: 16px;
-  border: 1px solid var(--accent-cyan);
-}
-
-.game-card-title {
-  color: var(--accent-cyan);
-  font-size: 14px;
-}
-```
-
-### Theme Variants with CSS
-
-Use the `.theme-light` class to switch themes. CSS custom properties automatically update:
+Use `.theme-light` wrapper class - CSS custom properties handle the rest:
 
 ```clojure
-;; Dark variant (default)
-[:div.game-card ...]
+;; Dark (default)
+[:sandbox.ui/game-card {:game-card/title "Card" ...}]
 
-;; Light variant
+;; Light
 [:div.theme-light
- [:div.game-card ...]]
+ [:sandbox.ui/game-card {:game-card/title "Card" ...}]]
 ```
 
-### Available Theme Variables
+## Available Theme Variables
 
-The stylesheet defines these CSS custom properties in `:root` (dark) and `.theme-light`:
+| Variable | Dark | Light |
+|----------|------|-------|
+| `--bg-primary` | `#0a0a12` | `#ffffff` |
+| `--bg-secondary` | `#12081f` | `#f8f4ff` |
+| `--accent-cyan` | `#0ff` | `#00cccc` |
+| `--accent-magenta` | `#ff00ff` | `#cc00cc` |
+| `--text-primary` | `#fff` | `#333` |
+| `--text-muted` | `#666` | `#888` |
 
-| Variable | Dark | Light | Purpose |
-|----------|------|-------|---------|
-| `--bg-primary` | `#0a0a12` | `#ffffff` | Main background |
-| `--bg-secondary` | `#12081f` | `#f8f4ff` | Secondary background |
-| `--accent-cyan` | `#0ff` | `#00cccc` | Primary accent |
-| `--accent-magenta` | `#ff00ff` | `#cc00cc` | Secondary accent |
-| `--text-primary` | `#fff` | `#333` | Main text |
-| `--text-muted` | `#666` | `#888` | Subdued text |
-
-### Utility Classes
-
-The stylesheet includes reusable utility classes:
+## Utility Classes
 
 | Class | Effect |
 |-------|--------|
-| `.clip-corners-lg` | Cut corner clip path (12px) |
-| `.clip-corners-md` | Cut corner clip path (10px) |
-| `.clip-corners-sm` | Cut corner clip path (8px) |
+| `.clip-corners-lg/md/sm` | Cut corner clip paths |
 | `.clip-hexagon` | Hexagon shape |
 | `.clip-diamond` | Diamond shape |
 | `.clip-badge` | Elongated hexagon for tags |
 | `.clip-octagon` | Octagon for avatars |
-| `.clip-asymmetric` | Asymmetric corner cut |
 | `.scanline-overlay` | CRT scanline effect |
-
-### When to Use Inline Styles
-
-After CSS extraction, minimal inline styles may remain for:
-- Dynamic/data-driven values (e.g., `width: 80%` for progress bars)
-- Container padding/layout for demo wrappers
-- One-off positioning adjustments
-
-**Avoid inline styles for:**
-- Colors (use CSS custom properties)
-- Typography (use classes)
-- Borders and shadows (use classes)
-- Anything that should change with themes
-
-## Browser Verification
-
-Use the Chrome extension to visually verify components during iteration:
-
-1. Take screenshots to see current state
-2. Test interactive elements (dropdowns, buttons)
-3. Verify responsive behavior by resizing
-4. Check both theme variants render correctly
 
 ## Related Skills
 

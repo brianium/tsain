@@ -999,6 +999,62 @@ Committed components should have minimal/no inline styles because:
 3. **Consistent theming** - CSS custom properties handle light/dark modes
 4. **Maintainable** - Styles in one place, easy to update
 
+## Chassis Alias Conventions
+
+Component structure lives in `dev/src/clj/sandbox/ui.clj` as chassis aliases. The `components.edn` file stores lean alias invocations with config props, not verbose hiccup.
+
+### Alias-First Development
+
+**Always define the alias before committing a component.** This keeps `components.edn` lean and makes copied hiccup portable.
+
+```clojure
+;; 1. Define structure in sandbox/ui.clj
+(defmethod c/resolve-alias ::my-card
+  [_ attrs _]
+  (let [{:my-card/keys [title subtitle icon]} attrs]
+    [:div.my-card attrs  ;; namespaced keys auto-elided by chassis
+     [:div.my-card-header
+      [:span.my-card-icon icon]
+      [:h3.my-card-title title]]
+     [:p.my-card-subtitle subtitle]]))
+
+;; 2. Use in components.edn with lean config
+[:sandbox.ui/my-card
+ {:my-card/title "Hello World"
+  :my-card/subtitle "A description"
+  :my-card/icon "🎉"}]
+```
+
+### Namespaced Attributes for Config
+
+Chassis automatically elides namespaced attributes from HTML output. **Convention:** namespace config props by component name (e.g., `:game-card/title`).
+
+```clojure
+[:sandbox.ui/game-card
+ {;; Config props (namespaced) - elided from HTML
+  :game-card/title "Neural Phantom"
+  :game-card/attack "3"
+
+  ;; HTML/Datastar attrs (not namespaced) - pass through
+  :data-signals:selected "false"
+  :data-on:click "$selected = !$selected"
+  :class "highlighted"}]
+```
+
+### When to Create Sub-Aliases
+
+- **Top-level components** (e.g., `::game-card`, `::player-hud`) get `components.edn` entries
+- **Internal sub-components** (e.g., `::game-card-stat`, `::player-hud-bar`) are helpers used by the main alias
+- Sub-components don't need library entries - they're implementation details
+
+### File Locations
+
+| File | Purpose |
+|------|---------|
+| `dev/src/clj/sandbox/ui.clj` | Chassis aliases (component structure) |
+| `resources/components.edn` | Lean alias invocations (config only) |
+| `dev/resources/public/styles.css` | Component CSS |
+
 ## Git Commits
 
 Use conventional commits format:

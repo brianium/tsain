@@ -1,438 +1,209 @@
 {:game-card
- {:description "Cyberpunk game card with attack/defense stats",
+ {:description "Cyberpunk game card with attack/defense stats"
   :examples
-  [{:label "Dark",
+  [{:label "Dark"
     :hiccup
-    [:div
-     {:style "padding: 40px; display: flex; justify-content: center;"}
-     [:div.game-card.clip-corners-lg
-      [:div.game-card-corner.game-card-corner--top-h]
-      [:div.game-card-corner.game-card-corner--top-v]
-      [:div.game-card-corner.game-card-corner--bottom-h]
-      [:div.game-card-corner.game-card-corner--bottom-v]
-      [:div.scanline-overlay]
-      [:div.game-card-inner-border.clip-corners-md]
-      [:div.game-card-cost.clip-hexagon
-       [:div.game-card-cost-value "4"]]
-      [:div.game-card-header
-       [:div.game-card-title "Neural Phantom"]
-       [:div.game-card-type "// Creature — AI Specter"]]
-      [:div.game-card-art
-       [:div.game-card-art-grid]
-       [:div.game-card-art-icon "👻"]
-       [:div.game-card-art-line]
-       [:div.game-card-art-bracket.game-card-art-bracket--tl]
-       [:div.game-card-art-bracket.game-card-art-bracket--tr]
-       [:div.game-card-art-bracket.game-card-art-bracket--bl]
-       [:div.game-card-art-bracket.game-card-art-bracket--br]]
-      [:div.game-card-text
-       [:div.game-card-text-accent]
-       [:div.game-card-ability
-        [:span.game-card-ability-keyword "▶ Stealth Protocol: "]
-        "Cannot be targeted by ICE programs on the turn it enters the grid."]
-       [:div.game-card-flavor
-        "\"They call it a ghost in the machine. I call it evolution.\""]]
-      [:div.game-card-footer
-       [:div.game-card-set
-        [:div.game-card-set-icon.clip-diamond]
-        [:div.game-card-set-id "SET-01 // 042"]]
-       [:div.game-card-stats
-        [:div.game-card-stat.game-card-stat--attack.clip-stat-hex "3"]
-        [:div.game-card-stat.game-card-stat--defense.clip-stat-hex "2"]]]]]}
-   {:label "Light",
+    [:div {:style "padding: 40px; display: flex; justify-content: center;"}
+     [:sandbox.ui/game-card
+      {:game-card/title "Neural Phantom"
+       :game-card/type "// Creature — AI Specter"
+       :game-card/cost "4"
+       :game-card/attack "3"
+       :game-card/defense "2"
+       :game-card/icon "👻"
+       :game-card/ability "Cannot be targeted by ICE programs on the turn it enters the grid."
+       :game-card/flavor "\"They call it a ghost in the machine. I call it evolution.\""}]]}
+   {:label "Light"
     :hiccup
-    [:div.theme-light
-     {:style "padding: 40px; background: #f0f4f8; display: flex; justify-content: center;"}
-     [:div.game-card.clip-corners-lg
-      [:div.game-card-corner.game-card-corner--top-h]
-      [:div.game-card-corner.game-card-corner--top-v]
-      [:div.game-card-corner.game-card-corner--bottom-h]
-      [:div.game-card-corner.game-card-corner--bottom-v]
-      [:div.scanline-overlay]
-      [:div.game-card-inner-border.clip-corners-md]
-      [:div.game-card-cost.clip-hexagon
-       [:div.game-card-cost-value "4"]]
-      [:div.game-card-header
-       [:div.game-card-title "Neural Phantom"]
-       [:div.game-card-type "// Creature — AI Specter"]]
-      [:div.game-card-art
-       [:div.game-card-art-grid]
-       [:div.game-card-art-icon "👻"]
-       [:div.game-card-art-line]
-       [:div.game-card-art-bracket.game-card-art-bracket--tl]
-       [:div.game-card-art-bracket.game-card-art-bracket--tr]
-       [:div.game-card-art-bracket.game-card-art-bracket--bl]
-       [:div.game-card-art-bracket.game-card-art-bracket--br]]
-      [:div.game-card-text
-       [:div.game-card-text-accent]
-       [:div.game-card-ability
-        [:span.game-card-ability-keyword "▶ Stealth Protocol: "]
-        "Cannot be targeted by ICE programs on the turn it enters the grid."]
-       [:div.game-card-flavor
-        "\"They call it a ghost in the machine. I call it evolution.\""]]
-      [:div.game-card-footer
-       [:div.game-card-set
-        [:div.game-card-set-icon.clip-diamond]
-        [:div.game-card-set-id "SET-01 // 042"]]
-       [:div.game-card-stats
-        [:div.game-card-stat.game-card-stat--attack.clip-stat-hex "3"]
-        [:div.game-card-stat.game-card-stat--defense.clip-stat-hex "2"]]]]]}],
-  :created-at #inst "2026-01-19T23:41:10.040-00:00"},
+    [:div.theme-light {:style "padding: 40px; background: #f0f4f8; display: flex; justify-content: center;"}
+     [:sandbox.ui/game-card
+      {:game-card/title "Neural Phantom"
+       :game-card/type "// Creature — AI Specter"
+       :game-card/cost "4"
+       :game-card/attack "3"
+       :game-card/defense "2"
+       :game-card/icon "👻"
+       :game-card/ability "Cannot be targeted by ICE programs on the turn it enters the grid."
+       :game-card/flavor "\"They call it a ghost in the machine. I call it evolution.\""}]]}]
+  :created-at #inst "2026-01-19T23:41:10.040-00:00"}
+
  :combat-log
- {:description "Battle log with timestamped events",
+ {:description "Battle log with timestamped events"
   :examples
-  [{:label "Dark",
+  [{:label "Dark"
     :hiccup
-    [:div
-     {:style "padding: 40px;"}
-     [:div.combat-log
-      [:div.scanline-overlay]
-      [:div.combat-log-header
-       [:span.combat-log-title "◆ Combat Log"]
-       [:span.combat-log-turn "TURN 7"]]
-      [:div.combat-log-entries
-       [:div.combat-log-entry
-        [:span.combat-log-time "07:23"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--cyan "Neural Phantom"]
-          " attacks "
-          [:span.combat-log-actor--magenta "ICE Sentinel"]]
-         [:div.combat-log-detail.combat-log-damage "⚡ 3 damage dealt"]]]
-       [:div.combat-log-entry
-        [:span.combat-log-time "07:22"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--magenta "ICE Sentinel"]
-          " blocks attack"]
-         [:div.combat-log-detail.combat-log-block "◇ 2 damage prevented"]]]
-       [:div.combat-log-entry.combat-log-entry--highlight-magenta
-        [:span.combat-log-time "07:21"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--magenta "You"]
-          " deployed "
-          [:span.combat-log-actor--cyan "Neural Phantom"]]
-         [:div.combat-log-detail.combat-log-info "▶ Cost: 4 energy"]]]
-       [:div.combat-log-entry.combat-log-entry--highlight-yellow
-        [:span.combat-log-time "07:20"]
-        [:div
-         [:div.combat-log-message.combat-log-warning "⚠ Firewall breach detected"]
-         [:div.combat-log-detail.combat-log-info "Security level increased"]]]
-       [:div.combat-log-entry
-        [:span.combat-log-time "07:19"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--red "GHOST_777"]
-          " ended their turn"]]]
-       [:div.combat-log-entry
-        [:span.combat-log-time "07:18"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--magenta "You"]
-          " drew 2 cards"]]]]
-      [:div.combat-log-input
-       [:div.combat-log-input-field "> Type command..."]
-       [:div.combat-log-submit "⏎"]]]]}
-   {:label "Light",
+    [:div {:style "padding: 40px;"}
+     [:sandbox.ui/combat-log
+      {:combat-log/turn 7
+       :combat-log/entries
+       [{:time "07:23"
+         :message [:<> [:span.combat-log-actor--cyan "Neural Phantom"] " attacks " [:span.combat-log-actor--magenta "ICE Sentinel"]]
+         :detail "⚡ 3 damage dealt"
+         :detail-type :damage}
+        {:time "07:22"
+         :message [:<> [:span.combat-log-actor--magenta "ICE Sentinel"] " blocks attack"]
+         :detail "◇ 2 damage prevented"
+         :detail-type :block}
+        {:time "07:21"
+         :message [:<> [:span.combat-log-actor--magenta "You"] " deployed " [:span.combat-log-actor--cyan "Neural Phantom"]]
+         :detail "▶ Cost: 4 energy"
+         :detail-type :info
+         :highlight :magenta}
+        {:time "07:20"
+         :message [:span.combat-log-warning "⚠ Firewall breach detected"]
+         :detail "Security level increased"
+         :detail-type :info
+         :highlight :yellow}
+        {:time "07:19"
+         :message [:<> [:span.combat-log-actor--red "GHOST_777"] " ended their turn"]}
+        {:time "07:18"
+         :message [:<> [:span.combat-log-actor--magenta "You"] " drew 2 cards"]}]}]]}
+   {:label "Light"
     :hiccup
-    [:div.theme-light
-     {:style "padding: 40px; background: #f0f4f8;"}
-     [:div.combat-log
-      [:div.scanline-overlay]
-      [:div.combat-log-header
-       [:span.combat-log-title "◆ Combat Log"]
-       [:span.combat-log-turn "TURN 7"]]
-      [:div.combat-log-entries
-       [:div.combat-log-entry
-        [:span.combat-log-time "07:23"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--cyan "Neural Phantom"]
-          " attacks "
-          [:span.combat-log-actor--magenta "ICE Sentinel"]]
-         [:div.combat-log-detail.combat-log-damage "⚡ 3 damage dealt"]]]
-       [:div.combat-log-entry
-        [:span.combat-log-time "07:22"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--magenta "ICE Sentinel"]
-          " blocks attack"]
-         [:div.combat-log-detail.combat-log-block "◇ 2 damage prevented"]]]
-       [:div.combat-log-entry.combat-log-entry--highlight-magenta
-        [:span.combat-log-time "07:21"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--magenta "You"]
-          " deployed "
-          [:span.combat-log-actor--cyan "Neural Phantom"]]
-         [:div.combat-log-detail.combat-log-info "▶ Cost: 4 energy"]]]
-       [:div.combat-log-entry.combat-log-entry--highlight-yellow
-        [:span.combat-log-time "07:20"]
-        [:div
-         [:div.combat-log-message.combat-log-warning "⚠ Firewall breach detected"]
-         [:div.combat-log-detail.combat-log-info "Security level increased"]]]
-       [:div.combat-log-entry
-        [:span.combat-log-time "07:19"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--red "GHOST_777"]
-          " ended their turn"]]]
-       [:div.combat-log-entry
-        [:span.combat-log-time "07:18"]
-        [:div
-         [:div.combat-log-message
-          [:span.combat-log-actor--magenta "You"]
-          " drew 2 cards"]]]]
-      [:div.combat-log-input
-       [:div.combat-log-input-field "> Type command..."]
-       [:div.combat-log-submit "⏎"]]]]}],
-  :created-at #inst "2026-01-19T23:48:58.198-00:00"},
+    [:div.theme-light {:style "padding: 40px; background: #f0f4f8;"}
+     [:sandbox.ui/combat-log
+      {:combat-log/turn 7
+       :combat-log/entries
+       [{:time "07:23"
+         :message [:<> [:span.combat-log-actor--cyan "Neural Phantom"] " attacks " [:span.combat-log-actor--magenta "ICE Sentinel"]]
+         :detail "⚡ 3 damage dealt"
+         :detail-type :damage}
+        {:time "07:22"
+         :message [:<> [:span.combat-log-actor--magenta "ICE Sentinel"] " blocks attack"]
+         :detail "◇ 2 damage prevented"
+         :detail-type :block}
+        {:time "07:21"
+         :message [:<> [:span.combat-log-actor--magenta "You"] " deployed " [:span.combat-log-actor--cyan "Neural Phantom"]]
+         :detail "▶ Cost: 4 energy"
+         :detail-type :info
+         :highlight :magenta}
+        {:time "07:20"
+         :message [:span.combat-log-warning "⚠ Firewall breach detected"]
+         :detail "Security level increased"
+         :detail-type :info
+         :highlight :yellow}
+        {:time "07:19"
+         :message [:<> [:span.combat-log-actor--red "GHOST_777"] " ended their turn"]}
+        {:time "07:18"
+         :message [:<> [:span.combat-log-actor--magenta "You"] " drew 2 cards"]}]}]]}]
+  :created-at #inst "2026-01-19T23:48:58.198-00:00"}
+
  :card-type-badges
- {:description "Card type and rarity indicator badges",
+ {:description "Card type and rarity indicator badges"
   :examples
-  [{:label "Dark",
+  [{:label "Dark"
     :hiccup
-    [:div
-     {:style "padding: 40px; display: flex; flex-wrap: wrap; gap: 12px;"}
-     [:div.badge.badge--attack.clip-badge
-      [:span.badge-icon "⚡"]
-      [:span.badge-label "Attack"]]
-     [:div.badge.badge--defense.clip-badge
-      [:span.badge-icon "◇"]
-      [:span.badge-label "Defense"]]
-     [:div.badge.badge--hack.clip-badge
-      [:span.badge-icon "⟁"]
-      [:span.badge-label "Hack"]]
-     [:div.badge.badge--virus.clip-badge
-      [:span.badge-icon "☣"]
-      [:span.badge-label "Virus"]]
-     [:div.badge.badge--protocol.clip-badge
-      [:span.badge-icon "⌘"]
-      [:span.badge-label "Protocol"]]
-     [:div.badge.badge--hardware.clip-badge
-      [:span.badge-icon "⚙"]
-      [:span.badge-label "Hardware"]]
-     [:div.badge.badge--creature.clip-badge
-      [:span.badge-icon "◈"]
-      [:span.badge-label "Creature"]]
-     [:div.badge.badge--ice.clip-badge
-      [:span.badge-icon "▣"]
-      [:span.badge-label "ICE"]]
-     [:div
-      {:style "margin-top: 16px; width: 100%; display: flex; gap: 12px;"}
-      [:div.badge-rarity.badge-rarity--common
-       [:div.badge-rarity-dot]
-       [:span.badge-rarity-label "Common"]]
-      [:div.badge-rarity.badge-rarity--rare
-       [:div.badge-rarity-dot]
-       [:span.badge-rarity-label "Rare"]]
-      [:div.badge-rarity.badge-rarity--epic
-       [:div.badge-rarity-dot]
-       [:span.badge-rarity-label "Epic"]]
-      [:div.badge-rarity.badge-rarity--legendary
-       [:div.badge-rarity-dot.clip-diamond]
-       [:span.badge-rarity-label "Legendary"]]]]}
-   {:label "Light",
+    [:div {:style "padding: 40px; display: flex; flex-wrap: wrap; gap: 12px;"}
+     [:sandbox.ui/card-type-badges
+      {:card-type-badges/badges
+       [{:icon "⚡" :label "Attack" :type :attack}
+        {:icon "◇" :label "Defense" :type :defense}
+        {:icon "⟁" :label "Hack" :type :hack}
+        {:icon "☣" :label "Virus" :type :virus}
+        {:icon "⌘" :label "Protocol" :type :protocol}
+        {:icon "⚙" :label "Hardware" :type :hardware}
+        {:icon "◈" :label "Creature" :type :creature}
+        {:icon "▣" :label "ICE" :type :ice}]
+       :card-type-badges/rarities
+       [{:label "Common" :rarity :common}
+        {:label "Rare" :rarity :rare}
+        {:label "Epic" :rarity :epic}
+        {:label "Legendary" :rarity :legendary}]}]]}
+   {:label "Light"
     :hiccup
-    [:div.theme-light
-     {:style "padding: 40px; background: #f0f4f8; display: flex; flex-wrap: wrap; gap: 12px;"}
-     [:div.badge.badge--attack.clip-badge
-      [:span.badge-icon "⚡"]
-      [:span.badge-label "Attack"]]
-     [:div.badge.badge--defense.clip-badge
-      [:span.badge-icon "◇"]
-      [:span.badge-label "Defense"]]
-     [:div.badge.badge--hack.clip-badge
-      [:span.badge-icon "⟁"]
-      [:span.badge-label "Hack"]]
-     [:div.badge.badge--virus.clip-badge
-      [:span.badge-icon "☣"]
-      [:span.badge-label "Virus"]]
-     [:div.badge.badge--protocol.clip-badge
-      [:span.badge-icon "⌘"]
-      [:span.badge-label "Protocol"]]
-     [:div.badge.badge--hardware.clip-badge
-      [:span.badge-icon "⚙"]
-      [:span.badge-label "Hardware"]]
-     [:div.badge.badge--creature.clip-badge
-      [:span.badge-icon "◈"]
-      [:span.badge-label "Creature"]]
-     [:div.badge.badge--ice.clip-badge
-      [:span.badge-icon "▣"]
-      [:span.badge-label "ICE"]]
-     [:div
-      {:style "margin-top: 16px; width: 100%; display: flex; gap: 12px;"}
-      [:div.badge-rarity.badge-rarity--common
-       [:div.badge-rarity-dot]
-       [:span.badge-rarity-label "Common"]]
-      [:div.badge-rarity.badge-rarity--rare
-       [:div.badge-rarity-dot]
-       [:span.badge-rarity-label "Rare"]]
-      [:div.badge-rarity.badge-rarity--epic
-       [:div.badge-rarity-dot]
-       [:span.badge-rarity-label "Epic"]]
-      [:div.badge-rarity.badge-rarity--legendary
-       [:div.badge-rarity-dot.clip-diamond]
-       [:span.badge-rarity-label "Legendary"]]]]}],
-  :created-at #inst "2026-01-19T23:49:33.575-00:00"},
+    [:div.theme-light {:style "padding: 40px; background: #f0f4f8; display: flex; flex-wrap: wrap; gap: 12px;"}
+     [:sandbox.ui/card-type-badges
+      {:card-type-badges/badges
+       [{:icon "⚡" :label "Attack" :type :attack}
+        {:icon "◇" :label "Defense" :type :defense}
+        {:icon "⟁" :label "Hack" :type :hack}
+        {:icon "☣" :label "Virus" :type :virus}
+        {:icon "⌘" :label "Protocol" :type :protocol}
+        {:icon "⚙" :label "Hardware" :type :hardware}
+        {:icon "◈" :label "Creature" :type :creature}
+        {:icon "▣" :label "ICE" :type :ice}]
+       :card-type-badges/rarities
+       [{:label "Common" :rarity :common}
+        {:label "Rare" :rarity :rare}
+        {:label "Epic" :rarity :epic}
+        {:label "Legendary" :rarity :legendary}]}]]}]
+  :created-at #inst "2026-01-19T23:49:33.575-00:00"}
+
  :player-hud
- {:description "Player status with health, energy, and card counts",
+ {:description "Player status with health, energy, and card counts"
   :examples
-  [{:label "Dark",
+  [{:label "Dark"
     :hiccup
-    [:div
-     {:style "padding: 40px;"}
-     [:div.player-hud.clip-asymmetric
-      [:div.player-hud-corner.player-hud-corner--tl-h]
-      [:div.player-hud-corner.player-hud-corner--tl-v]
-      [:div.player-hud-corner.player-hud-corner--br]
-      [:div.scanline-overlay]
-      [:div.player-hud-info
-       [:div.player-hud-avatar.clip-octagon "🤖"]
-       [:div
-        [:div.player-hud-name "NETRUNNER_X"]
-        [:div.player-hud-rank "// RANK: ELITE"]]]
-      [:div.player-hud-bar
-       [:div.player-hud-bar-header
-        [:span.player-hud-bar-label.player-hud-bar-label--health "◆ INTEGRITY"]
-        [:span.player-hud-bar-value.player-hud-bar-value--health "24/30"]]
-       [:div.player-hud-bar-track.player-hud-bar-track--health
-        [:div.player-hud-bar-fill.player-hud-bar-fill--health
-         {:style "width: 80%;"}]
-        [:div.player-hud-bar-segments]]]
-      [:div.player-hud-bar
-       [:div.player-hud-bar-header
-        [:span.player-hud-bar-label.player-hud-bar-label--energy "◆ ENERGY"]
-        [:span.player-hud-bar-value.player-hud-bar-value--energy "5/8"]]
-       [:div.player-hud-bar-track.player-hud-bar-track--energy
-        [:div.player-hud-bar-fill.player-hud-bar-fill--energy
-         {:style "width: 62.5%;"}]
-        [:div.player-hud-bar-segments]]]
-      [:div.player-hud-counters
-       [:div.player-hud-counter
-        [:div.player-hud-counter-label "DECK"]
-        [:div.player-hud-counter-value.player-hud-counter-value--deck "23"]]
-       [:div.player-hud-counter
-        [:div.player-hud-counter-label "HAND"]
-        [:div.player-hud-counter-value.player-hud-counter-value--hand "5"]]
-       [:div.player-hud-counter
-        [:div.player-hud-counter-label "TRASH"]
-        [:div.player-hud-counter-value.player-hud-counter-value--trash "8"]]]]]}
-   {:label "Light",
+    [:div {:style "padding: 40px;"}
+     [:sandbox.ui/player-hud
+      {:player-hud/name "NETRUNNER_X"
+       :player-hud/rank "ELITE"
+       :player-hud/avatar "🤖"
+       :player-hud/health {:current 24 :max 30 :percent "80%"}
+       :player-hud/energy {:current 5 :max 8 :percent "62.5%"}
+       :player-hud/counters
+       [{:label "DECK" :value "23" :type :deck}
+        {:label "HAND" :value "5" :type :hand}
+        {:label "TRASH" :value "8" :type :trash}]}]]}
+   {:label "Light"
     :hiccup
-    [:div.theme-light
-     {:style "padding: 40px; background: #f0f4f8;"}
-     [:div.player-hud.clip-asymmetric
-      [:div.player-hud-corner.player-hud-corner--tl-h]
-      [:div.player-hud-corner.player-hud-corner--tl-v]
-      [:div.player-hud-corner.player-hud-corner--br]
-      [:div.scanline-overlay]
-      [:div.player-hud-info
-       [:div.player-hud-avatar.clip-octagon "🤖"]
-       [:div
-        [:div.player-hud-name "NETRUNNER_X"]
-        [:div.player-hud-rank "// RANK: ELITE"]]]
-      [:div.player-hud-bar
-       [:div.player-hud-bar-header
-        [:span.player-hud-bar-label.player-hud-bar-label--health "◆ INTEGRITY"]
-        [:span.player-hud-bar-value.player-hud-bar-value--health "24/30"]]
-       [:div.player-hud-bar-track.player-hud-bar-track--health
-        [:div.player-hud-bar-fill.player-hud-bar-fill--health
-         {:style "width: 80%;"}]
-        [:div.player-hud-bar-segments]]]
-      [:div.player-hud-bar
-       [:div.player-hud-bar-header
-        [:span.player-hud-bar-label.player-hud-bar-label--energy "◆ ENERGY"]
-        [:span.player-hud-bar-value.player-hud-bar-value--energy "5/8"]]
-       [:div.player-hud-bar-track.player-hud-bar-track--energy
-        [:div.player-hud-bar-fill.player-hud-bar-fill--energy
-         {:style "width: 62.5%;"}]
-        [:div.player-hud-bar-segments]]]
-      [:div.player-hud-counters
-       [:div.player-hud-counter.player-hud-counter--deck
-        [:div.player-hud-counter-label "DECK"]
-        [:div.player-hud-counter-value.player-hud-counter-value--deck "23"]]
-       [:div.player-hud-counter.player-hud-counter--hand
-        [:div.player-hud-counter-label "HAND"]
-        [:div.player-hud-counter-value.player-hud-counter-value--hand "5"]]
-       [:div.player-hud-counter.player-hud-counter--trash
-        [:div.player-hud-counter-label "TRASH"]
-        [:div.player-hud-counter-value.player-hud-counter-value--trash "8"]]]]]}],
-  :created-at #inst "2026-01-19T23:41:31.341-00:00"},
+    [:div.theme-light {:style "padding: 40px; background: #f0f4f8;"}
+     [:sandbox.ui/player-hud
+      {:player-hud/name "NETRUNNER_X"
+       :player-hud/rank "ELITE"
+       :player-hud/avatar "🤖"
+       :player-hud/health {:current 24 :max 30 :percent "80%"}
+       :player-hud/energy {:current 5 :max 8 :percent "62.5%"}
+       :player-hud/counters
+       [{:label "DECK" :value "23" :type :deck}
+        {:label "HAND" :value "5" :type :hand}
+        {:label "TRASH" :value "8" :type :trash}]}]]}]
+  :created-at #inst "2026-01-19T23:41:31.341-00:00"}
+
  :action-buttons
- {:description "Game action buttons with various states",
+ {:description "Game action buttons with various states"
   :examples
-  [{:label "Dark",
+  [{:label "Dark"
     :hiccup
-    [:div
-     {:style "padding: 40px; display: flex; flex-direction: column; gap: 16px;"}
-     [:button.btn.btn--primary.clip-corners-sm "▶ EXECUTE"]
-     [:button.btn.btn--secondary.btn--cyan.clip-corners-sm "◼ END TURN"]
-     [:button.btn.btn--secondary.btn--red.clip-corners-sm "⚡ ATTACK"]
-     [:button.btn.btn--secondary.btn--blue.clip-corners-sm "◇ DEFEND"]
-     [:div {:style "display: flex; gap: 8px; margin-top: 16px;"}
-      [:button.btn.btn--small.btn--small-cyan "DRAW"]
-      [:button.btn.btn--small.btn--small-magenta "HACK"]
-      [:button.btn.btn--small.btn--small-yellow "SCAN"]]]}
-   {:label "Light",
+    [:div {:style "padding: 40px; display: flex; flex-direction: column; gap: 16px;"}
+     [:sandbox.ui/action-buttons
+      {:action-buttons/primary [{:label "EXECUTE" :icon "▶"}]
+       :action-buttons/secondary
+       [{:label "END TURN" :icon "◼" :color :cyan}
+        {:label "ATTACK" :icon "⚡" :color :red}
+        {:label "DEFEND" :icon "◇" :color :blue}]
+       :action-buttons/small
+       [{:label "DRAW" :color :cyan}
+        {:label "HACK" :color :magenta}
+        {:label "SCAN" :color :yellow}]}]]}
+   {:label "Light"
     :hiccup
-    [:div.theme-light
-     {:style "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 16px;"}
-     [:button.btn.btn--primary.clip-corners-sm "▶ EXECUTE"]
-     [:button.btn.btn--secondary.btn--cyan.clip-corners-sm "◼ END TURN"]
-     [:button.btn.btn--secondary.btn--red.clip-corners-sm "⚡ ATTACK"]
-     [:button.btn.btn--secondary.btn--blue.clip-corners-sm "◇ DEFEND"]
-     [:div {:style "display: flex; gap: 8px; margin-top: 16px;"}
-      [:button.btn.btn--small.btn--small-cyan "DRAW"]
-      [:button.btn.btn--small.btn--small-magenta "HACK"]
-      [:button.btn.btn--small.btn--small-yellow "SCAN"]]]}],
-  :created-at #inst "2026-01-19T23:41:57.945-00:00"},
+    [:div.theme-light {:style "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 16px;"}
+     [:sandbox.ui/action-buttons
+      {:action-buttons/primary [{:label "EXECUTE" :icon "▶"}]
+       :action-buttons/secondary
+       [{:label "END TURN" :icon "◼" :color :cyan}
+        {:label "ATTACK" :icon "⚡" :color :red}
+        {:label "DEFEND" :icon "◇" :color :blue}]
+       :action-buttons/small
+       [{:label "DRAW" :color :cyan}
+        {:label "HACK" :color :magenta}
+        {:label "SCAN" :color :yellow}]}]]}]
+  :created-at #inst "2026-01-19T23:41:57.945-00:00"}
+
  :resource-display
- {:description "Energy and credits resource indicators",
+ {:description "Energy and credits resource indicators"
   :examples
-  [{:label "Dark",
+  [{:label "Dark"
     :hiccup
-    [:div
-     {:style "padding: 40px; display: flex; flex-direction: column; gap: 24px;"}
-     [:div.resource-panel.resource-panel--energy
-      [:div.resource-label.resource-label--energy "◆ Available Energy"]
-      [:div.energy-orbs
-       [:div.energy-orb.energy-orb--active]
-       [:div.energy-orb.energy-orb--active]
-       [:div.energy-orb.energy-orb--active]
-       [:div.energy-orb.energy-orb--empty]
-       [:div.energy-orb.energy-orb--empty]]]
-     [:div.resource-panel.resource-panel--credits
-      [:div.credits-header
-       [:span.resource-label.resource-label--credits "◆ Credits"]
-       [:span.credits-value "₵ 2,450"]]
-      [:div.credits-chips
-       [:div.credit-chip.credit-chip--active.clip-hexagon]
-       [:div.credit-chip.credit-chip--active.clip-hexagon]
-       [:div.credit-chip.credit-chip--active.clip-hexagon]
-       [:div.credit-chip.credit-chip--empty.clip-hexagon]
-       [:div.credit-chip.credit-chip--empty.clip-hexagon]]]]}
-   {:label "Light",
+    [:div {:style "padding: 40px; display: flex; flex-direction: column; gap: 24px;"}
+     [:sandbox.ui/resource-display
+      {:resource-display/energy {:active 3 :total 5}
+       :resource-display/credits {:active 3 :total 5 :value "2,450"}}]]}
+   {:label "Light"
     :hiccup
-    [:div.theme-light
-     {:style "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 24px;"}
-     [:div.resource-panel.resource-panel--energy
-      [:div.resource-label.resource-label--energy "◆ Available Energy"]
-      [:div.energy-orbs
-       [:div.energy-orb.energy-orb--active]
-       [:div.energy-orb.energy-orb--active]
-       [:div.energy-orb.energy-orb--active]
-       [:div.energy-orb.energy-orb--empty]
-       [:div.energy-orb.energy-orb--empty]]]
-     [:div.resource-panel.resource-panel--credits
-      [:div.credits-header
-       [:span.resource-label.resource-label--credits "◆ Credits"]
-       [:span.credits-value "₵ 2,450"]]
-      [:div.credits-chips
-       [:div.credit-chip.credit-chip--active.clip-hexagon]
-       [:div.credit-chip.credit-chip--active.clip-hexagon]
-       [:div.credit-chip.credit-chip--active.clip-hexagon]
-       [:div.credit-chip.credit-chip--empty.clip-hexagon]
-       [:div.credit-chip.credit-chip--empty.clip-hexagon]]]]}],
+    [:div.theme-light {:style "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 24px;"}
+     [:sandbox.ui/resource-display
+      {:resource-display/energy {:active 3 :total 5}
+       :resource-display/credits {:active 3 :total 5 :value "2,450"}}]]}]
   :created-at #inst "2026-01-19T23:48:29.357-00:00"}}
