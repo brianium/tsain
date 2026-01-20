@@ -33,16 +33,16 @@ Use sandestin discovery to explore available effects:
 (require '[ascolais.tsain :as tsain])
 
 ;; List all tsain effects
-(describe dispatch)
+(describe (dispatch))
 
 ;; See schema and docs for an effect
-(describe dispatch ::tsain/preview)
+(describe (dispatch) ::tsain/preview)
 
 ;; Generate example invocation
-(sample dispatch ::tsain/preview)
+(sample (dispatch) ::tsain/preview)
 
 ;; Search by keyword
-(grep dispatch "component")
+(grep (dispatch) "component")
 ```
 
 ## Alias-First Workflow
@@ -165,10 +165,10 @@ Available in the dev namespace:
 
 | Function | Purpose |
 |----------|---------|
-| `(describe dispatch)` | List all registered effects |
-| `(describe dispatch ::tsain/preview)` | Inspect specific effect |
-| `(sample dispatch ::tsain/preview)` | Generate example invocation |
-| `(grep dispatch "pattern")` | Search by pattern |
+| `(describe (dispatch))` | List all registered effects |
+| `(describe (dispatch) ::tsain/preview)` | Inspect specific effect |
+| `(sample (dispatch) ::tsain/preview)` | Generate example invocation |
+| `(grep (dispatch) "pattern")` | Search by pattern |
 | `(reload)` | Reload changed namespaces (includes alias changes) |
 
 ## File Locations

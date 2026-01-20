@@ -76,9 +76,10 @@ The `dev` namespace provides:
 - `(reload)` - Reload changed namespaces via clj-reload
 - `(restart)` - Stop, reload, and start
 - `(dispatch effects)` - Dispatch sandestin effects
-- `(describe dispatch)` - List all registered effects/actions
-- `(sample dispatch key)` - Generate sample invocations
-- `(grep dispatch pattern)` - Search registry
+- `(dispatch)` - Get the raw dispatch function (for discovery)
+- `(describe (dispatch))` - List all registered effects/actions
+- `(sample (dispatch) key)` - Generate sample invocations
+- `(grep (dispatch) pattern)` - Search registry
 
 ### Portal
 

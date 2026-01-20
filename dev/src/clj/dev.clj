@@ -51,8 +51,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn dispatch
-  "Dispatch effects via the running system.
-   Convenience wrapper around system dispatch."
+  "Get the sandestin dispatch function from the running system.
+   Use this for both dispatching effects and discovery:
+
+   Dispatch effects:
+     (dispatch [[::tsain/preview [:h1 \"Hello\"]]])
+
+   Discovery:
+     (s/describe (dispatch))
+     (s/sample (dispatch) ::tsain/preview)"
+  ([]
+   (:dispatch system/*system*))
   ([effects]
    (when-let [d (:dispatch system/*system*)]
      (d effects)))
@@ -71,23 +80,23 @@
   "List and inspect registered effects/actions.
 
   Usage:
-    (describe dispatch)              ;; List all items
-    (describe dispatch :effects)     ;; List effects only
-    (describe dispatch ::tsain/preview)  ;; Inspect specific effect"
+    (describe (dispatch))              ;; List all items
+    (describe (dispatch) :effects)     ;; List effects only
+    (describe (dispatch) ::tsain/preview)  ;; Inspect specific effect"
   s/describe)
 
 (def sample
   "Generate example invocations.
 
   Usage:
-    (sample dispatch ::tsain/preview)     ;; One sample
-    (sample dispatch ::tsain/preview 3)   ;; Multiple samples"
+    (sample (dispatch) ::tsain/preview)     ;; One sample
+    (sample (dispatch) ::tsain/preview 3)   ;; Multiple samples"
   s/sample)
 
 (def grep
   "Search registry by pattern.
 
   Usage:
-    (grep dispatch \"component\")
-    (grep dispatch #\"preview|commit\")"
+    (grep (dispatch) \"component\")
+    (grep (dispatch) #\"preview|commit\")"
   s/grep)
