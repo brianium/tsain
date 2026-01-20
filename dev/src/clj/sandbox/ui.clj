@@ -250,3 +250,19 @@
        [:span.resource-label.resource-label--credits "◆ Credits"]
        [:span.credits-value (str "₵ " (:value credits-data))]]
       [::credit-chips {:credit-chips/active (:active credits-data) :credit-chips/total (:total credits-data)}]]]))
+
+;; =============================================================================
+;; Toast Component
+;; =============================================================================
+
+(defmethod c/resolve-alias ::toast
+  [_ attrs _]
+  (let [{:toast/keys [variant label message icon]} attrs
+        variant-class (str "toast--" (name (or variant :info)))]
+    [:div.toast {:class variant-class}
+     [:div.toast-accent]
+     [:div.toast-icon icon]
+     [:div.toast-content
+      [:div.toast-label (str "◆ " label)]
+      [:div.toast-message message]]
+     [:button.toast-dismiss "✕"]]))
