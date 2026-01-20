@@ -924,6 +924,81 @@ Clojure has two syntaxes for namespaced keywords:
 - Use `::alias/key` to reference keywords from required namespaces without typing the full name
 - Prefer `:` for spec keys, component IDs, and data that crosses namespace boundaries
 
+## Component Styling Conventions
+
+When building UI components for the sandbox:
+
+### Development Workflow
+
+1. **Exploration phase** - Use inline styles for rapid iteration with `preview!`
+2. **Before commit** - Extract all styles to `dev/resources/public/styles.css`
+3. **Commit** - Component hiccup should use CSS classes, not inline styles
+
+### Naming Convention (BEM-like)
+
+- `.component-name` - Block (main container)
+- `.component-name-element` - Element within block
+- `.component-name--modifier` - Modifier variant
+
+Example:
+```css
+.game-card { }
+.game-card-header { }
+.game-card-stat--attack { }
+```
+
+### Theme Support
+
+Use CSS custom properties for colors that vary by theme:
+
+```css
+.my-component {
+  background: var(--bg-primary);
+  color: var(--accent-cyan);
+  border-color: var(--border-glow-cyan);
+}
+```
+
+For light variants, wrap in `.theme-light`:
+```clojure
+[:div.theme-light
+ [:div.my-component ...]]
+```
+
+### Available CSS Variables
+
+| Variable | Purpose |
+|----------|---------|
+| `--bg-primary` | Main background |
+| `--bg-secondary` | Secondary background |
+| `--accent-cyan` | Primary accent color |
+| `--accent-magenta` | Secondary accent color |
+| `--accent-pink` | Pink accent |
+| `--accent-red` | Red/danger color |
+| `--accent-blue` | Blue/info color |
+| `--text-primary` | Main text color |
+| `--text-secondary` | Secondary text |
+| `--text-muted` | Subdued text |
+| `--border-glow-cyan` | Cyan border with glow |
+
+### Utility Classes
+
+Reusable clip-path classes:
+- `.clip-corners-lg` / `.clip-corners-md` / `.clip-corners-sm` - Cut corners
+- `.clip-hexagon` - Hexagon shape
+- `.clip-diamond` - Diamond shape
+- `.clip-badge` - Elongated hexagon for tags
+- `.clip-octagon` - Octagon for avatars
+- `.scanline-overlay` - CRT scanline effect
+
+### Why CSS Classes?
+
+Committed components should have minimal/no inline styles because:
+1. **Clean copied hiccup** - Easy to paste into other projects
+2. **Hot-reload** - CSS changes update without re-running preview
+3. **Consistent theming** - CSS custom properties handle light/dark modes
+4. **Maintainable** - Styles in one place, easy to update
+
 ## Git Commits
 
 Use conventional commits format:

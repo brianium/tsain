@@ -133,6 +133,8 @@ This saves to:
 3. **Use nested CSS** - The stylesheet supports CSS nesting (`& .child`) for cleaner organization
 4. **Descriptive names** - Use kebab-case names like `:user-card`, `:pricing-table`
 5. **Add descriptions** - Help future you remember what the component is for
+6. **BEM-like naming** - Use `.component-name`, `.component-name-element`, `.component-name--modifier`
+7. **Use CSS custom properties** - Leverage theme variables for colors that vary by theme
 
 ## Example Session: Static Component
 
@@ -301,19 +303,103 @@ clj-nrepl-eval -p 7888 "
 
 The sandbox dropdown lets you toggle between variants.
 
+## CSS Extraction (Required Before Commit)
+
+**IMPORTANT:** All committed components must use CSS classes, not inline styles. This ensures:
+- Copied hiccup is clean and immediately usable
+- Styles hot-reload during continued iteration
+- Consistent theming via CSS custom properties
+
+### Extraction Process
+
+1. **Identify repeated patterns** - Buttons, cards, containers get classes
+2. **Name classes semantically** - `.game-card`, `.game-card-header`, `.stat-badge`
+3. **Use BEM-like naming** - `.component-name-element--modifier`
+4. **Use CSS custom properties for themes** - Colors should reference `--accent-cyan`, `--bg-primary`, etc.
+5. **Move inline styles to CSS** - One section per component in `styles.css`
+
+### Example Extraction
+
+**Before (inline styles - exploration phase):**
+```clojure
+[:div {:style "background: #0a0a12; padding: 16px; border: 1px solid #0ff;"}
+ [:h2 {:style "color: #0ff; font-size: 14px;"} "Title"]]
+```
+
+**After (CSS classes - commit-ready):**
+```clojure
+[:div.game-card
+ [:h2.game-card-title "Title"]]
+```
+
+```css
+/* In styles.css */
+.game-card {
+  background: var(--bg-primary);
+  padding: 16px;
+  border: 1px solid var(--accent-cyan);
+}
+
+.game-card-title {
+  color: var(--accent-cyan);
+  font-size: 14px;
+}
+```
+
+### Theme Variants with CSS
+
+Use the `.theme-light` class to switch themes. CSS custom properties automatically update:
+
+```clojure
+;; Dark variant (default)
+[:div.game-card ...]
+
+;; Light variant
+[:div.theme-light
+ [:div.game-card ...]]
+```
+
+### Available Theme Variables
+
+The stylesheet defines these CSS custom properties in `:root` (dark) and `.theme-light`:
+
+| Variable | Dark | Light | Purpose |
+|----------|------|-------|---------|
+| `--bg-primary` | `#0a0a12` | `#ffffff` | Main background |
+| `--bg-secondary` | `#12081f` | `#f8f4ff` | Secondary background |
+| `--accent-cyan` | `#0ff` | `#00cccc` | Primary accent |
+| `--accent-magenta` | `#ff00ff` | `#cc00cc` | Secondary accent |
+| `--text-primary` | `#fff` | `#333` | Main text |
+| `--text-muted` | `#666` | `#888` | Subdued text |
+
+### Utility Classes
+
+The stylesheet includes reusable utility classes:
+
+| Class | Effect |
+|-------|--------|
+| `.clip-corners-lg` | Cut corner clip path (12px) |
+| `.clip-corners-md` | Cut corner clip path (10px) |
+| `.clip-corners-sm` | Cut corner clip path (8px) |
+| `.clip-hexagon` | Hexagon shape |
+| `.clip-diamond` | Diamond shape |
+| `.clip-badge` | Elongated hexagon for tags |
+| `.clip-octagon` | Octagon for avatars |
+| `.clip-asymmetric` | Asymmetric corner cut |
+| `.scanline-overlay` | CRT scanline effect |
+
 ### When to Use Inline Styles
 
-**Use CSS classes for:**
-- Reusable patterns (buttons, cards, layouts)
-- Hover/focus states
-- Media queries
-- Animations
+After CSS extraction, minimal inline styles may remain for:
+- Dynamic/data-driven values (e.g., `width: 80%` for progress bars)
+- Container padding/layout for demo wrappers
+- One-off positioning adjustments
 
-**Use inline styles for:**
-- One-off complex components with many unique visual elements
-- Rapid prototyping before patterns emerge
-- Components where every element has distinct styling (like game UI)
-- Theme-specific values that vary per variant
+**Avoid inline styles for:**
+- Colors (use CSS custom properties)
+- Typography (use classes)
+- Borders and shadows (use classes)
+- Anything that should change with themes
 
 ## Browser Verification
 

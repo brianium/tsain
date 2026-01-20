@@ -1,6 +1,6 @@
 # 008: CSS Extraction Workflow
 
-## Status: Draft
+## Status: Complete
 
 ## Overview
 
@@ -150,37 +150,37 @@ For each component in `components.edn`:
 ## Implementation Plan
 
 ### Phase 1: Workflow Updates
-- [ ] Update component-iterate skill with required CSS extraction step
-- [ ] Add component styling conventions to CLAUDE.md
-- [ ] Document CSS organization pattern
+- [x] Update component-iterate skill with required CSS extraction step
+- [x] Add component styling conventions to CLAUDE.md
+- [x] Document CSS organization pattern
 
 ### Phase 2: CSS Foundation
-- [ ] Set up CSS custom properties for theme variables in styles.css
-- [ ] Add section headers for component organization
+- [x] Set up CSS custom properties for theme variables in styles.css
+- [x] Add section headers for component organization
 
 ### Phase 3: Component Refactoring
 Refactor each component (extract CSS, update hiccup, verify appearance):
-- [ ] game-card
-- [ ] combat-log
-- [ ] card-type-badges
-- [ ] player-hud
-- [ ] action-buttons
-- [ ] resource-display
+- [x] game-card
+- [x] combat-log
+- [x] card-type-badges
+- [x] player-hud
+- [x] action-buttons
+- [x] resource-display
 
 ### Phase 4: Verification
-- [ ] All components render correctly in Dark variant
-- [ ] All components render correctly in Light variant
-- [ ] Copied hiccup is clean (no inline styles)
-- [ ] CSS hot-reload works for all components
+- [x] All components render correctly in Dark variant
+- [x] All components render correctly in Light variant
+- [x] Copied hiccup is clean (no inline styles)
+- [x] CSS hot-reload works for all components
 
 ## Success Criteria
 
-- [ ] `styles.css` contains all component styles with clear organization
-- [ ] All components in `components.edn` use CSS classes instead of inline styles
-- [ ] Theme variants work via CSS custom properties (single hiccup structure)
-- [ ] component-iterate skill documents CSS extraction as required step
-- [ ] CLAUDE.md includes component styling conventions
-- [ ] Copying any component yields clean, readable hiccup
+- [x] `styles.css` contains all component styles with clear organization
+- [x] All components in `components.edn` use CSS classes instead of inline styles
+- [x] Theme variants work via CSS custom properties (`.theme-light` wrapper)
+- [x] component-iterate skill documents CSS extraction as required step
+- [x] CLAUDE.md includes component styling conventions
+- [x] Copying any component yields clean, readable hiccup
 
 ## File Changes
 

@@ -5,213 +5,78 @@
     :hiccup
     [:div
      {:style "padding: 40px; display: flex; justify-content: center;"}
-     [:div.game-card
-      {:style
-       "\n     width: 280px;\n     height: 420px;\n     background: linear-gradient(160deg, #0a0a12 0%, #12081f 40%, #08101a 100%);\n     border: 1px solid;\n     border-image: linear-gradient(180deg, #0ff 0%, #ff00ff 100%) 1;\n     position: relative;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px));\n   "}
-      [:div
-       {:style
-        "position: absolute; top: 0; left: 12px; width: 60px; height: 2px; background: linear-gradient(90deg, #0ff, transparent);"}]
-      [:div
-       {:style
-        "position: absolute; top: 12px; left: 0; width: 2px; height: 60px; background: linear-gradient(180deg, #0ff, transparent);"}]
-      [:div
-       {:style
-        "position: absolute; bottom: 0; right: 12px; width: 60px; height: 2px; background: linear-gradient(270deg, #ff00ff, transparent);"}]
-      [:div
-       {:style
-        "position: absolute; bottom: 12px; right: 0; width: 2px; height: 60px; background: linear-gradient(0deg, #ff00ff, transparent);"}]
-      [:div
-       {:style
-        "position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,255,0.02) 3px, rgba(0,255,255,0.02) 6px); pointer-events: none; z-index: 10;"}]
-      [:div
-       {:style
-        "position: absolute; inset: 4px; border: 1px solid rgba(0,255,255,0.15); clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px)); pointer-events: none;"}]
-      [:div
-       {:style
-        "position: absolute; top: 16px; left: 16px; width: 40px; height: 46px; background: linear-gradient(135deg, #ff00ff 0%, #ff0066 100%); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #fff; z-index: 5;"}
-       [:div
-        {:style "filter: drop-shadow(0 0 8px rgba(255,0,255,0.8));"}
-        "4"]]
-      [:div
-       {:style
-        "margin: 16px 16px 0 64px; padding: 8px 12px; background: linear-gradient(90deg, rgba(0,255,255,0.1), transparent); border-left: 2px solid #0ff;"}
-       [:div
-        {:style
-         "font-size: 15px; font-weight: bold; color: #0ff; text-shadow: 0 0 10px rgba(0,255,255,0.6); text-transform: uppercase; letter-spacing: 2px;"}
-        "Neural Phantom"]
-       [:div
-        {:style
-         "font-size: 10px; color: #ff0080; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; opacity: 0.9;"}
-        "// Creature — AI Specter"]]
-      [:div
-       {:style
-        "margin: 12px 16px; height: 150px; background: linear-gradient(180deg, #0a0518 0%, #050a14 100%); border: 1px solid rgba(0,255,255,0.4); position: relative; overflow: hidden;"}
-       [:div
-        {:style
-         "position: absolute; inset: 0; opacity: 0.15; background-image: linear-gradient(90deg, #0ff 1px, transparent 1px), linear-gradient(#0ff 1px, transparent 1px); background-size: 20px 20px;"}]
-       [:div
-        {:style
-         "position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 72px; filter: drop-shadow(0 0 30px rgba(0,255,255,0.5));"}
-        "👻"]
-       [:div
-        {:style
-         "position: absolute; top: 25%; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent 10%, #0ff 30%, #ff00ff 70%, transparent 90%); opacity: 0.7;"}]
-       [:div
-        {:style
-         "position: absolute; top: 0; left: 0; width: 16px; height: 16px; border-top: 2px solid #0ff; border-left: 2px solid #0ff;"}]
-       [:div
-        {:style
-         "position: absolute; top: 0; right: 0; width: 16px; height: 16px; border-top: 2px solid #0ff; border-right: 2px solid #0ff;"}]
-       [:div
-        {:style
-         "position: absolute; bottom: 0; left: 0; width: 16px; height: 16px; border-bottom: 2px solid #ff00ff; border-left: 2px solid #ff00ff;"}]
-       [:div
-        {:style
-         "position: absolute; bottom: 0; right: 0; width: 16px; height: 16px; border-bottom: 2px solid #ff00ff; border-right: 2px solid #ff00ff;"}]]
-      [:div
-       {:style
-        "margin: 8px 16px; padding: 12px; background: rgba(0,10,20,0.9); border: 1px solid rgba(0,255,255,0.2); min-height: 90px; position: relative;"}
-       [:div
-        {:style
-         "position: absolute; top: -1px; left: 20px; width: 40px; height: 3px; background: #0ff;"}]
-       [:div
-        {:style "font-size: 11px; color: #ddd; line-height: 1.6;"}
-        [:span
-         {:style
-          "color: #ff0080; font-weight: bold; text-transform: uppercase; font-size: 10px;"}
-         "▶ Stealth Protocol: "]
+     [:div.game-card.clip-corners-lg
+      [:div.game-card-corner.game-card-corner--top-h]
+      [:div.game-card-corner.game-card-corner--top-v]
+      [:div.game-card-corner.game-card-corner--bottom-h]
+      [:div.game-card-corner.game-card-corner--bottom-v]
+      [:div.scanline-overlay]
+      [:div.game-card-inner-border.clip-corners-md]
+      [:div.game-card-cost.clip-hexagon
+       [:div.game-card-cost-value "4"]]
+      [:div.game-card-header
+       [:div.game-card-title "Neural Phantom"]
+       [:div.game-card-type "// Creature — AI Specter"]]
+      [:div.game-card-art
+       [:div.game-card-art-grid]
+       [:div.game-card-art-icon "👻"]
+       [:div.game-card-art-line]
+       [:div.game-card-art-bracket.game-card-art-bracket--tl]
+       [:div.game-card-art-bracket.game-card-art-bracket--tr]
+       [:div.game-card-art-bracket.game-card-art-bracket--bl]
+       [:div.game-card-art-bracket.game-card-art-bracket--br]]
+      [:div.game-card-text
+       [:div.game-card-text-accent]
+       [:div.game-card-ability
+        [:span.game-card-ability-keyword "▶ Stealth Protocol: "]
         "Cannot be targeted by ICE programs on the turn it enters the grid."]
-       [:div
-        {:style
-         "font-size: 10px; color: #0ff; line-height: 1.5; margin-top: 10px; font-style: italic; opacity: 0.8;"}
+       [:div.game-card-flavor
         "\"They call it a ghost in the machine. I call it evolution.\""]]
-      [:div
-       {:style
-        "position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(0deg, rgba(0,0,0,0.5), transparent);"}
-       [:div
-        {:style "display: flex; align-items: center; gap: 8px;"}
-        [:div
-         {:style
-          "width: 8px; height: 8px; background: #ff00ff; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); box-shadow: 0 0 8px #ff00ff;"}]
-        [:div
-         {:style "font-size: 9px; color: #666; letter-spacing: 1px;"}
-         "SET-01 // 042"]]
-       [:div
-        {:style "display: flex; gap: 6px;"}
-        [:div
-         {:style
-          "width: 38px; height: 38px; background: linear-gradient(135deg, #ff2222 0%, #aa0000 100%); clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #fff;"}
-         "3"]
-        [:div
-         {:style
-          "width: 38px; height: 38px; background: linear-gradient(135deg, #0088ff 0%, #0044aa 100%); clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #fff;"}
-         "2"]]]]]}
+      [:div.game-card-footer
+       [:div.game-card-set
+        [:div.game-card-set-icon.clip-diamond]
+        [:div.game-card-set-id "SET-01 // 042"]]
+       [:div.game-card-stats
+        [:div.game-card-stat.game-card-stat--attack.clip-stat-hex "3"]
+        [:div.game-card-stat.game-card-stat--defense.clip-stat-hex "2"]]]]]}
    {:label "Light",
     :hiccup
-    [:div
-     {:style
-      "padding: 40px; background: #f0f4f8; display: flex; justify-content: center;"}
-     [:div.game-card
-      {:style
-       "width: 280px; height: 420px; background: linear-gradient(160deg, #ffffff 0%, #f8f4ff 40%, #f4f8ff 100%); border: 2px solid; border-image: linear-gradient(180deg, #00cccc, #cc00cc) 1; position: relative; font-family: \"Courier New\", monospace; clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px)); box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 0 40px rgba(0,200,200,0.1);"}
-      [:div
-       {:style
-        "position: absolute; top: 0; left: 12px; width: 60px; height: 3px; background: linear-gradient(90deg, #00cccc, transparent);"}]
-      [:div
-       {:style
-        "position: absolute; top: 12px; left: 0; width: 3px; height: 60px; background: linear-gradient(180deg, #00cccc, transparent);"}]
-      [:div
-       {:style
-        "position: absolute; bottom: 0; right: 12px; width: 60px; height: 3px; background: linear-gradient(270deg, #cc00cc, transparent);"}]
-      [:div
-       {:style
-        "position: absolute; bottom: 12px; right: 0; width: 3px; height: 60px; background: linear-gradient(0deg, #cc00cc, transparent);"}]
-      [:div
-       {:style
-        "position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,150,150,0.03) 3px, rgba(0,150,150,0.03) 6px); pointer-events: none; z-index: 10;"}]
-      [:div
-       {:style
-        "position: absolute; inset: 4px; border: 1px solid rgba(0,180,180,0.2); clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px)); pointer-events: none;"}]
-      [:div
-       {:style
-        "position: absolute; top: 16px; left: 16px; width: 40px; height: 46px; background: linear-gradient(135deg, #cc00cc, #ff0066); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #fff; z-index: 5;"}
-       [:div
-        {:style "filter: drop-shadow(0 0 4px rgba(255,255,255,0.8));"}
-        "4"]]
-      [:div
-       {:style
-        "margin: 16px 16px 0 64px; padding: 8px 12px; background: linear-gradient(90deg, rgba(0,180,180,0.15), transparent); border-left: 3px solid #00cccc;"}
-       [:div
-        {:style
-         "font-size: 15px; font-weight: bold; color: #007777; text-transform: uppercase; letter-spacing: 2px;"}
-        "Neural Phantom"]
-       [:div
-        {:style
-         "font-size: 10px; color: #cc0066; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;"}
-        "// Creature — AI Specter"]]
-      [:div
-       {:style
-        "margin: 12px 16px; height: 150px; background: linear-gradient(180deg, #e8f4f8, #f0e8f4); border: 2px solid rgba(0,180,180,0.3); position: relative; overflow: hidden;"}
-       [:div
-        {:style
-         "position: absolute; inset: 0; opacity: 0.2; background-image: linear-gradient(90deg, #00cccc 1px, transparent 1px), linear-gradient(#00cccc 1px, transparent 1px); background-size: 20px 20px;"}]
-       [:div
-        {:style
-         "position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 72px; filter: drop-shadow(0 4px 8px rgba(0,150,150,0.3));"}
-        "👻"]
-       [:div
-        {:style
-         "position: absolute; top: 25%; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent 10%, #00cccc 30%, #cc00cc 70%, transparent 90%); opacity: 0.5;"}]
-       [:div
-        {:style
-         "position: absolute; top: 0; left: 0; width: 16px; height: 16px; border-top: 2px solid #00cccc; border-left: 2px solid #00cccc;"}]
-       [:div
-        {:style
-         "position: absolute; top: 0; right: 0; width: 16px; height: 16px; border-top: 2px solid #00cccc; border-right: 2px solid #00cccc;"}]
-       [:div
-        {:style
-         "position: absolute; bottom: 0; left: 0; width: 16px; height: 16px; border-bottom: 2px solid #cc00cc; border-left: 2px solid #cc00cc;"}]
-       [:div
-        {:style
-         "position: absolute; bottom: 0; right: 0; width: 16px; height: 16px; border-bottom: 2px solid #cc00cc; border-right: 2px solid #cc00cc;"}]]
-      [:div
-       {:style
-        "margin: 8px 16px; padding: 12px; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,180,180,0.3); min-height: 90px; position: relative;"}
-       [:div
-        {:style
-         "position: absolute; top: -1px; left: 20px; width: 40px; height: 3px; background: #00cccc;"}]
-       [:div
-        {:style "font-size: 11px; color: #333; line-height: 1.6;"}
-        [:span
-         {:style
-          "color: #cc0066; font-weight: bold; text-transform: uppercase; font-size: 10px;"}
-         "▶ Stealth Protocol: "]
+    [:div.theme-light
+     {:style "padding: 40px; background: #f0f4f8; display: flex; justify-content: center;"}
+     [:div.game-card.clip-corners-lg
+      [:div.game-card-corner.game-card-corner--top-h]
+      [:div.game-card-corner.game-card-corner--top-v]
+      [:div.game-card-corner.game-card-corner--bottom-h]
+      [:div.game-card-corner.game-card-corner--bottom-v]
+      [:div.scanline-overlay]
+      [:div.game-card-inner-border.clip-corners-md]
+      [:div.game-card-cost.clip-hexagon
+       [:div.game-card-cost-value "4"]]
+      [:div.game-card-header
+       [:div.game-card-title "Neural Phantom"]
+       [:div.game-card-type "// Creature — AI Specter"]]
+      [:div.game-card-art
+       [:div.game-card-art-grid]
+       [:div.game-card-art-icon "👻"]
+       [:div.game-card-art-line]
+       [:div.game-card-art-bracket.game-card-art-bracket--tl]
+       [:div.game-card-art-bracket.game-card-art-bracket--tr]
+       [:div.game-card-art-bracket.game-card-art-bracket--bl]
+       [:div.game-card-art-bracket.game-card-art-bracket--br]]
+      [:div.game-card-text
+       [:div.game-card-text-accent]
+       [:div.game-card-ability
+        [:span.game-card-ability-keyword "▶ Stealth Protocol: "]
         "Cannot be targeted by ICE programs on the turn it enters the grid."]
-       [:div
-        {:style
-         "font-size: 10px; color: #007777; line-height: 1.5; margin-top: 10px; font-style: italic;"}
+       [:div.game-card-flavor
         "\"They call it a ghost in the machine. I call it evolution.\""]]
-      [:div
-       {:style
-        "position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(0deg, rgba(240,244,248,0.9), transparent);"}
-       [:div
-        {:style "display: flex; align-items: center; gap: 8px;"}
-        [:div
-         {:style
-          "width: 8px; height: 8px; background: #cc00cc; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"}]
-        [:div
-         {:style "font-size: 9px; color: #888; letter-spacing: 1px;"}
-         "SET-01 // 042"]]
-       [:div
-        {:style "display: flex; gap: 6px;"}
-        [:div
-         {:style
-          "width: 38px; height: 38px; background: linear-gradient(135deg, #ff4444, #cc0000); clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #fff; box-shadow: 0 2px 8px rgba(200,0,0,0.3);"}
-         "3"]
-        [:div
-         {:style
-          "width: 38px; height: 38px; background: linear-gradient(135deg, #0099ff, #0066cc); clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #fff; box-shadow: 0 2px 8px rgba(0,100,200,0.3);"}
-         "2"]]]]]}],
+      [:div.game-card-footer
+       [:div.game-card-set
+        [:div.game-card-set-icon.clip-diamond]
+        [:div.game-card-set-id "SET-01 // 042"]]
+       [:div.game-card-stats
+        [:div.game-card-stat.game-card-stat--attack.clip-stat-hex "3"]
+        [:div.game-card-stat.game-card-stat--defense.clip-stat-hex "2"]]]]]}],
   :created-at #inst "2026-01-19T23:41:10.040-00:00"},
  :combat-log
  {:description "Battle log with timestamped events",
@@ -221,223 +86,107 @@
     [:div
      {:style "padding: 40px;"}
      [:div.combat-log
-      {:style
-       "\n     width: 360px;\n     height: 280px;\n     background: linear-gradient(180deg, #0a0a12 0%, #08080f 100%);\n     border: 1px solid rgba(0,255,255,0.3);\n     font-family: \"Courier New\", monospace;\n     display: flex;\n     flex-direction: column;\n     position: relative;\n     overflow: hidden;\n   "}
-      [:div
-       {:style
-        "position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.015) 2px, rgba(0,255,255,0.015) 4px); pointer-events: none; z-index: 10;"}]
-      [:div
-       {:style
-        "\n      padding: 10px 14px;\n      background: linear-gradient(90deg, rgba(0,255,255,0.1), transparent);\n      border-bottom: 1px solid rgba(0,255,255,0.2);\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n    "}
-       [:span
-        {:style
-         "font-size: 11px; color: #0ff; text-transform: uppercase; letter-spacing: 2px;"}
-        "◆ Combat Log"]
-       [:span {:style "font-size: 9px; color: #666;"} "TURN 7"]]
-      [:div
-       {:style "flex: 1; overflow-y: auto; padding: 8px 0;"}
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid transparent; display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #444; min-width: 40px;"}
-         "07:23"]
+      [:div.scanline-overlay]
+      [:div.combat-log-header
+       [:span.combat-log-title "◆ Combat Log"]
+       [:span.combat-log-turn "TURN 7"]]
+      [:div.combat-log-entries
+       [:div.combat-log-entry
+        [:span.combat-log-time "07:23"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #ff3366;"}
-          [:span {:style "color: #0ff;"} "Neural Phantom"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--cyan "Neural Phantom"]
           " attacks "
-          [:span {:style "color: #ff00ff;"} "ICE Sentinel"]]
-         [:div
-          {:style "font-size: 10px; color: #ff3366; margin-top: 2px;"}
-          "⚡ 3 damage dealt"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid transparent; display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #444; min-width: 40px;"}
-         "07:22"]
+          [:span.combat-log-actor--magenta "ICE Sentinel"]]
+         [:div.combat-log-detail.combat-log-damage "⚡ 3 damage dealt"]]]
+       [:div.combat-log-entry
+        [:span.combat-log-time "07:22"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #0088ff;"}
-          [:span {:style "color: #ff00ff;"} "ICE Sentinel"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--magenta "ICE Sentinel"]
           " blocks attack"]
-         [:div
-          {:style "font-size: 10px; color: #0088ff; margin-top: 2px;"}
-          "◇ 2 damage prevented"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid #ff00ff; background: rgba(255,0,255,0.05); display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #444; min-width: 40px;"}
-         "07:21"]
+         [:div.combat-log-detail.combat-log-block "◇ 2 damage prevented"]]]
+       [:div.combat-log-entry.combat-log-entry--highlight-magenta
+        [:span.combat-log-time "07:21"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #ccc;"}
-          [:span {:style "color: #ff00ff; font-weight: bold;"} "You"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--magenta "You"]
           " deployed "
-          [:span {:style "color: #0ff;"} "Neural Phantom"]]
-         [:div
-          {:style "font-size: 10px; color: #666; margin-top: 2px;"}
-          "▶ Cost: 4 energy"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid #ffff00; background: rgba(255,255,0,0.03); display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #444; min-width: 40px;"}
-         "07:20"]
+          [:span.combat-log-actor--cyan "Neural Phantom"]]
+         [:div.combat-log-detail.combat-log-info "▶ Cost: 4 energy"]]]
+       [:div.combat-log-entry.combat-log-entry--highlight-yellow
+        [:span.combat-log-time "07:20"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #ffff00;"}
-          "⚠ Firewall breach detected"]
-         [:div
-          {:style "font-size: 10px; color: #666; margin-top: 2px;"}
-          "Security level increased"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid transparent; display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #444; min-width: 40px;"}
-         "07:19"]
+         [:div.combat-log-message.combat-log-warning "⚠ Firewall breach detected"]
+         [:div.combat-log-detail.combat-log-info "Security level increased"]]]
+       [:div.combat-log-entry
+        [:span.combat-log-time "07:19"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #ccc;"}
-          [:span
-           {:style "color: #ff3366; font-weight: bold;"}
-           "GHOST_777"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--red "GHOST_777"]
           " ended their turn"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid transparent; display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #444; min-width: 40px;"}
-         "07:18"]
+       [:div.combat-log-entry
+        [:span.combat-log-time "07:18"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #ccc;"}
-          [:span {:style "color: #ff00ff; font-weight: bold;"} "You"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--magenta "You"]
           " drew 2 cards"]]]]
-      [:div
-       {:style
-        "\n      padding: 8px 14px;\n      background: rgba(0,0,0,0.3);\n      border-top: 1px solid rgba(0,255,255,0.1);\n      display: flex;\n      gap: 8px;\n      align-items: center;\n    "}
-       [:div
-        {:style
-         "flex: 1; height: 24px; background: rgba(0,20,30,0.5); border: 1px solid rgba(0,255,255,0.2); padding: 0 8px; display: flex; align-items: center; font-size: 10px; color: #444;"}
-        "> Type command..."]
-       [:div
-        {:style "font-size: 10px; color: #0ff; cursor: pointer;"}
-        "⏎"]]]]}
+      [:div.combat-log-input
+       [:div.combat-log-input-field "> Type command..."]
+       [:div.combat-log-submit "⏎"]]]]}
    {:label "Light",
     :hiccup
-    [:div
+    [:div.theme-light
      {:style "padding: 40px; background: #f0f4f8;"}
      [:div.combat-log
-      {:style
-       "width: 360px; height: 280px; background: linear-gradient(180deg, #ffffff 0%, #f8f8fc 100%); border: 2px solid rgba(0,180,180,0.3); font-family: \"Courier New\", monospace; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08);"}
-      [:div
-       {:style
-        "position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,150,150,0.02) 2px, rgba(0,150,150,0.02) 4px); pointer-events: none; z-index: 10;"}]
-      [:div
-       {:style
-        "padding: 10px 14px; background: linear-gradient(90deg, rgba(0,180,180,0.1), transparent); border-bottom: 2px solid rgba(0,180,180,0.2); display: flex; justify-content: space-between; align-items: center;"}
-       [:span
-        {:style
-         "font-size: 11px; color: #009999; text-transform: uppercase; letter-spacing: 2px;"}
-        "◆ Combat Log"]
-       [:span {:style "font-size: 9px; color: #888;"} "TURN 7"]]
-      [:div
-       {:style "flex: 1; overflow-y: auto; padding: 8px 0;"}
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid transparent; display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #aaa; min-width: 40px;"}
-         "07:23"]
+      [:div.scanline-overlay]
+      [:div.combat-log-header
+       [:span.combat-log-title "◆ Combat Log"]
+       [:span.combat-log-turn "TURN 7"]]
+      [:div.combat-log-entries
+       [:div.combat-log-entry
+        [:span.combat-log-time "07:23"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #cc3366;"}
-          [:span {:style "color: #009999;"} "Neural Phantom"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--cyan "Neural Phantom"]
           " attacks "
-          [:span {:style "color: #aa00aa;"} "ICE Sentinel"]]
-         [:div
-          {:style "font-size: 10px; color: #cc3366; margin-top: 2px;"}
-          "⚡ 3 damage dealt"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid transparent; display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #aaa; min-width: 40px;"}
-         "07:22"]
+          [:span.combat-log-actor--magenta "ICE Sentinel"]]
+         [:div.combat-log-detail.combat-log-damage "⚡ 3 damage dealt"]]]
+       [:div.combat-log-entry
+        [:span.combat-log-time "07:22"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #0088cc;"}
-          [:span {:style "color: #aa00aa;"} "ICE Sentinel"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--magenta "ICE Sentinel"]
           " blocks attack"]
-         [:div
-          {:style "font-size: 10px; color: #0088cc; margin-top: 2px;"}
-          "◇ 2 damage prevented"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 3px solid #cc00cc; background: rgba(200,0,200,0.05); display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #aaa; min-width: 40px;"}
-         "07:21"]
+         [:div.combat-log-detail.combat-log-block "◇ 2 damage prevented"]]]
+       [:div.combat-log-entry.combat-log-entry--highlight-magenta
+        [:span.combat-log-time "07:21"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #333;"}
-          [:span {:style "color: #cc00cc; font-weight: bold;"} "You"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--magenta "You"]
           " deployed "
-          [:span {:style "color: #009999;"} "Neural Phantom"]]
-         [:div
-          {:style "font-size: 10px; color: #888; margin-top: 2px;"}
-          "▶ Cost: 4 energy"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 3px solid #ccaa00; background: rgba(200,150,0,0.05); display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #aaa; min-width: 40px;"}
-         "07:20"]
+          [:span.combat-log-actor--cyan "Neural Phantom"]]
+         [:div.combat-log-detail.combat-log-info "▶ Cost: 4 energy"]]]
+       [:div.combat-log-entry.combat-log-entry--highlight-yellow
+        [:span.combat-log-time "07:20"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #aa8800;"}
-          "⚠ Firewall breach detected"]
-         [:div
-          {:style "font-size: 10px; color: #888; margin-top: 2px;"}
-          "Security level increased"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid transparent; display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #aaa; min-width: 40px;"}
-         "07:19"]
+         [:div.combat-log-message.combat-log-warning "⚠ Firewall breach detected"]
+         [:div.combat-log-detail.combat-log-info "Security level increased"]]]
+       [:div.combat-log-entry
+        [:span.combat-log-time "07:19"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #555;"}
-          [:span
-           {:style "color: #cc3366; font-weight: bold;"}
-           "GHOST_777"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--red "GHOST_777"]
           " ended their turn"]]]
-       [:div
-        {:style
-         "padding: 8px 14px; border-left: 2px solid transparent; display: flex; gap: 10px; align-items: flex-start;"}
-        [:span
-         {:style "font-size: 9px; color: #aaa; min-width: 40px;"}
-         "07:18"]
+       [:div.combat-log-entry
+        [:span.combat-log-time "07:18"]
         [:div
-         [:div
-          {:style "font-size: 11px; color: #555;"}
-          [:span {:style "color: #cc00cc; font-weight: bold;"} "You"]
+         [:div.combat-log-message
+          [:span.combat-log-actor--magenta "You"]
           " drew 2 cards"]]]]
-      [:div
-       {:style
-        "padding: 8px 14px; background: rgba(0,180,180,0.05); border-top: 2px solid rgba(0,180,180,0.15); display: flex; gap: 8px; align-items: center;"}
-       [:div
-        {:style
-         "flex: 1; height: 24px; background: #ffffff; border: 2px solid rgba(0,180,180,0.2); padding: 0 8px; display: flex; align-items: center; font-size: 10px; color: #aaa;"}
-        "> Type command..."]
-       [:div
-        {:style "font-size: 10px; color: #009999; cursor: pointer;"}
-        "⏎"]]]]}],
+      [:div.combat-log-input
+       [:div.combat-log-input-field "> Type command..."]
+       [:div.combat-log-submit "⏎"]]]]}],
   :created-at #inst "2026-01-19T23:48:58.198-00:00"},
  :card-type-badges
  {:description "Card type and rarity indicator badges",
@@ -445,227 +194,87 @@
   [{:label "Dark",
     :hiccup
     [:div
-     {:style
-      "padding: 40px; display: flex; flex-wrap: wrap; gap: 12px;"}
+     {:style "padding: 40px; display: flex; flex-wrap: wrap; gap: 12px;"}
+     [:div.badge.badge--attack.clip-badge
+      [:span.badge-icon "⚡"]
+      [:span.badge-label "Attack"]]
+     [:div.badge.badge--defense.clip-badge
+      [:span.badge-icon "◇"]
+      [:span.badge-label "Defense"]]
+     [:div.badge.badge--hack.clip-badge
+      [:span.badge-icon "⟁"]
+      [:span.badge-label "Hack"]]
+     [:div.badge.badge--virus.clip-badge
+      [:span.badge-icon "☣"]
+      [:span.badge-label "Virus"]]
+     [:div.badge.badge--protocol.clip-badge
+      [:span.badge-icon "⌘"]
+      [:span.badge-label "Protocol"]]
+     [:div.badge.badge--hardware.clip-badge
+      [:span.badge-icon "⚙"]
+      [:span.badge-label "Hardware"]]
+     [:div.badge.badge--creature.clip-badge
+      [:span.badge-icon "◈"]
+      [:span.badge-label "Creature"]]
+     [:div.badge.badge--ice.clip-badge
+      [:span.badge-icon "▣"]
+      [:span.badge-label "ICE"]]
      [:div
-      {:style
-       "\n     display: inline-flex;\n     align-items: center;\n     gap: 6px;\n     padding: 6px 14px;\n     background: linear-gradient(135deg, #330011 0%, #1a0008 100%);\n     border: 1px solid #ff3366;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);\n   "}
-      [:span {:style "font-size: 12px;"} "⚡"]
-      [:span
-       {:style
-        "font-size: 11px; color: #ff3366; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Attack"]]
-     [:div
-      {:style
-       "\n     display: inline-flex;\n     align-items: center;\n     gap: 6px;\n     padding: 6px 14px;\n     background: linear-gradient(135deg, #001133 0%, #000819 100%);\n     border: 1px solid #0088ff;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);\n   "}
-      [:span {:style "font-size: 12px;"} "◇"]
-      [:span
-       {:style
-        "font-size: 11px; color: #0088ff; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Defense"]]
-     [:div
-      {:style
-       "\n     display: inline-flex;\n     align-items: center;\n     gap: 6px;\n     padding: 6px 14px;\n     background: linear-gradient(135deg, #1a0033 0%, #0d001a 100%);\n     border: 1px solid #ff00ff;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);\n   "}
-      [:span {:style "font-size: 12px;"} "⟁"]
-      [:span
-       {:style
-        "font-size: 11px; color: #ff00ff; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Hack"]]
-     [:div
-      {:style
-       "\n     display: inline-flex;\n     align-items: center;\n     gap: 6px;\n     padding: 6px 14px;\n     background: linear-gradient(135deg, #1a3300 0%, #0d1a00 100%);\n     border: 1px solid #88ff00;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);\n   "}
-      [:span {:style "font-size: 12px;"} "☣"]
-      [:span
-       {:style
-        "font-size: 11px; color: #88ff00; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Virus"]]
-     [:div
-      {:style
-       "\n     display: inline-flex;\n     align-items: center;\n     gap: 6px;\n     padding: 6px 14px;\n     background: linear-gradient(135deg, #002233 0%, #001119 100%);\n     border: 1px solid #0ff;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);\n   "}
-      [:span {:style "font-size: 12px;"} "⌘"]
-      [:span
-       {:style
-        "font-size: 11px; color: #0ff; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Protocol"]]
-     [:div
-      {:style
-       "\n     display: inline-flex;\n     align-items: center;\n     gap: 6px;\n     padding: 6px 14px;\n     background: linear-gradient(135deg, #332200 0%, #1a1100 100%);\n     border: 1px solid #ffaa00;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);\n   "}
-      [:span {:style "font-size: 12px;"} "⚙"]
-      [:span
-       {:style
-        "font-size: 11px; color: #ffaa00; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Hardware"]]
-     [:div
-      {:style
-       "\n     display: inline-flex;\n     align-items: center;\n     gap: 6px;\n     padding: 6px 14px;\n     background: linear-gradient(135deg, #0a0a1a 0%, #05050d 100%);\n     border: 1px solid #8888ff;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);\n   "}
-      [:span {:style "font-size: 12px;"} "◈"]
-      [:span
-       {:style
-        "font-size: 11px; color: #8888ff; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Creature"]]
-     [:div
-      {:style
-       "\n     display: inline-flex;\n     align-items: center;\n     gap: 6px;\n     padding: 6px 14px;\n     background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);\n     border: 1px solid #888;\n     font-family: \"Courier New\", monospace;\n     clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);\n   "}
-      [:span {:style "font-size: 12px;"} "▣"]
-      [:span
-       {:style
-        "font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "ICE"]]
-     [:div
-      {:style
-       "margin-top: 16px; width: 100%; display: flex; gap: 12px;"}
-      [:div
-       {:style
-        "\n      display: inline-flex;\n      align-items: center;\n      gap: 4px;\n      padding: 4px 10px;\n      background: rgba(128,128,128,0.1);\n      border: 1px solid #666;\n      font-family: \"Courier New\", monospace;\n    "}
-       [:div
-        {:style
-         "width: 6px; height: 6px; background: #666; border-radius: 50%;"}]
-       [:span
-        {:style
-         "font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px;"}
-        "Common"]]
-      [:div
-       {:style
-        "\n      display: inline-flex;\n      align-items: center;\n      gap: 4px;\n      padding: 4px 10px;\n      background: rgba(0,136,255,0.1);\n      border: 1px solid #0088ff;\n      font-family: \"Courier New\", monospace;\n    "}
-       [:div
-        {:style
-         "width: 6px; height: 6px; background: #0088ff; border-radius: 50%; box-shadow: 0 0 6px #0088ff;"}]
-       [:span
-        {:style
-         "font-size: 9px; color: #0088ff; text-transform: uppercase; letter-spacing: 1px;"}
-        "Rare"]]
-      [:div
-       {:style
-        "\n      display: inline-flex;\n      align-items: center;\n      gap: 4px;\n      padding: 4px 10px;\n      background: rgba(255,0,255,0.1);\n      border: 1px solid #ff00ff;\n      font-family: \"Courier New\", monospace;\n    "}
-       [:div
-        {:style
-         "width: 6px; height: 6px; background: #ff00ff; border-radius: 50%; box-shadow: 0 0 6px #ff00ff;"}]
-       [:span
-        {:style
-         "font-size: 9px; color: #ff00ff; text-transform: uppercase; letter-spacing: 1px;"}
-        "Epic"]]
-      [:div
-       {:style
-        "\n      display: inline-flex;\n      align-items: center;\n      gap: 4px;\n      padding: 4px 10px;\n      background: linear-gradient(90deg, rgba(255,200,0,0.1), rgba(255,100,0,0.1));\n      border: 1px solid;\n      border-image: linear-gradient(90deg, #ffcc00, #ff6600) 1;\n      font-family: \"Courier New\", monospace;\n    "}
-       [:div
-        {:style
-         "width: 6px; height: 6px; background: linear-gradient(135deg, #ffcc00, #ff6600); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); box-shadow: 0 0 8px #ffaa00;"}]
-       [:span
-        {:style
-         "font-size: 9px; background: linear-gradient(90deg, #ffcc00, #ff6600); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-        "Legendary"]]]]}
+      {:style "margin-top: 16px; width: 100%; display: flex; gap: 12px;"}
+      [:div.badge-rarity.badge-rarity--common
+       [:div.badge-rarity-dot]
+       [:span.badge-rarity-label "Common"]]
+      [:div.badge-rarity.badge-rarity--rare
+       [:div.badge-rarity-dot]
+       [:span.badge-rarity-label "Rare"]]
+      [:div.badge-rarity.badge-rarity--epic
+       [:div.badge-rarity-dot]
+       [:span.badge-rarity-label "Epic"]]
+      [:div.badge-rarity.badge-rarity--legendary
+       [:div.badge-rarity-dot.clip-diamond]
+       [:span.badge-rarity-label "Legendary"]]]]}
    {:label "Light",
     :hiccup
-    [:div
-     {:style
-      "padding: 40px; background: #f0f4f8; display: flex; flex-wrap: wrap; gap: 12px;"}
+    [:div.theme-light
+     {:style "padding: 40px; background: #f0f4f8; display: flex; flex-wrap: wrap; gap: 12px;"}
+     [:div.badge.badge--attack.clip-badge
+      [:span.badge-icon "⚡"]
+      [:span.badge-label "Attack"]]
+     [:div.badge.badge--defense.clip-badge
+      [:span.badge-icon "◇"]
+      [:span.badge-label "Defense"]]
+     [:div.badge.badge--hack.clip-badge
+      [:span.badge-icon "⟁"]
+      [:span.badge-label "Hack"]]
+     [:div.badge.badge--virus.clip-badge
+      [:span.badge-icon "☣"]
+      [:span.badge-label "Virus"]]
+     [:div.badge.badge--protocol.clip-badge
+      [:span.badge-icon "⌘"]
+      [:span.badge-label "Protocol"]]
+     [:div.badge.badge--hardware.clip-badge
+      [:span.badge-icon "⚙"]
+      [:span.badge-label "Hardware"]]
+     [:div.badge.badge--creature.clip-badge
+      [:span.badge-icon "◈"]
+      [:span.badge-label "Creature"]]
+     [:div.badge.badge--ice.clip-badge
+      [:span.badge-icon "▣"]
+      [:span.badge-label "ICE"]]
      [:div
-      {:style
-       "display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: linear-gradient(135deg, #fff0f0 0%, #ffeeee 100%); border: 2px solid #cc3366; font-family: \"Courier New\", monospace; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); box-shadow: 0 2px 8px rgba(200,50,100,0.15);"}
-      [:span {:style "font-size: 12px;"} "⚡"]
-      [:span
-       {:style
-        "font-size: 11px; color: #cc3366; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Attack"]]
-     [:div
-      {:style
-       "display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: linear-gradient(135deg, #f0f8ff 0%, #eef4ff 100%); border: 2px solid #0088cc; font-family: \"Courier New\", monospace; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); box-shadow: 0 2px 8px rgba(0,136,200,0.15);"}
-      [:span {:style "font-size: 12px;"} "◇"]
-      [:span
-       {:style
-        "font-size: 11px; color: #0088cc; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Defense"]]
-     [:div
-      {:style
-       "display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: linear-gradient(135deg, #f8f0ff 0%, #f4e8ff 100%); border: 2px solid #cc00cc; font-family: \"Courier New\", monospace; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); box-shadow: 0 2px 8px rgba(200,0,200,0.15);"}
-      [:span {:style "font-size: 12px;"} "⟁"]
-      [:span
-       {:style
-        "font-size: 11px; color: #cc00cc; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Hack"]]
-     [:div
-      {:style
-       "display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: linear-gradient(135deg, #f0fff0 0%, #e8ffe8 100%); border: 2px solid #66aa00; font-family: \"Courier New\", monospace; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); box-shadow: 0 2px 8px rgba(100,170,0,0.15);"}
-      [:span {:style "font-size: 12px;"} "☣"]
-      [:span
-       {:style
-        "font-size: 11px; color: #66aa00; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Virus"]]
-     [:div
-      {:style
-       "display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: linear-gradient(135deg, #f0ffff 0%, #e8f8f8 100%); border: 2px solid #00aaaa; font-family: \"Courier New\", monospace; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); box-shadow: 0 2px 8px rgba(0,170,170,0.15);"}
-      [:span {:style "font-size: 12px;"} "⌘"]
-      [:span
-       {:style
-        "font-size: 11px; color: #00aaaa; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Protocol"]]
-     [:div
-      {:style
-       "display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: linear-gradient(135deg, #fff8f0 0%, #fff4e8 100%); border: 2px solid #cc8800; font-family: \"Courier New\", monospace; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); box-shadow: 0 2px 8px rgba(200,136,0,0.15);"}
-      [:span {:style "font-size: 12px;"} "⚙"]
-      [:span
-       {:style
-        "font-size: 11px; color: #cc8800; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Hardware"]]
-     [:div
-      {:style
-       "display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: linear-gradient(135deg, #f4f4ff 0%, #eeeeff 100%); border: 2px solid #6666cc; font-family: \"Courier New\", monospace; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); box-shadow: 0 2px 8px rgba(100,100,200,0.15);"}
-      [:span {:style "font-size: 12px;"} "◈"]
-      [:span
-       {:style
-        "font-size: 11px; color: #6666cc; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "Creature"]]
-     [:div
-      {:style
-       "display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%); border: 2px solid #888888; font-family: \"Courier New\", monospace; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); box-shadow: 0 2px 8px rgba(136,136,136,0.15);"}
-      [:span {:style "font-size: 12px;"} "▣"]
-      [:span
-       {:style
-        "font-size: 11px; color: #888888; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-       "ICE"]]
-     [:div
-      {:style
-       "margin-top: 16px; width: 100%; display: flex; gap: 12px;"}
-      [:div
-       {:style
-        "display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(136,136,136,0.08); border: 2px solid #aaa; font-family: \"Courier New\", monospace;"}
-       [:div
-        {:style
-         "width: 6px; height: 6px; background: #aaa; border-radius: 50%;"}]
-       [:span
-        {:style
-         "font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px;"}
-        "Common"]]
-      [:div
-       {:style
-        "display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(0,136,200,0.08); border: 2px solid #0088cc; font-family: \"Courier New\", monospace;"}
-       [:div
-        {:style
-         "width: 6px; height: 6px; background: #0088cc; border-radius: 50%;"}]
-       [:span
-        {:style
-         "font-size: 9px; color: #0088cc; text-transform: uppercase; letter-spacing: 1px;"}
-        "Rare"]]
-      [:div
-       {:style
-        "display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(200,0,200,0.08); border: 2px solid #cc00cc; font-family: \"Courier New\", monospace;"}
-       [:div
-        {:style
-         "width: 6px; height: 6px; background: #cc00cc; border-radius: 50%;"}]
-       [:span
-        {:style
-         "font-size: 9px; color: #cc00cc; text-transform: uppercase; letter-spacing: 1px;"}
-        "Epic"]]
-      [:div
-       {:style
-        "display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: linear-gradient(90deg, rgba(200,150,0,0.08), rgba(200,100,0,0.08)); border: 2px solid; border-image: linear-gradient(90deg, #ccaa00, #cc6600) 1; font-family: \"Courier New\", monospace;"}
-       [:div
-        {:style
-         "width: 6px; height: 6px; background: linear-gradient(135deg, #ccaa00, #cc6600); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"}]
-       [:span
-        {:style
-         "font-size: 9px; background: linear-gradient(90deg, #aa8800, #cc6600); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;"}
-        "Legendary"]]]]}],
+      {:style "margin-top: 16px; width: 100%; display: flex; gap: 12px;"}
+      [:div.badge-rarity.badge-rarity--common
+       [:div.badge-rarity-dot]
+       [:span.badge-rarity-label "Common"]]
+      [:div.badge-rarity.badge-rarity--rare
+       [:div.badge-rarity-dot]
+       [:span.badge-rarity-label "Rare"]]
+      [:div.badge-rarity.badge-rarity--epic
+       [:div.badge-rarity-dot]
+       [:span.badge-rarity-label "Epic"]]
+      [:div.badge-rarity.badge-rarity--legendary
+       [:div.badge-rarity-dot.clip-diamond]
+       [:span.badge-rarity-label "Legendary"]]]]}],
   :created-at #inst "2026-01-19T23:49:33.575-00:00"},
  :player-hud
  {:description "Player status with health, energy, and card counts",
@@ -674,223 +283,82 @@
     :hiccup
     [:div
      {:style "padding: 40px;"}
-     [:div.player-hud
-      {:style
-       "width: 320px; background: linear-gradient(135deg, #0a0a12 0%, #0d0818 100%); border: 1px solid; border-image: linear-gradient(90deg, #0ff, #ff00ff) 1; padding: 16px; font-family: \"Courier New\", monospace; position: relative; clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));"}
-      [:div
-       {:style
-        "position: absolute; top: 0; left: 0; width: 40px; height: 2px; background: #0ff;"}]
-      [:div
-       {:style
-        "position: absolute; top: 0; left: 0; width: 2px; height: 40px; background: #0ff;"}]
-      [:div
-       {:style
-        "position: absolute; bottom: 0; right: 20px; width: 40px; height: 2px; background: #ff00ff;"}]
-      [:div
-       {:style
-        "position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.02) 2px, rgba(0,255,255,0.02) 4px); pointer-events: none;"}]
-      [:div
-       {:style
-        "display: flex; align-items: center; gap: 12px; margin-bottom: 16px;"}
+     [:div.player-hud.clip-asymmetric
+      [:div.player-hud-corner.player-hud-corner--tl-h]
+      [:div.player-hud-corner.player-hud-corner--tl-v]
+      [:div.player-hud-corner.player-hud-corner--br]
+      [:div.scanline-overlay]
+      [:div.player-hud-info
+       [:div.player-hud-avatar.clip-octagon "🤖"]
        [:div
-        {:style
-         "width: 48px; height: 48px; background: linear-gradient(135deg, #1a0a2e, #0a1628); border: 2px solid #0ff; display: flex; align-items: center; justify-content: center; font-size: 24px; clip-path: polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%);"}
-        "🤖"]
-       [:div
-        [:div
-         {:style
-          "color: #0ff; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,255,255,0.5);"}
-         "NETRUNNER_X"]
-        [:div
-         {:style
-          "color: #ff0080; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;"}
-         "// RANK: ELITE"]]]
-      [:div
-       {:style "margin-bottom: 12px;"}
-       [:div
-        {:style
-         "display: flex; justify-content: space-between; margin-bottom: 4px;"}
-        [:span
-         {:style
-          "color: #ff3366; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;"}
-         "◆ INTEGRITY"]
-        [:span
-         {:style "color: #ff3366; font-size: 12px; font-weight: bold;"}
-         "24/30"]]
-       [:div
-        {:style
-         "height: 8px; background: rgba(255,51,102,0.2); border: 1px solid rgba(255,51,102,0.4); position: relative; overflow: hidden;"}
-        [:div
-         {:style
-          "position: absolute; inset: 1px; width: 80%; background: linear-gradient(90deg, #ff0044, #ff3366); box-shadow: 0 0 10px rgba(255,51,102,0.5);"}]
-        [:div
-         {:style
-          "position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.3) 4px, rgba(0,0,0,0.3) 8px);"}]]]
-      [:div
-       {:style "margin-bottom: 16px;"}
-       [:div
-        {:style
-         "display: flex; justify-content: space-between; margin-bottom: 4px;"}
-        [:span
-         {:style
-          "color: #0ff; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;"}
-         "◆ ENERGY"]
-        [:span
-         {:style "color: #0ff; font-size: 12px; font-weight: bold;"}
-         "5/8"]]
-       [:div
-        {:style
-         "height: 8px; background: rgba(0,255,255,0.1); border: 1px solid rgba(0,255,255,0.3); position: relative; overflow: hidden;"}
-        [:div
-         {:style
-          "position: absolute; inset: 1px; width: 62.5%; background: linear-gradient(90deg, #00aaaa, #0ff); box-shadow: 0 0 10px rgba(0,255,255,0.5);"}]
-        [:div
-         {:style
-          "position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.3) 4px, rgba(0,0,0,0.3) 8px);"}]]]
-      [:div
-       {:style "display: flex; gap: 8px;"}
-       [:div
-        {:style
-         "flex: 1; background: rgba(0,20,40,0.6); border: 1px solid rgba(0,255,255,0.2); padding: 8px; text-align: center;"}
-        [:div
-         {:style
-          "font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;"}
-         "DECK"]
-        [:div
-         {:style
-          "font-size: 18px; color: #0ff; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,255,0.5);"}
-         "23"]]
-       [:div
-        {:style
-         "flex: 1; background: rgba(0,20,40,0.6); border: 1px solid rgba(0,255,255,0.2); padding: 8px; text-align: center;"}
-        [:div
-         {:style
-          "font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;"}
-         "HAND"]
-        [:div
-         {:style
-          "font-size: 18px; color: #ff00ff; font-weight: bold; text-shadow: 0 0 8px rgba(255,0,255,0.5);"}
-         "5"]]
-       [:div
-        {:style
-         "flex: 1; background: rgba(0,20,40,0.6); border: 1px solid rgba(0,255,255,0.2); padding: 8px; text-align: center;"}
-        [:div
-         {:style
-          "font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;"}
-         "TRASH"]
-        [:div
-         {:style
-          "font-size: 18px; color: #ff3366; font-weight: bold; text-shadow: 0 0 8px rgba(255,51,102,0.5);"}
-         "8"]]]]]}
+        [:div.player-hud-name "NETRUNNER_X"]
+        [:div.player-hud-rank "// RANK: ELITE"]]]
+      [:div.player-hud-bar
+       [:div.player-hud-bar-header
+        [:span.player-hud-bar-label.player-hud-bar-label--health "◆ INTEGRITY"]
+        [:span.player-hud-bar-value.player-hud-bar-value--health "24/30"]]
+       [:div.player-hud-bar-track.player-hud-bar-track--health
+        [:div.player-hud-bar-fill.player-hud-bar-fill--health
+         {:style "width: 80%;"}]
+        [:div.player-hud-bar-segments]]]
+      [:div.player-hud-bar
+       [:div.player-hud-bar-header
+        [:span.player-hud-bar-label.player-hud-bar-label--energy "◆ ENERGY"]
+        [:span.player-hud-bar-value.player-hud-bar-value--energy "5/8"]]
+       [:div.player-hud-bar-track.player-hud-bar-track--energy
+        [:div.player-hud-bar-fill.player-hud-bar-fill--energy
+         {:style "width: 62.5%;"}]
+        [:div.player-hud-bar-segments]]]
+      [:div.player-hud-counters
+       [:div.player-hud-counter
+        [:div.player-hud-counter-label "DECK"]
+        [:div.player-hud-counter-value.player-hud-counter-value--deck "23"]]
+       [:div.player-hud-counter
+        [:div.player-hud-counter-label "HAND"]
+        [:div.player-hud-counter-value.player-hud-counter-value--hand "5"]]
+       [:div.player-hud-counter
+        [:div.player-hud-counter-label "TRASH"]
+        [:div.player-hud-counter-value.player-hud-counter-value--trash "8"]]]]]}
    {:label "Light",
     :hiccup
-    [:div
+    [:div.theme-light
      {:style "padding: 40px; background: #f0f4f8;"}
-     [:div.player-hud
-      {:style
-       "width: 320px; background: linear-gradient(135deg, #ffffff 0%, #f8f4ff 100%); border: 2px solid; border-image: linear-gradient(90deg, #00cccc, #cc00cc) 1; padding: 16px; font-family: \"Courier New\", monospace; position: relative; clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px)); box-shadow: 0 4px 20px rgba(0,0,0,0.08);"}
-      [:div
-       {:style
-        "position: absolute; top: 0; left: 0; width: 40px; height: 3px; background: #00cccc;"}]
-      [:div
-       {:style
-        "position: absolute; top: 0; left: 0; width: 3px; height: 40px; background: #00cccc;"}]
-      [:div
-       {:style
-        "position: absolute; bottom: 0; right: 20px; width: 40px; height: 3px; background: #cc00cc;"}]
-      [:div
-       {:style
-        "position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,150,150,0.02) 2px, rgba(0,150,150,0.02) 4px); pointer-events: none;"}]
-      [:div
-       {:style
-        "display: flex; align-items: center; gap: 12px; margin-bottom: 16px;"}
+     [:div.player-hud.clip-asymmetric
+      [:div.player-hud-corner.player-hud-corner--tl-h]
+      [:div.player-hud-corner.player-hud-corner--tl-v]
+      [:div.player-hud-corner.player-hud-corner--br]
+      [:div.scanline-overlay]
+      [:div.player-hud-info
+       [:div.player-hud-avatar.clip-octagon "🤖"]
        [:div
-        {:style
-         "width: 48px; height: 48px; background: linear-gradient(135deg, #f0e8f4, #e8f4f8); border: 2px solid #00cccc; display: flex; align-items: center; justify-content: center; font-size: 24px; clip-path: polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%); box-shadow: 0 2px 8px rgba(0,180,180,0.2);"}
-        "🤖"]
-       [:div
-        [:div
-         {:style
-          "color: #007777; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;"}
-         "NETRUNNER_X"]
-        [:div
-         {:style
-          "color: #cc0066; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;"}
-         "// RANK: ELITE"]]]
-      [:div
-       {:style "margin-bottom: 12px;"}
-       [:div
-        {:style
-         "display: flex; justify-content: space-between; margin-bottom: 4px;"}
-        [:span
-         {:style
-          "color: #cc3366; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;"}
-         "◆ INTEGRITY"]
-        [:span
-         {:style "color: #cc3366; font-size: 12px; font-weight: bold;"}
-         "24/30"]]
-       [:div
-        {:style
-         "height: 10px; background: rgba(200,50,100,0.1); border: 2px solid rgba(200,50,100,0.3); position: relative; overflow: hidden;"}
-        [:div
-         {:style
-          "position: absolute; inset: 2px; width: 80%; background: linear-gradient(90deg, #ff0066, #ff3388);"}]
-        [:div
-         {:style
-          "position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255,255,255,0.3) 4px, rgba(255,255,255,0.3) 8px);"}]]]
-      [:div
-       {:style "margin-bottom: 16px;"}
-       [:div
-        {:style
-         "display: flex; justify-content: space-between; margin-bottom: 4px;"}
-        [:span
-         {:style
-          "color: #009999; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;"}
-         "◆ ENERGY"]
-        [:span
-         {:style "color: #009999; font-size: 12px; font-weight: bold;"}
-         "5/8"]]
-       [:div
-        {:style
-         "height: 10px; background: rgba(0,180,180,0.1); border: 2px solid rgba(0,180,180,0.3); position: relative; overflow: hidden;"}
-        [:div
-         {:style
-          "position: absolute; inset: 2px; width: 62.5%; background: linear-gradient(90deg, #00aaaa, #00dddd);"}]
-        [:div
-         {:style
-          "position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255,255,255,0.3) 4px, rgba(255,255,255,0.3) 8px);"}]]]
-      [:div
-       {:style "display: flex; gap: 8px;"}
-       [:div
-        {:style
-         "flex: 1; background: rgba(0,180,180,0.08); border: 2px solid rgba(0,180,180,0.2); padding: 8px; text-align: center;"}
-        [:div
-         {:style
-          "font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;"}
-         "DECK"]
-        [:div
-         {:style "font-size: 18px; color: #009999; font-weight: bold;"}
-         "23"]]
-       [:div
-        {:style
-         "flex: 1; background: rgba(200,0,200,0.08); border: 2px solid rgba(200,0,200,0.2); padding: 8px; text-align: center;"}
-        [:div
-         {:style
-          "font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;"}
-         "HAND"]
-        [:div
-         {:style "font-size: 18px; color: #cc00cc; font-weight: bold;"}
-         "5"]]
-       [:div
-        {:style
-         "flex: 1; background: rgba(200,50,100,0.08); border: 2px solid rgba(200,50,100,0.2); padding: 8px; text-align: center;"}
-        [:div
-         {:style
-          "font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;"}
-         "TRASH"]
-        [:div
-         {:style "font-size: 18px; color: #cc3366; font-weight: bold;"}
-         "8"]]]]]}],
+        [:div.player-hud-name "NETRUNNER_X"]
+        [:div.player-hud-rank "// RANK: ELITE"]]]
+      [:div.player-hud-bar
+       [:div.player-hud-bar-header
+        [:span.player-hud-bar-label.player-hud-bar-label--health "◆ INTEGRITY"]
+        [:span.player-hud-bar-value.player-hud-bar-value--health "24/30"]]
+       [:div.player-hud-bar-track.player-hud-bar-track--health
+        [:div.player-hud-bar-fill.player-hud-bar-fill--health
+         {:style "width: 80%;"}]
+        [:div.player-hud-bar-segments]]]
+      [:div.player-hud-bar
+       [:div.player-hud-bar-header
+        [:span.player-hud-bar-label.player-hud-bar-label--energy "◆ ENERGY"]
+        [:span.player-hud-bar-value.player-hud-bar-value--energy "5/8"]]
+       [:div.player-hud-bar-track.player-hud-bar-track--energy
+        [:div.player-hud-bar-fill.player-hud-bar-fill--energy
+         {:style "width: 62.5%;"}]
+        [:div.player-hud-bar-segments]]]
+      [:div.player-hud-counters
+       [:div.player-hud-counter.player-hud-counter--deck
+        [:div.player-hud-counter-label "DECK"]
+        [:div.player-hud-counter-value.player-hud-counter-value--deck "23"]]
+       [:div.player-hud-counter.player-hud-counter--hand
+        [:div.player-hud-counter-label "HAND"]
+        [:div.player-hud-counter-value.player-hud-counter-value--hand "5"]]
+       [:div.player-hud-counter.player-hud-counter--trash
+        [:div.player-hud-counter-label "TRASH"]
+        [:div.player-hud-counter-value.player-hud-counter-value--trash "8"]]]]]}],
   :created-at #inst "2026-01-19T23:41:31.341-00:00"},
  :action-buttons
  {:description "Game action buttons with various states",
@@ -898,73 +366,27 @@
   [{:label "Dark",
     :hiccup
     [:div
-     {:style
-      "padding: 40px; display: flex; flex-direction: column; gap: 16px;"}
-     [:button
-      {:style
-       "background: linear-gradient(135deg, #ff00ff 0%, #ff0066 50%, #ff00ff 100%); border: none; padding: 14px 32px; font-family: \"Courier New\", monospace; font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px); box-shadow: 0 0 20px rgba(255, 0, 255, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1); text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"}
-      "▶ EXECUTE"]
-     [:button
-      {:style
-       "background: linear-gradient(135deg, #0a1628 0%, #1a0a2e 100%); border: 2px solid #0ff; padding: 12px 28px; font-family: \"Courier New\", monospace; font-size: 13px; font-weight: bold; color: #0ff; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px); box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);"}
-      "◼ END TURN"]
-     [:button
-      {:style
-       "background: linear-gradient(135deg, #330000 0%, #1a0000 100%); border: 2px solid #ff3333; padding: 12px 28px; font-family: \"Courier New\", monospace; font-size: 13px; font-weight: bold; color: #ff3333; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px); box-shadow: 0 0 15px rgba(255, 51, 51, 0.3); text-shadow: 0 0 8px rgba(255, 51, 51, 0.8);"}
-      "⚡ ATTACK"]
-     [:button
-      {:style
-       "background: linear-gradient(135deg, #001a33 0%, #000d1a 100%); border: 2px solid #0088ff; padding: 12px 28px; font-family: \"Courier New\", monospace; font-size: 13px; font-weight: bold; color: #0088ff; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px); box-shadow: 0 0 15px rgba(0, 136, 255, 0.3); text-shadow: 0 0 8px rgba(0, 136, 255, 0.8);"}
-      "◇ DEFEND"]
-     [:div
-      {:style "display: flex; gap: 8px; margin-top: 16px;"}
-      [:button
-       {:style
-        "flex: 1; background: linear-gradient(180deg, rgba(0,255,255,0.15) 0%, transparent 100%); border: 1px solid #0ff; border-bottom: 3px solid #0ff; padding: 10px 16px; font-family: \"Courier New\", monospace; font-size: 11px; font-weight: bold; color: #0ff; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; text-shadow: 0 0 5px rgba(0,255,255,0.5);"}
-       "DRAW"]
-      [:button
-       {:style
-        "flex: 1; background: linear-gradient(180deg, rgba(255,0,255,0.15) 0%, transparent 100%); border: 1px solid #ff00ff; border-bottom: 3px solid #ff00ff; padding: 10px 16px; font-family: \"Courier New\", monospace; font-size: 11px; font-weight: bold; color: #ff00ff; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; text-shadow: 0 0 5px rgba(255,0,255,0.5);"}
-       "HACK"]
-      [:button
-       {:style
-        "flex: 1; background: linear-gradient(180deg, rgba(255,255,0,0.15) 0%, transparent 100%); border: 1px solid #ffff00; border-bottom: 3px solid #ffff00; padding: 10px 16px; font-family: \"Courier New\", monospace; font-size: 11px; font-weight: bold; color: #ffff00; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; text-shadow: 0 0 5px rgba(255,255,0,0.5);"}
-       "SCAN"]]]}
+     {:style "padding: 40px; display: flex; flex-direction: column; gap: 16px;"}
+     [:button.btn.btn--primary.clip-corners-sm "▶ EXECUTE"]
+     [:button.btn.btn--secondary.btn--cyan.clip-corners-sm "◼ END TURN"]
+     [:button.btn.btn--secondary.btn--red.clip-corners-sm "⚡ ATTACK"]
+     [:button.btn.btn--secondary.btn--blue.clip-corners-sm "◇ DEFEND"]
+     [:div {:style "display: flex; gap: 8px; margin-top: 16px;"}
+      [:button.btn.btn--small.btn--small-cyan "DRAW"]
+      [:button.btn.btn--small.btn--small-magenta "HACK"]
+      [:button.btn.btn--small.btn--small-yellow "SCAN"]]]}
    {:label "Light",
     :hiccup
-    [:div
-     {:style
-      "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 16px;"}
-     [:button
-      {:style
-       "background: linear-gradient(135deg, #cc00cc 0%, #ff0066 50%, #cc00cc 100%); border: none; padding: 14px 32px; font-family: \"Courier New\", monospace; font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px); box-shadow: 0 4px 15px rgba(200, 0, 200, 0.4);"}
-      "▶ EXECUTE"]
-     [:button
-      {:style
-       "background: linear-gradient(135deg, #ffffff 0%, #f4f8ff 100%); border: 2px solid #00cccc; padding: 12px 28px; font-family: \"Courier New\", monospace; font-size: 13px; font-weight: bold; color: #009999; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px); box-shadow: 0 2px 10px rgba(0, 180, 180, 0.2);"}
-      "◼ END TURN"]
-     [:button
-      {:style
-       "background: linear-gradient(135deg, #fff0f0 0%, #ffeeee 100%); border: 2px solid #cc3333; padding: 12px 28px; font-family: \"Courier New\", monospace; font-size: 13px; font-weight: bold; color: #cc3333; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px); box-shadow: 0 2px 10px rgba(200, 50, 50, 0.2);"}
-      "⚡ ATTACK"]
-     [:button
-      {:style
-       "background: linear-gradient(135deg, #f0f8ff 0%, #eef4ff 100%); border: 2px solid #0088cc; padding: 12px 28px; font-family: \"Courier New\", monospace; font-size: 13px; font-weight: bold; color: #0088cc; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px); box-shadow: 0 2px 10px rgba(0, 136, 200, 0.2);"}
-      "◇ DEFEND"]
-     [:div
-      {:style "display: flex; gap: 8px; margin-top: 16px;"}
-      [:button
-       {:style
-        "flex: 1; background: linear-gradient(180deg, rgba(0,200,200,0.1) 0%, #ffffff 100%); border: 2px solid #00cccc; border-bottom: 4px solid #00cccc; padding: 10px 16px; font-family: \"Courier New\", monospace; font-size: 11px; font-weight: bold; color: #009999; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;"}
-       "DRAW"]
-      [:button
-       {:style
-        "flex: 1; background: linear-gradient(180deg, rgba(200,0,200,0.1) 0%, #ffffff 100%); border: 2px solid #cc00cc; border-bottom: 4px solid #cc00cc; padding: 10px 16px; font-family: \"Courier New\", monospace; font-size: 11px; font-weight: bold; color: #cc00cc; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;"}
-       "HACK"]
-      [:button
-       {:style
-        "flex: 1; background: linear-gradient(180deg, rgba(200,180,0,0.1) 0%, #ffffff 100%); border: 2px solid #ccaa00; border-bottom: 4px solid #ccaa00; padding: 10px 16px; font-family: \"Courier New\", monospace; font-size: 11px; font-weight: bold; color: #aa8800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;"}
-       "SCAN"]]]}],
+    [:div.theme-light
+     {:style "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 16px;"}
+     [:button.btn.btn--primary.clip-corners-sm "▶ EXECUTE"]
+     [:button.btn.btn--secondary.btn--cyan.clip-corners-sm "◼ END TURN"]
+     [:button.btn.btn--secondary.btn--red.clip-corners-sm "⚡ ATTACK"]
+     [:button.btn.btn--secondary.btn--blue.clip-corners-sm "◇ DEFEND"]
+     [:div {:style "display: flex; gap: 8px; margin-top: 16px;"}
+      [:button.btn.btn--small.btn--small-cyan "DRAW"]
+      [:button.btn.btn--small.btn--small-magenta "HACK"]
+      [:button.btn.btn--small.btn--small-yellow "SCAN"]]]}],
   :created-at #inst "2026-01-19T23:41:57.945-00:00"},
  :resource-display
  {:description "Energy and credits resource indicators",
@@ -972,138 +394,45 @@
   [{:label "Dark",
     :hiccup
     [:div
-     {:style
-      "padding: 40px; display: flex; flex-direction: column; gap: 24px;"}
-     [:div
-      {:style
-       "background: linear-gradient(135deg, #0a0a12, #0d0818); border: 1px solid rgba(0,255,255,0.3); padding: 16px; font-family: \"Courier New\", monospace;"}
-      [:div
-       {:style
-        "font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;"}
-       "◆ Available Energy"]
-      [:div
-       {:style "display: flex; gap: 8px; flex-wrap: wrap;"}
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #00ffff, #0088aa 50%, #004466); border-radius: 50%; box-shadow: 0 0 15px rgba(0,255,255,0.6); position: relative;"}
-        [:div
-         {:style
-          "position: absolute; top: 4px; left: 6px; width: 8px; height: 8px; background: rgba(255,255,255,0.6); border-radius: 50%; filter: blur(2px);"}]]
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #00ffff, #0088aa 50%, #004466); border-radius: 50%; box-shadow: 0 0 15px rgba(0,255,255,0.6); position: relative;"}
-        [:div
-         {:style
-          "position: absolute; top: 4px; left: 6px; width: 8px; height: 8px; background: rgba(255,255,255,0.6); border-radius: 50%; filter: blur(2px);"}]]
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #00ffff, #0088aa 50%, #004466); border-radius: 50%; box-shadow: 0 0 15px rgba(0,255,255,0.6); position: relative;"}
-        [:div
-         {:style
-          "position: absolute; top: 4px; left: 6px; width: 8px; height: 8px; background: rgba(255,255,255,0.6); border-radius: 50%; filter: blur(2px);"}]]
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #1a2a3a, #0a1520); border: 1px solid rgba(0,255,255,0.2); border-radius: 50%; opacity: 0.5;"}]
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #1a2a3a, #0a1520); border: 1px solid rgba(0,255,255,0.2); border-radius: 50%; opacity: 0.5;"}]]]
-     [:div
-      {:style
-       "background: linear-gradient(135deg, #0a0a12, #12081f); border: 1px solid rgba(255,0,255,0.3); padding: 16px; font-family: \"Courier New\", monospace;"}
-      [:div
-       {:style
-        "display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;"}
-       [:span
-        {:style
-         "font-size: 10px; color: #ff00ff; text-transform: uppercase; letter-spacing: 2px;"}
-        "◆ Credits"]
-       [:span
-        {:style
-         "font-size: 24px; color: #ff00ff; font-weight: bold; text-shadow: 0 0 15px rgba(255,0,255,0.5);"}
-        "₵ 2,450"]]
-      [:div
-       {:style "display: flex; gap: 6px;"}
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: linear-gradient(180deg, #ff00ff, #aa0066); box-shadow: 0 0 8px rgba(255,0,255,0.5);"}]
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: linear-gradient(180deg, #ff00ff, #aa0066); box-shadow: 0 0 8px rgba(255,0,255,0.5);"}]
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: linear-gradient(180deg, #ff00ff, #aa0066); box-shadow: 0 0 8px rgba(255,0,255,0.5);"}]
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #1a0a1a;"}]
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #1a0a1a;"}]]]]}
+     {:style "padding: 40px; display: flex; flex-direction: column; gap: 24px;"}
+     [:div.resource-panel.resource-panel--energy
+      [:div.resource-label.resource-label--energy "◆ Available Energy"]
+      [:div.energy-orbs
+       [:div.energy-orb.energy-orb--active]
+       [:div.energy-orb.energy-orb--active]
+       [:div.energy-orb.energy-orb--active]
+       [:div.energy-orb.energy-orb--empty]
+       [:div.energy-orb.energy-orb--empty]]]
+     [:div.resource-panel.resource-panel--credits
+      [:div.credits-header
+       [:span.resource-label.resource-label--credits "◆ Credits"]
+       [:span.credits-value "₵ 2,450"]]
+      [:div.credits-chips
+       [:div.credit-chip.credit-chip--active.clip-hexagon]
+       [:div.credit-chip.credit-chip--active.clip-hexagon]
+       [:div.credit-chip.credit-chip--active.clip-hexagon]
+       [:div.credit-chip.credit-chip--empty.clip-hexagon]
+       [:div.credit-chip.credit-chip--empty.clip-hexagon]]]]}
    {:label "Light",
     :hiccup
-    [:div
-     {:style
-      "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 24px;"}
-     [:div
-      {:style
-       "background: linear-gradient(135deg, #ffffff, #f4f8ff); border: 2px solid rgba(0,180,180,0.3); padding: 16px; font-family: \"Courier New\", monospace; box-shadow: 0 2px 12px rgba(0,0,0,0.08);"}
-      [:div
-       {:style
-        "font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;"}
-       "◆ Available Energy"]
-      [:div
-       {:style "display: flex; gap: 8px; flex-wrap: wrap;"}
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #00dddd, #00aaaa 50%, #008888); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,180,180,0.4); position: relative;"}
-        [:div
-         {:style
-          "position: absolute; top: 4px; left: 6px; width: 8px; height: 8px; background: rgba(255,255,255,0.8); border-radius: 50%; filter: blur(2px);"}]]
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #00dddd, #00aaaa 50%, #008888); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,180,180,0.4); position: relative;"}
-        [:div
-         {:style
-          "position: absolute; top: 4px; left: 6px; width: 8px; height: 8px; background: rgba(255,255,255,0.8); border-radius: 50%; filter: blur(2px);"}]]
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #00dddd, #00aaaa 50%, #008888); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,180,180,0.4); position: relative;"}
-        [:div
-         {:style
-          "position: absolute; top: 4px; left: 6px; width: 8px; height: 8px; background: rgba(255,255,255,0.8); border-radius: 50%; filter: blur(2px);"}]]
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #e8f4f8, #d8e8f0); border: 2px solid rgba(0,180,180,0.2); border-radius: 50%; opacity: 0.6;"}]
-       [:div
-        {:style
-         "width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #e8f4f8, #d8e8f0); border: 2px solid rgba(0,180,180,0.2); border-radius: 50%; opacity: 0.6;"}]]]
-     [:div
-      {:style
-       "background: linear-gradient(135deg, #ffffff, #f8f4ff); border: 2px solid rgba(200,0,200,0.3); padding: 16px; font-family: \"Courier New\", monospace; box-shadow: 0 2px 12px rgba(0,0,0,0.08);"}
-      [:div
-       {:style
-        "display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;"}
-       [:span
-        {:style
-         "font-size: 10px; color: #cc00cc; text-transform: uppercase; letter-spacing: 2px;"}
-        "◆ Credits"]
-       [:span
-        {:style "font-size: 24px; color: #aa00aa; font-weight: bold;"}
-        "₵ 2,450"]]
-      [:div
-       {:style "display: flex; gap: 6px;"}
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: linear-gradient(180deg, #cc00cc, #990066); box-shadow: 0 2px 8px rgba(200,0,200,0.3);"}]
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: linear-gradient(180deg, #cc00cc, #990066); box-shadow: 0 2px 8px rgba(200,0,200,0.3);"}]
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: linear-gradient(180deg, #cc00cc, #990066); box-shadow: 0 2px 8px rgba(200,0,200,0.3);"}]
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #f4e8f8; border: 1px solid rgba(200,0,200,0.2);"}]
-       [:div
-        {:style
-         "width: 24px; height: 28px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #f4e8f8; border: 1px solid rgba(200,0,200,0.2);"}]]]]}],
+    [:div.theme-light
+     {:style "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 24px;"}
+     [:div.resource-panel.resource-panel--energy
+      [:div.resource-label.resource-label--energy "◆ Available Energy"]
+      [:div.energy-orbs
+       [:div.energy-orb.energy-orb--active]
+       [:div.energy-orb.energy-orb--active]
+       [:div.energy-orb.energy-orb--active]
+       [:div.energy-orb.energy-orb--empty]
+       [:div.energy-orb.energy-orb--empty]]]
+     [:div.resource-panel.resource-panel--credits
+      [:div.credits-header
+       [:span.resource-label.resource-label--credits "◆ Credits"]
+       [:span.credits-value "₵ 2,450"]]
+      [:div.credits-chips
+       [:div.credit-chip.credit-chip--active.clip-hexagon]
+       [:div.credit-chip.credit-chip--active.clip-hexagon]
+       [:div.credit-chip.credit-chip--active.clip-hexagon]
+       [:div.credit-chip.credit-chip--empty.clip-hexagon]
+       [:div.credit-chip.credit-chip--empty.clip-hexagon]]]]}],
   :created-at #inst "2026-01-19T23:48:29.357-00:00"}}

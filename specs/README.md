@@ -57,7 +57,7 @@ One-click copy of component hiccup to clipboard. Done when:
 - Works for components with and without variants
 
 ### Milestone 7: CSS Extraction Workflow
-**Spec:** [008-css-extraction](./008-css-extraction.md)
+**Spec:** [008-css-extraction](./008-css-extraction.md) ✓
 
 Establish workflow where committed components use CSS classes. Done when:
 - `styles.css` contains all component styles with clear organization
@@ -78,6 +78,6 @@ Establish workflow where committed components use CSS classes. Done when:
 | [005-component-navigation](./005-component-navigation.md) | Complete | Previous/Next navigation on single component views |
 | [006-dynamic-components](./006-dynamic-components.md) | Complete | Stateful Datastar components with multiple example configs |
 | [007-copy-hiccup](./007-copy-hiccup.md) | Complete | Copy hiccup to clipboard from single component view |
-| [008-css-extraction](./008-css-extraction.md) | Draft | CSS extraction workflow for clean, reusable component hiccup |
+| [008-css-extraction](./008-css-extraction.md) | Complete | CSS extraction workflow for clean, reusable component hiccup |
 
 Status values: Draft, Active, Complete, Archived
