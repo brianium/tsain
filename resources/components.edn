@@ -67,7 +67,7 @@
   :created-at #inst "2026-01-19T23:41:10.040-00:00"},
  :event-modal
  {:description
-  "Modal for in-game events with success/warning/error variants",
+  "Modal for in-game events with success/warning/error/info/epic variants",
   :examples
   [{:label "Success",
     :hiccup
@@ -111,8 +111,38 @@
                     "Core memory corruption detected. Emergency protocols engaged. Data loss imminent without immediate intervention.",
                     :actions
                     [{:label "EMERGENCY REPAIR", :primary? true}
-                     {:label "ABORT MISSION"}]}]]}],
-  :created-at #inst "2026-01-21T12:41:26.606-00:00"},
+                     {:label "ABORT MISSION"}]}]]}
+   {:label "Info",
+    :hiccup
+    [:div
+     {:style
+      "padding: 40px; display: flex; justify-content: center; background: #050510;"}
+     [:sandbox.ui/event-modal
+      #:event-modal{:title "INCOMING TRANSMISSION",
+                    :subtitle "Encrypted Channel Active",
+                    :icon "◆",
+                    :variant :info,
+                    :message
+                    "New mission parameters received from HQ. Objectives updated. Check your datapad for full briefing details.",
+                    :actions
+                    [{:label "VIEW BRIEFING", :primary? true}
+                     {:label "LATER"}]}]]}
+   {:label "Epic",
+    :hiccup
+    [:div
+     {:style
+      "padding: 40px; display: flex; justify-content: center; background: #050510;"}
+     [:sandbox.ui/event-modal
+      #:event-modal{:title "LEGENDARY DROP",
+                    :subtitle "Ultra Rare Item Acquired",
+                    :icon "★",
+                    :variant :epic,
+                    :message
+                    "You have obtained the Quantum Blade of the Void Walker. This artifact has not been seen in over 1000 cycles. Its power is beyond measure.",
+                    :actions
+                    [{:label "EQUIP NOW", :primary? true}
+                     {:label "STORE"}]}]]}],
+  :created-at #inst "2026-01-21T12:44:26.693-00:00"},
  :card-type-badges
  {:description "Card type and rarity indicator badges",
   :examples
