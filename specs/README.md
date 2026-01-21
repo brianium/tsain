@@ -98,6 +98,17 @@ Make sandbox API discoverable via sandestin. Done when:
 - component-iterate skill uses discovery workflow
 - Unit tests pass for registry factory, config loading, and schema validation
 
+### Milestone 11: Portable Library
+**Spec:** [012-portable-library](./012-portable-library.md)
+
+Package tsain for distribution to any sandestin/twk project. Done when:
+- Library exports registry factory + route factory
+- `sample/CLAUDE.md` contains ecosystem docs + tsain workflow
+- `sample/tsain.edn` and `sample/ui.clj` provide starter templates
+- `.claude/skills/component-iterate/` uses discovery-first approach
+- Fresh project can integrate tsain following setup guide
+- Tsain dogfoods its own library exports
+
 ## Spec Index
 
 | Spec | Status | Description |
@@ -113,5 +124,6 @@ Make sandbox API discoverable via sandestin. Done when:
 | [009-storybook-sidebar](./009-storybook-sidebar.md) | Complete | Replace gallery grid with storybook-style sidebar navigation |
 | [010-chassis-alias-workflow](./010-chassis-alias-workflow.md) | Complete | Enforce alias-first component development for lean components.edn |
 | [011-discoverable-dev-registry](./011-discoverable-dev-registry.md) | Complete | Make sandbox API discoverable via sandestin registry |
+| [012-portable-library](./012-portable-library.md) | Draft | Package tsain for distribution to any sandestin/twk project |
 
 Status values: Draft, Active, Complete, Archived
