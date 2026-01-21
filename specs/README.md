@@ -4,6 +4,18 @@ This directory contains living specifications for tsain features and concepts.
 
 ## Current Priorities
 
+### Milestone 12: Schema Cleanup
+**Spec:** [013-schema-cleanup](./013-schema-cleanup.md)
+
+Use canonical twk schemas and fix namespace pollution. Done when:
+- `::state` used instead of `::s/state` (tsain owns its state)
+- `HiccupSchema` uses `ascolais.twk.schema/Hiccup` as base
+- `SignalMapSchema` uses `ascolais.twk.schema/Signals` as base
+- Generation hints preserved for `s/sample` functionality
+- All consumers updated to use `::tsain/state`
+
+---
+
 ### Milestone 1: Canvas for HTML updates
 **Spec:** [002-dev-sandbox](./002-dev-sandbox.md)
 
@@ -125,5 +137,6 @@ Package tsain for distribution to any sandestin/twk project. Done when:
 | [010-chassis-alias-workflow](./010-chassis-alias-workflow.md) | Complete | Enforce alias-first component development for lean components.edn |
 | [011-discoverable-dev-registry](./011-discoverable-dev-registry.md) | Complete | Make sandbox API discoverable via sandestin registry |
 | [012-portable-library](./012-portable-library.md) | Complete | Package tsain for distribution to any sandestin/twk project |
+| [013-schema-cleanup](./013-schema-cleanup.md) | Draft | Use canonical twk schemas and fix state namespace |
 
 Status values: Draft, Active, Complete, Archived
