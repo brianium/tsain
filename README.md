@@ -8,7 +8,7 @@ A REPL-driven component sandbox for Clojure + Datastar applications. Design, ite
 
 ```clojure
 ;; deps.edn
-{:deps {io.github.brianium/tsain {:git/tag "v0.1.0" :git/sha "c7400c2"}}}
+{:deps {io.github.brianium/tsain {:git/tag "v0.1.0" :git/sha "25f129f"}}}
 ```
 
 ### 2. Create Configuration
