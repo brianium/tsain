@@ -11,13 +11,19 @@
     (require '[ascolais.sandestin :as s])
 
     ;; Create registry (reads tsain.edn for config)
-    (def dispatch (s/create-dispatch [(tsain/registry) ...]))
+    (def tsain-reg (tsain/registry))
+    (def dispatch (s/create-dispatch [tsain-reg (twk/registry) ...]))
+
+    ;; Get state atom for routes
+    (def tsain-state (::s/state tsain-reg))
+    (def tsain-config (::tsain/config tsain-reg))
 
     ;; Discover available effects
     (s/describe dispatch)
     (s/sample dispatch ::tsain/preview)"
   (:require [ascolais.sandestin :as s]
             [ascolais.sfere :as sfere]
+            [ascolais.tsain.views :as views]
             [ascolais.twk :as twk]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -65,23 +71,12 @@
 ;; View Rendering
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn- require-views
-  "Dynamically require sandbox.views namespace and return render-view fn.
-  This allows tsain to be used without sandbox.views on classpath."
-  []
-  (try
-    (require 'sandbox.views)
-    (ns-resolve 'sandbox.views 'render-view)
-    (catch Exception _
-      nil)))
-
 (defn- broadcast-view!
   "Broadcast current view state to all connected clients."
-  [dispatch state-atom render-view]
-  (when render-view
-    (dispatch {} {}
-              [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
-                [::twk/patch-elements (render-view @state-atom)]]])))
+  [dispatch state-atom]
+  (dispatch {} {}
+            [[::sfere/broadcast {:pattern [:* [:sandbox :*]]}
+              [::twk/patch-elements (views/render-view @state-atom)]]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Schemas
@@ -149,10 +144,10 @@
          state-atom (atom {:preview {:hiccup nil}
                            :view {:type :preview}
                            :library (load-library components-file)
-                           :sidebar-collapsed? false})
-         render-view (require-views)]
+                           :sidebar-collapsed? false})]
 
      {::s/state state-atom
+      ::config config
 
       ::s/effects
       {::preview
@@ -173,7 +168,7 @@ Example:
           (swap! state-atom assoc
                  :preview {:hiccup hiccup}
                  :view {:type :preview})
-          (broadcast-view! dispatch state-atom render-view))}
+          (broadcast-view! dispatch state-atom))}
 
        ::preview-append
        {::s/description
@@ -196,7 +191,7 @@ Example:
                      [:div existing hiccup]
                      hiccup)))
           (swap! state-atom assoc :view {:type :preview})
-          (broadcast-view! dispatch state-atom render-view))}
+          (broadcast-view! dispatch state-atom))}
 
        ::preview-clear
        {::s/description
@@ -215,7 +210,7 @@ Example:
           (swap! state-atom assoc
                  :preview {:hiccup nil}
                  :view {:type :preview})
-          (broadcast-view! dispatch state-atom render-view))}
+          (broadcast-view! dispatch state-atom))}
 
        ::commit
        {::s/description
@@ -268,7 +263,7 @@ Examples:
             (when (or hiccup (:examples opts))
               (swap! state-atom assoc-in [:library component-name] component-data)
               (save-library! components-file (:library @state-atom))
-              (broadcast-view! dispatch state-atom render-view))))}
+              (broadcast-view! dispatch state-atom))))}
 
        ::uncommit
        {::s/description
@@ -286,7 +281,7 @@ Example:
         (fn [{:keys [dispatch]} _system component-name]
           (swap! state-atom update :library dissoc component-name)
           (save-library! components-file (:library @state-atom))
-          (broadcast-view! dispatch state-atom render-view))}
+          (broadcast-view! dispatch state-atom))}
 
        ::show
        {::s/description
@@ -307,7 +302,7 @@ Examples:
           (swap! state-atom assoc :view {:type :component
                                          :name component-name
                                          :example-idx (or example-idx 0)})
-          (broadcast-view! dispatch state-atom render-view))}
+          (broadcast-view! dispatch state-atom))}
 
        ::show-gallery
        {::s/description
@@ -325,7 +320,7 @@ Example:
         ::s/handler
         (fn [{:keys [dispatch]} _system]
           (swap! state-atom assoc :view {:type :gallery})
-          (broadcast-view! dispatch state-atom render-view))}
+          (broadcast-view! dispatch state-atom))}
 
        ::show-preview
        {::s/description
@@ -342,7 +337,7 @@ Example:
         ::s/handler
         (fn [{:keys [dispatch]} _system]
           (swap! state-atom assoc :view {:type :preview})
-          (broadcast-view! dispatch state-atom render-view))}
+          (broadcast-view! dispatch state-atom))}
 
        ::sync-view
        {::s/description
@@ -358,8 +353,7 @@ Example:
 
         ::s/handler
         (fn [_ctx _system]
-          (when render-view
-            [[::twk/patch-elements (render-view @state-atom)]]))}
+          [[::twk/patch-elements (views/render-view @state-atom)]])}
 
        ::patch-signals
        {::s/description
@@ -396,7 +390,7 @@ Example:
         ::s/handler
         (fn [{:keys [dispatch]} _system]
           (swap! state-atom update :sidebar-collapsed? not)
-          (broadcast-view! dispatch state-atom render-view))}
+          (broadcast-view! dispatch state-atom))}
 
        ::show-components
        {::s/description
@@ -426,4 +420,4 @@ Examples:
             (swap! state-atom assoc :view {:type :components
                                            :name target-name
                                            :example-idx example-idx})
-            (broadcast-view! dispatch state-atom render-view)))}}})))
+            (broadcast-view! dispatch state-atom)))}}})))

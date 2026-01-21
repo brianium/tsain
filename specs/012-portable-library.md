@@ -1,6 +1,6 @@
 # Spec 012: Portable Library
 
-## Status: Draft
+## Status: Complete
 
 ## Problem
 
@@ -606,20 +606,20 @@ Existing tests plus:
 
 ## Done When
 
-- [ ] `src/clj/ascolais/tsain/routes.clj` exports `routes` function
-- [ ] `src/clj/ascolais/tsain/views.clj` exports view rendering functions
-- [ ] Routes are parameterized (dispatch + state-atom)
-- [ ] Views are parameterized (config for ui-namespace)
-- [ ] `resources/tsain/sandbox.css` exists (classpath resource)
-- [ ] `sample/CLAUDE.md` contains ecosystem docs + workflow
-- [ ] `sample/tsain.edn` documents all configuration keys
-- [ ] `sample/ui.clj` provides starter alias template
-- [ ] `.claude/skills/component-iterate/SKILL.md` uses discovery-first approach
-- [ ] Skill reads `tsain.edn` for file paths
-- [ ] Skill documents optional enhancements (chrome, frontend-design)
-- [ ] Fresh project can integrate tsain following setup guide
-- [ ] Tsain dogfoods its own library exports
-- [ ] Tests pass for route factory and view rendering
+- [x] `src/clj/ascolais/tsain/routes.clj` exports `routes` function
+- [x] `src/clj/ascolais/tsain/views.clj` exports view rendering functions
+- [x] Routes are parameterized (dispatch + state-atom)
+- [x] Views are parameterized (config for ui-namespace)
+- [x] `resources/tsain/sandbox.css` exists (classpath resource)
+- [x] `sample/CLAUDE.md` contains ecosystem docs + workflow
+- [x] `sample/tsain.edn` documents all configuration keys
+- [x] `sample/ui.clj` provides starter alias template
+- [x] `.claude/skills/component-iterate/SKILL.md` uses discovery-first approach
+- [x] Skill reads `tsain.edn` for file paths
+- [x] Skill documents optional enhancements (chrome, frontend-design)
+- [x] Fresh project can integrate tsain following setup guide
+- [x] Tsain dogfoods its own library exports
+- [x] Tests pass for route factory and view rendering
 
 ## Relationship to Other Specs
 

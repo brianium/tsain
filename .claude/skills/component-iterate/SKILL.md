@@ -1,11 +1,11 @@
 ---
 name: component-iterate
-description: Iterate on hiccup components with live preview, CSS styling, and library commits. Use alias-first workflow where structure lives in sandbox/ui.clj and examples use lean config props. Keywords: component, preview, iterate, css, hiccup, design, ui, commit, datastar, signals, interactive, alias.
+description: Iterate on hiccup components with live preview, CSS styling, and library commits. Use alias-first workflow where structure lives in the UI namespace and examples use lean config props. Keywords: component, preview, iterate, css, hiccup, design, ui, commit, datastar, signals, interactive, alias.
 ---
 
 # Component Iteration Skill
 
-Drive component development through an **alias-first** REPL-powered iteration loop. Component structure lives in `sandbox/ui.clj` as chassis aliases, while `components.edn` stores lean alias invocations with config props.
+Drive component development through an **alias-first** REPL-powered iteration loop. Component structure lives in a UI namespace as chassis aliases, while `components.edn` stores lean alias invocations with config props.
 
 ## Configuration
 
@@ -27,7 +27,7 @@ Read `tsain.edn` at project root for file locations:
 
 ## Discovering the API
 
-Use sandestin discovery to explore available effects:
+Use sandestin discovery to explore available effects. This is the primary way to learn what's available:
 
 ```clojure
 (require '[ascolais.tsain :as tsain])
@@ -47,9 +47,19 @@ Use sandestin discovery to explore available effects:
 
 ## Alias-First Workflow
 
-### Step 0: Define the Chassis Alias (Required First Step)
+### Step 0: Read Configuration
 
-Before iterating on visuals, define the component structure in `sandbox/ui.clj` (or the namespace specified in `:ui-namespace`).
+First, read `tsain.edn` to find the correct file paths:
+
+```bash
+cat tsain.edn
+```
+
+The `:ui-namespace` tells you where to add aliases. The `:stylesheet` tells you where to add CSS.
+
+### Step 1: Define the Chassis Alias (Required First Step)
+
+Before iterating on visuals, define the component structure in the UI namespace (from `:ui-namespace`).
 
 **Key conventions:**
 - **Namespaced attrs** (`:game-card/title`) = config props (elided from HTML output)
@@ -57,7 +67,7 @@ Before iterating on visuals, define the component structure in `sandbox/ui.clj` 
 - **Namespace by component name** for self-documenting code
 
 ```clojure
-;; In dev/src/clj/sandbox/ui.clj
+;; In the UI namespace
 (defmethod c/resolve-alias ::my-component
   [_ attrs _]
   (let [{:my-component/keys [title subtitle icon]} attrs]
@@ -74,9 +84,9 @@ After adding the alias, reload the namespace:
 clj-nrepl-eval -p 7888 "(reload)"
 ```
 
-### Step 1: Preview with Alias Invocation
+### Step 2: Preview with Alias Invocation
 
-Use the alias with config props:
+Use the alias with config props. The namespace is from `:ui-namespace`:
 
 ```bash
 clj-nrepl-eval -p 7888 "(dispatch [[::tsain/preview
@@ -86,14 +96,14 @@ clj-nrepl-eval -p 7888 "(dispatch [[::tsain/preview
     :my-component/icon \"🎉\"}]]])"
 ```
 
-### Step 2: Iterate on Structure and CSS
+### Step 3: Iterate on Structure and CSS
 
-1. **Modify the alias** in `sandbox/ui.clj` to adjust structure
+1. **Modify the alias** in the UI namespace to adjust structure
 2. **Reload**: `clj-nrepl-eval -p 7888 "(reload)"`
 3. **Re-preview** to see changes
-4. **Add CSS** to `dev/resources/public/styles.css` (hot-reloads automatically)
+4. **Add CSS** to the stylesheet (from `:stylesheet`) - hot-reloads automatically
 
-### Step 3: Commit the Lean Example
+### Step 4: Commit the Lean Example
 
 ```bash
 clj-nrepl-eval -p 7888 "(dispatch [[::tsain/commit :my-component
@@ -131,9 +141,9 @@ clj-nrepl-eval -p 7888 "(dispatch [[::tsain/commit :my-component
 
 The alias handler receives both, but chassis automatically elides namespaced keys from the rendered HTML.
 
-## REPL API Reference
+## Effect Reference
 
-All sandbox functionality is available via dispatch effects:
+All sandbox functionality is available via dispatch effects. Use `(describe (dispatch))` to see the full list. Common effects:
 
 | Effect | Purpose |
 |--------|---------|
@@ -144,20 +154,9 @@ All sandbox functionality is available via dispatch effects:
 | `[::tsain/commit :name "desc"]` | Save with description |
 | `[::tsain/commit :name {:description "..." :examples [...]}]` | Save with multiple examples |
 | `[::tsain/uncommit :name]` | Remove from library |
-| `[::tsain/show :name]` | View single component (legacy) |
-| `[::tsain/show :name idx]` | View specific example (0-indexed) |
 | `[::tsain/show-components :name]` | View component with sidebar |
-| `[::tsain/show-gallery]` | View gallery grid |
 | `[::tsain/show-preview]` | Return to preview view |
 | `[::tsain/patch-signals {:key val}]` | Patch Datastar signals on all clients |
-| `[::tsain/toggle-sidebar]` | Toggle sidebar collapsed state |
-
-Invoke effects via dispatch:
-
-```clojure
-(dispatch [[::tsain/preview [:div "Hello"]]])
-(dispatch [[::tsain/commit :my-card {:description "Card component"}]])
-```
 
 ## Discovery Functions
 
@@ -171,44 +170,46 @@ Available in the dev namespace:
 | `(grep (dispatch) "pattern")` | Search by pattern |
 | `(reload)` | Reload changed namespaces (includes alias changes) |
 
-## File Locations
+## File Locations (from tsain.edn)
 
-| File | Purpose |
-|------|---------|
-| `tsain.edn` | **Configuration** (paths, port) |
-| `dev/resources/public/styles.css` | Component CSS (hot-reloads) |
-| `dev/src/clj/sandbox/ui.clj` | **Chassis aliases (component structure)** |
-| `resources/components.edn` | **Lean alias invocations (config only)** |
+| Config Key | Purpose |
+|------------|---------|
+| `:ui-namespace` | Namespace for chassis aliases |
+| `:stylesheet` | CSS file for component styles |
+| `:components-file` | Library persistence file |
 
 ## Best Practices
 
-1. **Alias-first** - Always define structure in `sandbox/ui.clj` before committing
+1. **Alias-first** - Always define structure in UI namespace before committing
 2. **Config by component name** - Use `:component-name/prop` for config props
-3. **CSS classes over inline styles** - Extract to styles.css before committing
+3. **CSS classes over inline styles** - Extract to stylesheet before committing
 4. **Use CSS custom properties** - Leverage theme variables (`--accent-cyan`, `--bg-primary`)
 5. **BEM-like naming** - `.component-name`, `.component-name-element`, `.component-name--modifier`
-6. **Sub-components are internal** - Only top-level components get `components.edn` entries
+6. **Discovery-first** - Use `describe`, `sample`, `grep` to explore the API
 
 ## Example: Creating a New Component
 
 ```bash
-# 1. Add alias to sandbox/ui.clj (using Edit tool)
+# 1. Read config to find file paths
+cat tsain.edn
+
+# 2. Add alias to UI namespace (using Edit tool)
 # Structure: [:div.status-badge attrs [:span.status-badge-dot] [:span.status-badge-label label]]
 
-# 2. Reload
+# 3. Reload
 clj-nrepl-eval -p 7888 "(reload)"
 
-# 3. Preview with config
+# 4. Preview with config
 clj-nrepl-eval -p 7888 "(dispatch [[::tsain/preview
   [:sandbox.ui/status-badge
    {:status-badge/label \"Online\"
     :status-badge/status :active}]]])"
 
-# 4. Add CSS to styles.css
+# 5. Add CSS to stylesheet
 # .status-badge { ... }
 # .status-badge--active { ... }
 
-# 5. Commit with dark/light variants
+# 6. Commit with dark/light variants
 clj-nrepl-eval -p 7888 "(dispatch [[::tsain/commit :status-badge
   {:description \"Status indicator badge\"
    :examples
@@ -253,7 +254,7 @@ All committed components must use CSS classes. The copy button returns the lean 
 ### Extraction Process
 
 1. **Define structure in alias** with semantic class names
-2. **Add CSS** for those classes in `styles.css`
+2. **Add CSS** for those classes in stylesheet
 3. **Use CSS custom properties** for colors that vary by theme
 4. **Commit the lean alias invocation** with config props only
 
@@ -269,30 +270,3 @@ Use `.theme-light` wrapper class - CSS custom properties handle the rest:
 [:div.theme-light
  [:sandbox.ui/game-card {:game-card/title "Card" ...}]]
 ```
-
-## Available Theme Variables
-
-| Variable | Dark | Light |
-|----------|------|-------|
-| `--bg-primary` | `#0a0a12` | `#ffffff` |
-| `--bg-secondary` | `#12081f` | `#f8f4ff` |
-| `--accent-cyan` | `#0ff` | `#00cccc` |
-| `--accent-magenta` | `#ff00ff` | `#cc00cc` |
-| `--text-primary` | `#fff` | `#333` |
-| `--text-muted` | `#666` | `#888` |
-
-## Utility Classes
-
-| Class | Effect |
-|-------|--------|
-| `.clip-corners-lg/md/sm` | Cut corner clip paths |
-| `.clip-hexagon` | Hexagon shape |
-| `.clip-diamond` | Diamond shape |
-| `.clip-badge` | Elongated hexagon for tags |
-| `.clip-octagon` | Octagon for avatars |
-| `.scanline-overlay` | CRT scanline effect |
-
-## Related Skills
-
-- **clojure-eval**: General REPL evaluation
-- **fx-explore**: Discover sandbox effects with describe/grep/sample

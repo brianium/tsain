@@ -1,0 +1,15 @@
+{;; Namespace where chassis aliases are defined
+ ;; Claude will add new `defmethod c/resolve-alias` entries here
+ ;; during component iteration
+ :ui-namespace myapp.ui
+
+ ;; Where the component library is persisted
+ ;; This file stores lean alias invocations with config props
+ :components-file "resources/components.edn"
+
+ ;; CSS file for component styles (watched for hot reload)
+ ;; Add component classes here during CSS extraction phase
+ :stylesheet "dev/resources/public/styles.css"
+
+ ;; Port for sandbox server
+ :port 3000}

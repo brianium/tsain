@@ -186,3 +186,96 @@
                          (contains? v ::s/handler)
                          (contains? v ::s/description)))
                   effects)))))
+
+(deftest registry-includes-config
+  (testing "registry stores config for route factory access"
+    (let [reg (tsain/registry {:components-file test-components-file :port 4000})]
+      (is (contains? reg ::tsain/config))
+      (is (= 4000 (get-in reg [::tsain/config :port]))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Route Factory Tests
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require '[ascolais.tsain.routes :as routes])
+
+(deftest routes-returns-vector
+  (testing "routes returns a vector of route definitions"
+    (let [reg (tsain/registry {:components-file test-components-file})
+          state-atom (::s/state reg)
+          config (::tsain/config reg)
+          route-data (routes/routes nil state-atom config)]
+      (is (vector? route-data))
+      (is (pos? (count route-data))))))
+
+(deftest routes-have-correct-structure
+  (testing "each route has path and handler map"
+    (let [reg (tsain/registry {:components-file test-components-file})
+          state-atom (::s/state reg)
+          config (::tsain/config reg)
+          route-data (routes/routes nil state-atom config)]
+      (doseq [[path handler-map] route-data]
+        (is (string? path) (str "Path should be string: " path))
+        (is (map? handler-map) (str "Handler map missing for: " path))))))
+
+(deftest routes-include-expected-paths
+  (testing "routes include core sandbox paths"
+    (let [reg (tsain/registry {:components-file test-components-file})
+          state-atom (::s/state reg)
+          config (::tsain/config reg)
+          route-data (routes/routes nil state-atom config)
+          paths (set (map first route-data))]
+      (is (contains? paths "/sandbox"))
+      (is (contains? paths "/sandbox/sse"))
+      (is (contains? paths "/sandbox/c/:name"))
+      (is (contains? paths "/sandbox/commit"))
+      (is (contains? paths "/sandbox/copy/:name"))
+      (is (contains? paths "/sandbox.css")))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; View Rendering Tests
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require '[ascolais.tsain.views :as views])
+
+(deftest render-view-returns-hiccup
+  (testing "render-view returns hiccup structure"
+    (let [state {:preview {:hiccup [:div "test"]}
+                 :view {:type :preview}
+                 :library {}
+                 :sidebar-collapsed? false}
+          result (views/render-view state)]
+      (is (vector? result))
+      (is (= :div#app (first result))))))
+
+(deftest sandbox-page-returns-full-html
+  (testing "sandbox-page returns doctype + html structure"
+    (let [result (views/sandbox-page)]
+      (is (vector? result))
+      ;; Structure should be [doctype [:html ...]]
+      (is (= 2 (count result)))
+      (is (= :html (first (second result)))))))
+
+(deftest render-view-handles-all-view-types
+  (testing "render-view handles preview view"
+    (let [state {:preview {:hiccup [:div "test"]}
+                 :view {:type :preview}
+                 :library {}
+                 :sidebar-collapsed? false}]
+      (is (vector? (views/render-view state)))))
+
+  (testing "render-view handles gallery view"
+    (let [state {:preview {:hiccup nil}
+                 :view {:type :gallery}
+                 :library {}
+                 :sidebar-collapsed? false}]
+      (is (vector? (views/render-view state)))))
+
+  (testing "render-view handles components view"
+    (let [state {:preview {:hiccup nil}
+                 :view {:type :components :name :test-card :example-idx 0}
+                 :library {:test-card {:description "Test"
+                                       :examples [{:label "Default"
+                                                   :hiccup [:div "test"]}]}}
+                 :sidebar-collapsed? false}]
+      (is (vector? (views/render-view state))))))
