@@ -61,7 +61,7 @@
   ([] (start-system 3000))
   ([port]
    (let [tsain-reg  (tsain/registry {:port port})
-         state-atom (::s/state tsain-reg)
+         state-atom (::tsain/state tsain-reg)
          config     (::tsain/config tsain-reg)
          store      (create-store)
          dispatch   (create-dispatch store tsain-reg)

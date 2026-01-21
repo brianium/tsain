@@ -57,7 +57,7 @@ Create your UI namespace for chassis aliases:
 (defn start []
   (let [;; Create tsain registry (reads tsain.edn)
         tsain-reg  (tsain/registry)
-        state-atom (::s/state tsain-reg)
+        state-atom (::tsain/state tsain-reg)
         config     (::tsain/config tsain-reg)
 
         ;; Create connection store and dispatch

@@ -50,14 +50,14 @@
     (let [reg (tsain/registry {:components-file test-components-file})]
       (is (map? reg))
       (is (contains? reg ::s/effects))
-      (is (contains? reg ::s/state))
+      (is (contains? reg ::tsain/state))
       (is (map? (::s/effects reg)))
-      (is (instance? clojure.lang.Atom (::s/state reg))))))
+      (is (instance? clojure.lang.Atom (::tsain/state reg))))))
 
 (deftest registry-state-initialization
   (testing "registry initializes state atom correctly"
     (let [reg (tsain/registry {:components-file test-components-file})
-          state @(::s/state reg)]
+          state @(::tsain/state reg)]
       (is (map? state))
       (is (contains? state :preview))
       (is (contains? state :view))
@@ -202,7 +202,7 @@
 (deftest routes-returns-vector
   (testing "routes returns a vector of route definitions"
     (let [reg (tsain/registry {:components-file test-components-file})
-          state-atom (::s/state reg)
+          state-atom (::tsain/state reg)
           config (::tsain/config reg)
           route-data (routes/routes nil state-atom config)]
       (is (vector? route-data))
@@ -211,7 +211,7 @@
 (deftest routes-have-correct-structure
   (testing "each route has path and handler map"
     (let [reg (tsain/registry {:components-file test-components-file})
-          state-atom (::s/state reg)
+          state-atom (::tsain/state reg)
           config (::tsain/config reg)
           route-data (routes/routes nil state-atom config)]
       (doseq [[path handler-map] route-data]
@@ -221,7 +221,7 @@
 (deftest routes-include-expected-paths
   (testing "routes include core sandbox paths"
     (let [reg (tsain/registry {:components-file test-components-file})
-          state-atom (::s/state reg)
+          state-atom (::tsain/state reg)
           config (::tsain/config reg)
           route-data (routes/routes nil state-atom config)
           paths (set (map first route-data))]

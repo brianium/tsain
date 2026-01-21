@@ -1,6 +1,6 @@
 # Spec 013: Schema Cleanup
 
-## Status: Draft
+## Status: Complete
 
 ## Problem
 
@@ -87,14 +87,14 @@ This:
 
 ## Done When
 
-- [ ] `::state` used instead of `::s/state` in tsain registry
-- [ ] `HiccupSchema` uses `ascolais.twk.schema/Hiccup` as base
-- [ ] `SignalMapSchema` uses `ascolais.twk.schema/Signals` as base
-- [ ] Generation hints preserved for `s/sample` functionality
-- [ ] `sandbox/app.clj` updated to use `::tsain/state`
-- [ ] `tsain.routes` updated to use `::tsain/state`
-- [ ] README updated with correct namespace
-- [ ] All tests pass
+- [x] `::state` used instead of `::s/state` in tsain registry
+- [x] `HiccupSchema` uses `ascolais.twk.schema/Hiccup` as base
+- [x] `SignalMapSchema` uses `ascolais.twk.schema/Signals` as base
+- [x] Generation hints preserved for `s/sample` functionality
+- [x] `sandbox/app.clj` updated to use `::tsain/state`
+- [x] `tsain.routes` updated to use `::tsain/state` (routes.clj doesn't access state directly)
+- [x] README updated with correct namespace
+- [x] All tests pass
 
 ## Relationship to Other Specs
 

@@ -15,7 +15,7 @@
     (def dispatch (s/create-dispatch [tsain-reg (twk/registry) ...]))
 
     ;; Get state atom for routes
-    (def tsain-state (::s/state tsain-reg))
+    (def tsain-state (::state tsain-reg))
     (def tsain-config (::tsain/config tsain-reg))
 
     ;; Discover available effects
@@ -25,9 +25,11 @@
             [ascolais.sfere :as sfere]
             [ascolais.tsain.views :as views]
             [ascolais.twk :as twk]
+            [ascolais.twk.schema :as twk.schema]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [clojure.pprint :as pprint]))
+            [clojure.pprint :as pprint]
+            [malli.util :as mu]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuration
@@ -83,12 +85,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def HiccupSchema
-  "Malli schema for hiccup elements."
-  [:vector {:description "Hiccup element - a vector starting with keyword tag"
-            :gen/elements [[:div [:h1 "Hello World"]]
-                           [:div.card [:h2 "Title"] [:p "Content"]]
-                           [:button {:data-on:click "@post('/action')"} "Click me"]]}
-   :any])
+  "Malli schema for hiccup elements.
+  Based on ascolais.twk.schema/Hiccup with generation hints for s/sample."
+  (mu/update-properties
+   twk.schema/Hiccup
+   assoc
+   :gen/elements [[:div [:h1 "Hello World"]]
+                  [:div.card [:h2 "Title"] [:p "Content"]]
+                  [:button {:data-on:click "@post('/action')"} "Click me"]]))
 
 (def ComponentNameSchema
   "Schema for component names."
@@ -111,11 +115,15 @@
      [:examples {:optional true} [:vector ExampleSchema]]]]])
 
 (def SignalMapSchema
-  "Schema for Datastar signal patches."
-  [:map {:description "Map of signal names to values"
-         :gen/elements [{:count 0}
-                        {:selected true}
-                        {:form {:email "test@example.com"}}]}])
+  "Schema for Datastar signal patches.
+  Based on ascolais.twk.schema/Signals with generation hints for s/sample."
+  (mu/update-properties
+   twk.schema/Signals
+   assoc
+   :description "Map of signal names to values"
+   :gen/elements [{:count 0}
+                  {:selected true}
+                  {:form {:email "test@example.com"}}]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Registry Factory
@@ -146,7 +154,7 @@
                            :library (load-library components-file)
                            :sidebar-collapsed? false})]
 
-     {::s/state state-atom
+     {::state state-atom
       ::config config
 
       ::s/effects
