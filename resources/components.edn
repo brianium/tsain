@@ -1,4 +1,36 @@
-{:game-card
+{:player-hud
+ {:description "Player status with health, energy, and card counts",
+  :examples
+  [{:label "Dark",
+    :hiccup
+    [:div
+     {:style "padding: 40px;"}
+     [:sandbox.ui/player-hud
+      #:player-hud{:name "NETRUNNER_X",
+                   :rank "ELITE",
+                   :avatar "🤖",
+                   :health {:current 24, :max 30, :percent "80%"},
+                   :energy {:current 5, :max 8, :percent "62.5%"},
+                   :counters
+                   [{:label "DECK", :value "23", :type :deck}
+                    {:label "HAND", :value "5", :type :hand}
+                    {:label "TRASH", :value "8", :type :trash}]}]]}
+   {:label "Light",
+    :hiccup
+    [:div.theme-light
+     {:style "padding: 40px; background: #f0f4f8;"}
+     [:sandbox.ui/player-hud
+      #:player-hud{:name "NETRUNNER_X",
+                   :rank "ELITE",
+                   :avatar "🤖",
+                   :health {:current 24, :max 30, :percent "80%"},
+                   :energy {:current 5, :max 8, :percent "62.5%"},
+                   :counters
+                   [{:label "DECK", :value "23", :type :deck}
+                    {:label "HAND", :value "5", :type :hand}
+                    {:label "TRASH", :value "8", :type :trash}]}]]}],
+  :created-at #inst "2026-01-19T23:41:31.341-00:00"},
+ :game-card
  {:description "Cyberpunk game card with attack/defense stats",
   :examples
   [{:label "Dark",
@@ -33,6 +65,187 @@
                   :flavor
                   "\"They call it a ghost in the machine. I call it evolution.\""}]]}],
   :created-at #inst "2026-01-19T23:41:10.040-00:00"},
+ :event-modal
+ {:description
+  "Modal for in-game events with success/warning/error variants",
+  :examples
+  [{:label "Success",
+    :hiccup
+    [:div
+     {:style
+      "padding: 40px; display: flex; justify-content: center; background: #050510;"}
+     [:sandbox.ui/event-modal
+      #:event-modal{:title "UPLOAD COMPLETE",
+                    :subtitle "Data Transfer Successful",
+                    :icon "✓",
+                    :variant :success,
+                    :message
+                    "Neural pathway synchronization complete. New abilities unlocked. System performance increased by 23%. All subsystems nominal.",
+                    :actions [{:label "CONTINUE", :primary? true}]}]]}
+   {:label "Warning",
+    :hiccup
+    [:div
+     {:style
+      "padding: 40px; display: flex; justify-content: center; background: #050510;"}
+     [:sandbox.ui/event-modal
+      #:event-modal{:title "SYSTEM BREACH",
+                    :subtitle "Security Protocol Initiated",
+                    :icon "⚠",
+                    :variant :warning,
+                    :message
+                    "An unauthorized access attempt has been detected in Sector 7. Firewall integrity at 67%. Immediate action required.",
+                    :actions
+                    [{:label "INVESTIGATE", :primary? true}
+                     {:label "DISMISS"}]}]]}
+   {:label "Error",
+    :hiccup
+    [:div
+     {:style
+      "padding: 40px; display: flex; justify-content: center; background: #050510;"}
+     [:sandbox.ui/event-modal
+      #:event-modal{:title "CRITICAL FAILURE",
+                    :subtitle "System Integrity Compromised",
+                    :icon "✕",
+                    :variant :error,
+                    :message
+                    "Core memory corruption detected. Emergency protocols engaged. Data loss imminent without immediate intervention.",
+                    :actions
+                    [{:label "EMERGENCY REPAIR", :primary? true}
+                     {:label "ABORT MISSION"}]}]]}],
+  :created-at #inst "2026-01-21T12:41:26.606-00:00"},
+ :card-type-badges
+ {:description "Card type and rarity indicator badges",
+  :examples
+  [{:label "Dark",
+    :hiccup
+    [:div
+     {:style
+      "padding: 40px; display: flex; flex-wrap: wrap; gap: 12px;"}
+     [:sandbox.ui/card-type-badges
+      #:card-type-badges{:badges
+                         [{:icon "⚡", :label "Attack", :type :attack}
+                          {:icon "◇", :label "Defense", :type :defense}
+                          {:icon "⟁", :label "Hack", :type :hack}
+                          {:icon "☣", :label "Virus", :type :virus}
+                          {:icon "⌘",
+                           :label "Protocol",
+                           :type :protocol}
+                          {:icon "⚙",
+                           :label "Hardware",
+                           :type :hardware}
+                          {:icon "◈",
+                           :label "Creature",
+                           :type :creature}
+                          {:icon "▣", :label "ICE", :type :ice}],
+                         :rarities
+                         [{:label "Common", :rarity :common}
+                          {:label "Rare", :rarity :rare}
+                          {:label "Epic", :rarity :epic}
+                          {:label "Legendary", :rarity :legendary}]}]]}
+   {:label "Light",
+    :hiccup
+    [:div.theme-light
+     {:style
+      "padding: 40px; background: #f0f4f8; display: flex; flex-wrap: wrap; gap: 12px;"}
+     [:sandbox.ui/card-type-badges
+      #:card-type-badges{:badges
+                         [{:icon "⚡", :label "Attack", :type :attack}
+                          {:icon "◇", :label "Defense", :type :defense}
+                          {:icon "⟁", :label "Hack", :type :hack}
+                          {:icon "☣", :label "Virus", :type :virus}
+                          {:icon "⌘",
+                           :label "Protocol",
+                           :type :protocol}
+                          {:icon "⚙",
+                           :label "Hardware",
+                           :type :hardware}
+                          {:icon "◈",
+                           :label "Creature",
+                           :type :creature}
+                          {:icon "▣", :label "ICE", :type :ice}],
+                         :rarities
+                         [{:label "Common", :rarity :common}
+                          {:label "Rare", :rarity :rare}
+                          {:label "Epic", :rarity :epic}
+                          {:label "Legendary",
+                           :rarity :legendary}]}]]}],
+  :created-at #inst "2026-01-19T23:49:33.575-00:00"},
+ :toast
+ {:description "System alert toasts for in-game messaging",
+  :examples
+  [{:label "Dark",
+    :hiccup
+    [:div
+     {:style
+      "display: flex; flex-direction: column; gap: 1rem; padding: 2rem;"}
+     [:sandbox.ui/toast
+      #:toast{:variant :error,
+              :label "CRITICAL ERROR",
+              :message "Connection to server lost. Retrying...",
+              :icon "⚠"}]
+     [:sandbox.ui/toast
+      #:toast{:variant :warning,
+              :label "WARNING",
+              :message "Low energy reserves. Recharge recommended.",
+              :icon "⚡"}]
+     [:sandbox.ui/toast
+      #:toast{:variant :info,
+              :label "SYSTEM INFO",
+              :message "New update available. Version 2.4.1",
+              :icon "ℹ"}]
+     [:sandbox.ui/toast
+      #:toast{:variant :success,
+              :label "COMPLETE",
+              :message "Operation completed successfully.",
+              :icon "✓"}]]}
+   {:label "Light",
+    :hiccup
+    [:div.theme-light
+     {:style
+      "display: flex; flex-direction: column; gap: 1rem; padding: 2rem; background: #f0f4f8;"}
+     [:sandbox.ui/toast
+      #:toast{:variant :error,
+              :label "CRITICAL ERROR",
+              :message "Connection to server lost. Retrying...",
+              :icon "⚠"}]
+     [:sandbox.ui/toast
+      #:toast{:variant :warning,
+              :label "WARNING",
+              :message "Low energy reserves. Recharge recommended.",
+              :icon "⚡"}]
+     [:sandbox.ui/toast
+      #:toast{:variant :info,
+              :label "SYSTEM INFO",
+              :message "New update available. Version 2.4.1",
+              :icon "ℹ"}]
+     [:sandbox.ui/toast
+      #:toast{:variant :success,
+              :label "COMPLETE",
+              :message "Operation completed successfully.",
+              :icon "✓"}]]}],
+  :created-at #inst "2026-01-20T02:43:09.680-00:00"},
+ :resource-display
+ {:description "Energy and credits resource indicators",
+  :examples
+  [{:label "Dark",
+    :hiccup
+    [:div
+     {:style
+      "padding: 40px; display: flex; flex-direction: column; gap: 24px;"}
+     [:sandbox.ui/resource-display
+      #:resource-display{:energy {:active 3, :total 5},
+                         :credits
+                         {:active 3, :total 5, :value "2,450"}}]]}
+   {:label "Light",
+    :hiccup
+    [:div.theme-light
+     {:style
+      "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 24px;"}
+     [:sandbox.ui/resource-display
+      #:resource-display{:energy {:active 3, :total 5},
+                         :credits
+                         {:active 3, :total 5, :value "2,450"}}]]}],
+  :created-at #inst "2026-01-19T23:48:29.357-00:00"},
  :combat-log
  {:description "Battle log with timestamped events",
   :examples
@@ -135,95 +348,6 @@
                       [:span.combat-log-actor--magenta "You"]
                       " drew 2 cards"]}]}]]}],
   :created-at #inst "2026-01-19T23:48:58.198-00:00"},
- :card-type-badges
- {:description "Card type and rarity indicator badges",
-  :examples
-  [{:label "Dark",
-    :hiccup
-    [:div
-     {:style
-      "padding: 40px; display: flex; flex-wrap: wrap; gap: 12px;"}
-     [:sandbox.ui/card-type-badges
-      #:card-type-badges{:badges
-                         [{:icon "⚡", :label "Attack", :type :attack}
-                          {:icon "◇", :label "Defense", :type :defense}
-                          {:icon "⟁", :label "Hack", :type :hack}
-                          {:icon "☣", :label "Virus", :type :virus}
-                          {:icon "⌘",
-                           :label "Protocol",
-                           :type :protocol}
-                          {:icon "⚙",
-                           :label "Hardware",
-                           :type :hardware}
-                          {:icon "◈",
-                           :label "Creature",
-                           :type :creature}
-                          {:icon "▣", :label "ICE", :type :ice}],
-                         :rarities
-                         [{:label "Common", :rarity :common}
-                          {:label "Rare", :rarity :rare}
-                          {:label "Epic", :rarity :epic}
-                          {:label "Legendary", :rarity :legendary}]}]]}
-   {:label "Light",
-    :hiccup
-    [:div.theme-light
-     {:style
-      "padding: 40px; background: #f0f4f8; display: flex; flex-wrap: wrap; gap: 12px;"}
-     [:sandbox.ui/card-type-badges
-      #:card-type-badges{:badges
-                         [{:icon "⚡", :label "Attack", :type :attack}
-                          {:icon "◇", :label "Defense", :type :defense}
-                          {:icon "⟁", :label "Hack", :type :hack}
-                          {:icon "☣", :label "Virus", :type :virus}
-                          {:icon "⌘",
-                           :label "Protocol",
-                           :type :protocol}
-                          {:icon "⚙",
-                           :label "Hardware",
-                           :type :hardware}
-                          {:icon "◈",
-                           :label "Creature",
-                           :type :creature}
-                          {:icon "▣", :label "ICE", :type :ice}],
-                         :rarities
-                         [{:label "Common", :rarity :common}
-                          {:label "Rare", :rarity :rare}
-                          {:label "Epic", :rarity :epic}
-                          {:label "Legendary",
-                           :rarity :legendary}]}]]}],
-  :created-at #inst "2026-01-19T23:49:33.575-00:00"},
- :player-hud
- {:description "Player status with health, energy, and card counts",
-  :examples
-  [{:label "Dark",
-    :hiccup
-    [:div
-     {:style "padding: 40px;"}
-     [:sandbox.ui/player-hud
-      #:player-hud{:name "NETRUNNER_X",
-                   :rank "ELITE",
-                   :avatar "🤖",
-                   :health {:current 24, :max 30, :percent "80%"},
-                   :energy {:current 5, :max 8, :percent "62.5%"},
-                   :counters
-                   [{:label "DECK", :value "23", :type :deck}
-                    {:label "HAND", :value "5", :type :hand}
-                    {:label "TRASH", :value "8", :type :trash}]}]]}
-   {:label "Light",
-    :hiccup
-    [:div.theme-light
-     {:style "padding: 40px; background: #f0f4f8;"}
-     [:sandbox.ui/player-hud
-      #:player-hud{:name "NETRUNNER_X",
-                   :rank "ELITE",
-                   :avatar "🤖",
-                   :health {:current 24, :max 30, :percent "80%"},
-                   :energy {:current 5, :max 8, :percent "62.5%"},
-                   :counters
-                   [{:label "DECK", :value "23", :type :deck}
-                    {:label "HAND", :value "5", :type :hand}
-                    {:label "TRASH", :value "8", :type :trash}]}]]}],
-  :created-at #inst "2026-01-19T23:41:31.341-00:00"},
  :action-buttons
  {:description "Game action buttons with various states",
   :examples
@@ -258,82 +382,6 @@
                         {:label "HACK", :color :magenta}
                         {:label "SCAN", :color :yellow}]}]]}],
   :created-at #inst "2026-01-19T23:41:57.945-00:00"},
- :resource-display
- {:description "Energy and credits resource indicators",
-  :examples
-  [{:label "Dark",
-    :hiccup
-    [:div
-     {:style
-      "padding: 40px; display: flex; flex-direction: column; gap: 24px;"}
-     [:sandbox.ui/resource-display
-      #:resource-display{:energy {:active 3, :total 5},
-                         :credits
-                         {:active 3, :total 5, :value "2,450"}}]]}
-   {:label "Light",
-    :hiccup
-    [:div.theme-light
-     {:style
-      "padding: 40px; background: #f0f4f8; display: flex; flex-direction: column; gap: 24px;"}
-     [:sandbox.ui/resource-display
-      #:resource-display{:energy {:active 3, :total 5},
-                         :credits
-                         {:active 3, :total 5, :value "2,450"}}]]}],
-  :created-at #inst "2026-01-19T23:48:29.357-00:00"},
- :toast
- {:description "System alert toasts for in-game messaging",
-  :examples
-  [{:label "Dark",
-    :hiccup
-    [:div
-     {:style
-      "display: flex; flex-direction: column; gap: 1rem; padding: 2rem;"}
-     [:sandbox.ui/toast
-      #:toast{:variant :error,
-              :label "CRITICAL ERROR",
-              :message "Connection to server lost. Retrying...",
-              :icon "⚠"}]
-     [:sandbox.ui/toast
-      #:toast{:variant :warning,
-              :label "WARNING",
-              :message "Low energy reserves. Recharge recommended.",
-              :icon "⚡"}]
-     [:sandbox.ui/toast
-      #:toast{:variant :info,
-              :label "SYSTEM INFO",
-              :message "New update available. Version 2.4.1",
-              :icon "ℹ"}]
-     [:sandbox.ui/toast
-      #:toast{:variant :success,
-              :label "COMPLETE",
-              :message "Operation completed successfully.",
-              :icon "✓"}]]}
-   {:label "Light",
-    :hiccup
-    [:div.theme-light
-     {:style
-      "display: flex; flex-direction: column; gap: 1rem; padding: 2rem; background: #f0f4f8;"}
-     [:sandbox.ui/toast
-      #:toast{:variant :error,
-              :label "CRITICAL ERROR",
-              :message "Connection to server lost. Retrying...",
-              :icon "⚠"}]
-     [:sandbox.ui/toast
-      #:toast{:variant :warning,
-              :label "WARNING",
-              :message "Low energy reserves. Recharge recommended.",
-              :icon "⚡"}]
-     [:sandbox.ui/toast
-      #:toast{:variant :info,
-              :label "SYSTEM INFO",
-              :message "New update available. Version 2.4.1",
-              :icon "ℹ"}]
-     [:sandbox.ui/toast
-      #:toast{:variant :success,
-              :label "COMPLETE",
-              :message "Operation completed successfully.",
-              :icon "✓"}]]}],
-  :created-at #inst "2026-01-20T02:43:09.680-00:00"},
  :player-portrait
  {:description
   "16-bit cyberpunk player portrait with pixel art character, stats bars, and theme variants",
@@ -341,30 +389,58 @@
   [{:label "Default",
     :hiccup
     [:div
-     {:style {:display "flex", :gap "1.5rem", :padding "2rem", :flex-wrap "wrap"}}
+     {:style
+      {:display "flex",
+       :gap "1.5rem",
+       :padding "2rem",
+       :flex-wrap "wrap"}}
      [:sandbox.ui/player-portrait
       #:player-portrait{:name "ZERO_COOL",
                         :class "RUNNER",
                         :level "12",
                         :theme :cyan,
-                        :pixels "6px -30px 0 #0ff, 12px -30px 0 #0ff, 18px -30px 0 #0ff, 0px -24px 0 #0dd, 6px -24px 0 #0ff, 12px -24px 0 #5ff, 18px -24px 0 #0ff, 24px -24px 0 #0dd, 6px -18px 0 #0dd, 12px -18px 0 #0ff, 18px -18px 0 #0dd, 0px -12px 0 #d4a878, 6px -12px 0 #e8c4a0, 12px -12px 0 #e8c4a0, 18px -12px 0 #e8c4a0, 24px -12px 0 #d4a878, 0px -6px 0 #d4a878, 6px -6px 0 #e8c4a0, 12px -6px 0 #e8c4a0, 18px -6px 0 #e8c4a0, 24px -6px 0 #d4a878, 0px 0px 0 #c49868, 6px 0px 0 #f0f, 12px 0px 0 #222, 18px 0px 0 #fff, 24px 0px 0 #c49868, 0px 6px 0 #b08058, 6px 6px 0 #c49868, 12px 6px 0 #d4a878, 18px 6px 0 #c49868, 24px 6px 0 #b08058, 6px 12px 0 #b08058, 12px 12px 0 #c49868, 18px 12px 0 #b08058, 0px 18px 0 #1a1a2e, 6px 18px 0 #252538, 12px 18px 0 #252538, 18px 18px 0 #252538, 24px 18px 0 #1a1a2e, -6px 24px 0 #1a1a2e, 0px 24px 0 #0ff, 6px 24px 0 #1a1a2e, 12px 24px 0 #1a1a2e, 18px 24px 0 #1a1a2e, 24px 24px 0 #0ff, 30px 24px 0 #1a1a2e",
-                        :stats [{:label "HP", :value "78", :percent "78%", :type :hp}
-                                {:label "NRG", :value "36", :percent "60%", :type :nrg}]}]
+                        :pixels
+                        "6px -30px 0 #0ff, 12px -30px 0 #0ff, 18px -30px 0 #0ff, 0px -24px 0 #0dd, 6px -24px 0 #0ff, 12px -24px 0 #5ff, 18px -24px 0 #0ff, 24px -24px 0 #0dd, 6px -18px 0 #0dd, 12px -18px 0 #0ff, 18px -18px 0 #0dd, 0px -12px 0 #d4a878, 6px -12px 0 #e8c4a0, 12px -12px 0 #e8c4a0, 18px -12px 0 #e8c4a0, 24px -12px 0 #d4a878, 0px -6px 0 #d4a878, 6px -6px 0 #e8c4a0, 12px -6px 0 #e8c4a0, 18px -6px 0 #e8c4a0, 24px -6px 0 #d4a878, 0px 0px 0 #c49868, 6px 0px 0 #f0f, 12px 0px 0 #222, 18px 0px 0 #fff, 24px 0px 0 #c49868, 0px 6px 0 #b08058, 6px 6px 0 #c49868, 12px 6px 0 #d4a878, 18px 6px 0 #c49868, 24px 6px 0 #b08058, 6px 12px 0 #b08058, 12px 12px 0 #c49868, 18px 12px 0 #b08058, 0px 18px 0 #1a1a2e, 6px 18px 0 #252538, 12px 18px 0 #252538, 18px 18px 0 #252538, 24px 18px 0 #1a1a2e, -6px 24px 0 #1a1a2e, 0px 24px 0 #0ff, 6px 24px 0 #1a1a2e, 12px 24px 0 #1a1a2e, 18px 24px 0 #1a1a2e, 24px 24px 0 #0ff, 30px 24px 0 #1a1a2e",
+                        :stats
+                        [{:label "HP",
+                          :value "78",
+                          :percent "78%",
+                          :type :hp}
+                         {:label "NRG",
+                          :value "36",
+                          :percent "60%",
+                          :type :nrg}]}]
      [:sandbox.ui/player-portrait
       #:player-portrait{:name "RAZR_BLADE",
                         :class "SAMURAI",
                         :level "18",
                         :theme :red,
-                        :pixels "0px -30px 0 #f00, 6px -30px 0 #f00, 12px -30px 0 #f00, 18px -30px 0 #f00, 24px -30px 0 #f00, 6px -24px 0 #222, 12px -24px 0 #333, 18px -24px 0 #222, 0px -18px 0 #222, 6px -18px 0 #333, 12px -18px 0 #444, 18px -18px 0 #333, 24px -18px 0 #222, 0px -12px 0 #c49868, 6px -12px 0 #d4a878, 12px -12px 0 #d4a878, 18px -12px 0 #d4a878, 24px -12px 0 #c49868, 0px -6px 0 #b08058, 6px -6px 0 #d4a878, 12px -6px 0 #d4a878, 18px -6px 0 #d4a878, 24px -6px 0 #b08058, 0px 0px 0 #a07048, 6px 0px 0 #a00, 12px 0px 0 #222, 18px 0px 0 #fff, 24px 0px 0 #a07048, 0px 6px 0 #a07048, 6px 6px 0 #b08058, 12px 6px 0 #c49868, 18px 6px 0 #b08058, 24px 6px 0 #a07048, 6px 12px 0 #a07048, 12px 12px 0 #b08058, 18px 12px 0 #a07048, 0px 18px 0 #333, 6px 18px 0 #444, 12px 18px 0 #444, 18px 18px 0 #444, 24px 18px 0 #333, -6px 24px 0 #333, 0px 24px 0 #f50, 6px 24px 0 #333, 12px 24px 0 #333, 18px 24px 0 #333, 24px 24px 0 #f50, 30px 24px 0 #333",
-                        :stats [{:label "HP", :value "92", :percent "92%", :type :red}
-                                {:label "STM", :value "27", :percent "45%", :type :stm}]}]
+                        :pixels
+                        "0px -30px 0 #f00, 6px -30px 0 #f00, 12px -30px 0 #f00, 18px -30px 0 #f00, 24px -30px 0 #f00, 6px -24px 0 #222, 12px -24px 0 #333, 18px -24px 0 #222, 0px -18px 0 #222, 6px -18px 0 #333, 12px -18px 0 #444, 18px -18px 0 #333, 24px -18px 0 #222, 0px -12px 0 #c49868, 6px -12px 0 #d4a878, 12px -12px 0 #d4a878, 18px -12px 0 #d4a878, 24px -12px 0 #c49868, 0px -6px 0 #b08058, 6px -6px 0 #d4a878, 12px -6px 0 #d4a878, 18px -6px 0 #d4a878, 24px -6px 0 #b08058, 0px 0px 0 #a07048, 6px 0px 0 #a00, 12px 0px 0 #222, 18px 0px 0 #fff, 24px 0px 0 #a07048, 0px 6px 0 #a07048, 6px 6px 0 #b08058, 12px 6px 0 #c49868, 18px 6px 0 #b08058, 24px 6px 0 #a07048, 6px 12px 0 #a07048, 12px 12px 0 #b08058, 18px 12px 0 #a07048, 0px 18px 0 #333, 6px 18px 0 #444, 12px 18px 0 #444, 18px 18px 0 #444, 24px 18px 0 #333, -6px 24px 0 #333, 0px 24px 0 #f50, 6px 24px 0 #333, 12px 24px 0 #333, 18px 24px 0 #333, 24px 24px 0 #f50, 30px 24px 0 #333",
+                        :stats
+                        [{:label "HP",
+                          :value "92",
+                          :percent "92%",
+                          :type :red}
+                         {:label "STM",
+                          :value "27",
+                          :percent "45%",
+                          :type :stm}]}]
      [:sandbox.ui/player-portrait
       #:player-portrait{:name "GL1TCH_3R",
                         :class "TECHIE",
                         :level "07",
                         :theme :green,
                         :active? true,
-                        :pixels "0px -30px 0 #444, 6px -30px 0 #0f0, 12px -30px 0 #0f0, 18px -30px 0 #0f0, 24px -30px 0 #444, 0px -24px 0 #654, 6px -24px 0 #765, 12px -24px 0 #876, 18px -24px 0 #765, 24px -24px 0 #654, 0px -18px 0 #543, 6px -18px 0 #654, 12px -18px 0 #765, 18px -18px 0 #654, 24px -18px 0 #543, 0px -12px 0 #e8d0b8, 6px -12px 0 #f0dcc0, 12px -12px 0 #f0dcc0, 18px -12px 0 #f0dcc0, 24px -12px 0 #e8d0b8, 0px -6px 0 #d8c0a8, 6px -6px 0 #e8d0b8, 12px -6px 0 #f0dcc0, 18px -6px 0 #e8d0b8, 24px -6px 0 #d8c0a8, 0px 0px 0 #333, 6px 0px 0 #0f0, 12px 0px 0 #333, 18px 0px 0 #0f0, 24px 0px 0 #333, 0px 6px 0 #c8b098, 6px 6px 0 #d8c0a8, 12px 6px 0 #e8d0b8, 18px 6px 0 #d8c0a8, 24px 6px 0 #c8b098, 6px 12px 0 #c8b098, 12px 12px 0 #d8c0a8, 18px 12px 0 #c8b098, 0px 18px 0 #252, 6px 18px 0 #363, 12px 18px 0 #252, 18px 18px 0 #363, 24px 18px 0 #252, -6px 24px 0 #252, 0px 24px 0 #0f0, 6px 24px 0 #363, 12px 24px 0 #363, 18px 24px 0 #363, 24px 24px 0 #0f0, 30px 24px 0 #252",
-                        :stats [{:label "HP", :value "55", :percent "55%", :type :green}
-                                {:label "PWR", :value "99", :percent "100%", :type :pwr}]}]]}],
+                        :pixels
+                        "0px -30px 0 #444, 6px -30px 0 #0f0, 12px -30px 0 #0f0, 18px -30px 0 #0f0, 24px -30px 0 #444, 0px -24px 0 #654, 6px -24px 0 #765, 12px -24px 0 #876, 18px -24px 0 #765, 24px -24px 0 #654, 0px -18px 0 #543, 6px -18px 0 #654, 12px -18px 0 #765, 18px -18px 0 #654, 24px -18px 0 #543, 0px -12px 0 #e8d0b8, 6px -12px 0 #f0dcc0, 12px -12px 0 #f0dcc0, 18px -12px 0 #f0dcc0, 24px -12px 0 #e8d0b8, 0px -6px 0 #d8c0a8, 6px -6px 0 #e8d0b8, 12px -6px 0 #f0dcc0, 18px -6px 0 #e8d0b8, 24px -6px 0 #d8c0a8, 0px 0px 0 #333, 6px 0px 0 #0f0, 12px 0px 0 #333, 18px 0px 0 #0f0, 24px 0px 0 #333, 0px 6px 0 #c8b098, 6px 6px 0 #d8c0a8, 12px 6px 0 #e8d0b8, 18px 6px 0 #d8c0a8, 24px 6px 0 #c8b098, 6px 12px 0 #c8b098, 12px 12px 0 #d8c0a8, 18px 12px 0 #c8b098, 0px 18px 0 #252, 6px 18px 0 #363, 12px 18px 0 #252, 18px 18px 0 #363, 24px 18px 0 #252, -6px 24px 0 #252, 0px 24px 0 #0f0, 6px 24px 0 #363, 12px 24px 0 #363, 18px 24px 0 #363, 24px 24px 0 #0f0, 30px 24px 0 #252",
+                        :stats
+                        [{:label "HP",
+                          :value "55",
+                          :percent "55%",
+                          :type :green}
+                         {:label "PWR",
+                          :value "99",
+                          :percent "100%",
+                          :type :pwr}]}]]}],
   :created-at #inst "2026-01-20T13:21:46.921-00:00"}}

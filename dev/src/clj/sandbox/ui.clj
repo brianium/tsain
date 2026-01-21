@@ -308,3 +308,39 @@
       [:div.player-portrait-footer
        [:span.player-portrait-level (str "LV." level)]
        [:span.player-portrait-class class]]]]))
+
+;; =============================================================================
+;; Event Modal Component
+;; =============================================================================
+
+(defmethod c/resolve-alias ::event-modal
+  [_ attrs _]
+  (let [{:event-modal/keys [title subtitle icon message actions variant]} attrs
+        variant-class (str "event-modal--" (clojure.core/name (or variant :info)))]
+    [:div.event-modal {:class variant-class}
+     [:div.event-modal-backdrop]
+     [:div.event-modal-container.clip-corners-lg
+      ;; Corner accents
+      [:div.event-modal-corner.event-modal-corner--tl-h]
+      [:div.event-modal-corner.event-modal-corner--tl-v]
+      [:div.event-modal-corner.event-modal-corner--br-h]
+      [:div.event-modal-corner.event-modal-corner--br-v]
+      ;; Scanline effect
+      [:div.scanline-overlay]
+      ;; Header
+      [:div.event-modal-header
+       [:div.event-modal-icon icon]
+       [:div.event-modal-titles
+        [:div.event-modal-title title]
+        (when subtitle
+          [:div.event-modal-subtitle subtitle])]]
+      ;; Body
+      [:div.event-modal-body
+       [:div.event-modal-message message]]
+      ;; Actions
+      (when (seq actions)
+        [:div.event-modal-actions
+         (for [{:keys [label primary?]} actions]
+           [:button.event-modal-btn
+            {:class (when primary? "event-modal-btn--primary")}
+            label])])]]))

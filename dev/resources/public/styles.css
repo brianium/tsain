@@ -2287,3 +2287,346 @@
   color: var(--text-muted);
   text-transform: uppercase;
 }
+
+/* --------------------------------------------------------------------------
+   Event Modal
+   -------------------------------------------------------------------------- */
+.event-modal {
+  position: relative;
+  font-family: "Courier New", monospace;
+}
+
+.event-modal-backdrop {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  pointer-events: none;
+}
+
+.event-modal-container {
+  position: relative;
+  width: 400px;
+  background: var(--bg-card);
+  border: 1px solid;
+  overflow: hidden;
+}
+
+/* Variant border colors */
+.event-modal--info .event-modal-container {
+  border-image: linear-gradient(180deg, var(--accent-cyan) 0%, var(--accent-blue) 100%) 1;
+}
+
+.event-modal--warning .event-modal-container {
+  border-image: linear-gradient(180deg, var(--accent-yellow) 0%, var(--accent-orange) 100%) 1;
+}
+
+.event-modal--error .event-modal-container {
+  border-image: linear-gradient(180deg, var(--accent-red) 0%, var(--accent-pink) 100%) 1;
+}
+
+.event-modal--success .event-modal-container {
+  border-image: linear-gradient(180deg, var(--accent-green) 0%, var(--accent-cyan) 100%) 1;
+}
+
+.event-modal--epic .event-modal-container {
+  border-image: linear-gradient(180deg, var(--accent-magenta) 0%, var(--accent-pink) 100%) 1;
+}
+
+.theme-light .event-modal-container {
+  border-width: 2px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Corner accents */
+.event-modal-corner {
+  position: absolute;
+  background: linear-gradient(var(--corner-direction, 90deg), var(--corner-color), transparent);
+  z-index: 5;
+}
+
+.event-modal-corner--tl-h {
+  --corner-direction: 90deg;
+  top: 0;
+  left: 12px;
+  width: 80px;
+  height: 2px;
+}
+
+.event-modal-corner--tl-v {
+  --corner-direction: 180deg;
+  top: 12px;
+  left: 0;
+  width: 2px;
+  height: 80px;
+}
+
+.event-modal-corner--br-h {
+  --corner-direction: 270deg;
+  bottom: 0;
+  right: 12px;
+  width: 80px;
+  height: 2px;
+}
+
+.event-modal-corner--br-v {
+  --corner-direction: 0deg;
+  bottom: 12px;
+  right: 0;
+  width: 2px;
+  height: 80px;
+}
+
+/* Variant corner colors */
+.event-modal--info .event-modal-corner { --corner-color: var(--accent-cyan); }
+.event-modal--warning .event-modal-corner { --corner-color: var(--accent-yellow); }
+.event-modal--error .event-modal-corner { --corner-color: var(--accent-red); }
+.event-modal--success .event-modal-corner { --corner-color: var(--accent-green); }
+.event-modal--epic .event-modal-corner { --corner-color: var(--accent-magenta); }
+
+.theme-light .event-modal-corner--tl-h,
+.theme-light .event-modal-corner--br-h {
+  height: 3px;
+}
+
+.theme-light .event-modal-corner--tl-v,
+.theme-light .event-modal-corner--br-v {
+  width: 3px;
+}
+
+/* Header */
+.event-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.event-modal--info .event-modal-header {
+  background: linear-gradient(90deg, rgba(0, 255, 255, 0.1), transparent);
+}
+
+.event-modal--warning .event-modal-header {
+  background: linear-gradient(90deg, rgba(255, 255, 0, 0.1), transparent);
+}
+
+.event-modal--error .event-modal-header {
+  background: linear-gradient(90deg, rgba(255, 51, 102, 0.1), transparent);
+}
+
+.event-modal--success .event-modal-header {
+  background: linear-gradient(90deg, rgba(136, 255, 0, 0.1), transparent);
+}
+
+.event-modal--epic .event-modal-header {
+  background: linear-gradient(90deg, rgba(255, 0, 255, 0.15), transparent);
+}
+
+.theme-light .event-modal-header {
+  border-bottom-width: 2px;
+}
+
+/* Icon */
+.event-modal-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border: 2px solid;
+}
+
+.event-modal--info .event-modal-icon {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.event-modal--warning .event-modal-icon {
+  background: rgba(255, 255, 0, 0.1);
+  border-color: var(--accent-yellow);
+  color: var(--accent-yellow);
+  box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
+}
+
+.event-modal--error .event-modal-icon {
+  background: rgba(255, 51, 102, 0.1);
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+  box-shadow: 0 0 15px rgba(255, 51, 102, 0.3);
+}
+
+.event-modal--success .event-modal-icon {
+  background: rgba(136, 255, 0, 0.1);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+  box-shadow: 0 0 15px rgba(136, 255, 0, 0.3);
+}
+
+.event-modal--epic .event-modal-icon {
+  background: rgba(255, 0, 255, 0.1);
+  border-color: var(--accent-magenta);
+  color: var(--accent-magenta);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+}
+
+.theme-light .event-modal-icon {
+  box-shadow: none;
+}
+
+/* Titles */
+.event-modal-titles {
+  flex: 1;
+}
+
+.event-modal-title {
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.event-modal--info .event-modal-title {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.event-modal--warning .event-modal-title {
+  color: var(--accent-yellow);
+  text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+}
+
+.event-modal--error .event-modal-title {
+  color: var(--accent-red);
+  text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+}
+
+.event-modal--success .event-modal-title {
+  color: var(--accent-green);
+  text-shadow: 0 0 10px rgba(136, 255, 0, 0.5);
+}
+
+.event-modal--epic .event-modal-title {
+  color: var(--accent-magenta);
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+.theme-light .event-modal-title {
+  text-shadow: none;
+}
+
+.event-modal-subtitle {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 4px;
+}
+
+/* Body */
+.event-modal-body {
+  padding: 20px;
+}
+
+.event-modal-message {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.theme-light .event-modal-message {
+  color: var(--text-primary);
+}
+
+/* Actions */
+.event-modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.theme-light .event-modal-actions {
+  border-top-width: 2px;
+  border-top-color: rgba(0, 0, 0, 0.05);
+}
+
+.event-modal-btn {
+  flex: 1;
+  padding: 12px 20px;
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: 1px solid;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.event-modal--info .event-modal-btn {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.event-modal--warning .event-modal-btn {
+  border-color: var(--accent-yellow);
+  color: var(--accent-yellow);
+}
+
+.event-modal--error .event-modal-btn {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+
+.event-modal--success .event-modal-btn {
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+.event-modal--epic .event-modal-btn {
+  border-color: var(--accent-magenta);
+  color: var(--accent-magenta);
+}
+
+.event-modal-btn--primary {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  border-color: transparent;
+}
+
+.event-modal--info .event-modal-btn--primary {
+  background: linear-gradient(135deg, var(--accent-cyan-dark) 0%, var(--accent-blue) 100%);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.event-modal--warning .event-modal-btn--primary {
+  background: linear-gradient(135deg, #cc8800 0%, #aa5500 100%);
+  box-shadow: 0 0 20px rgba(255, 200, 0, 0.4);
+}
+
+.event-modal--error .event-modal-btn--primary {
+  background: linear-gradient(135deg, #cc2244 0%, #aa0044 100%);
+  box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+}
+
+.event-modal--success .event-modal-btn--primary {
+  background: linear-gradient(135deg, #448800 0%, #226644 100%);
+  box-shadow: 0 0 20px rgba(136, 255, 0, 0.4);
+}
+
+.event-modal--epic .event-modal-btn--primary {
+  background: linear-gradient(135deg, #aa00aa 0%, #880066 100%);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+}
+
+.theme-light .event-modal-btn {
+  border-width: 2px;
+}
+
+.theme-light .event-modal-btn--primary {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
