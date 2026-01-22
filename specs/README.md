@@ -138,5 +138,6 @@ Package tsain for distribution to any sandestin/twk project. Done when:
 | [011-discoverable-dev-registry](./011-discoverable-dev-registry.md) | Complete | Make sandbox API discoverable via sandestin registry |
 | [012-portable-library](./012-portable-library.md) | Complete | Package tsain for distribution to any sandestin/twk project |
 | [013-schema-cleanup](./013-schema-cleanup.md) | Complete | Use canonical twk schemas and fix state namespace |
+| [014-ascolais-template](./014-ascolais-template.md) | Draft | deps-new template for sandestin-powered web apps |
 
 Status values: Draft, Active, Complete, Archived
