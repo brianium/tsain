@@ -1,6 +1,6 @@
 # Spec 014: Ascolais Project Template
 
-## Status: Draft
+## Status: Complete
 
 ## Overview
 
