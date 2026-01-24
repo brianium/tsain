@@ -27,7 +27,7 @@
 
 (defn nav-bar
   "Navigation bar with view controls."
-  [{:keys [view preview]}]
+  [{:keys [view preview committed?]}]
   (let [view-type (:type view)
         has-preview? (some? (:hiccup preview))]
     [:nav.sandbox-nav
@@ -38,15 +38,17 @@
           :data-on:click "@post('/sandbox/view/components')"}
       (icons/icon :grid-3x3 {:class "nav-icon"}) "Components"]
      [:div.spacer]
-     ;; Background color picker
-     [:div.color-picker
-      (icons/icon :palette {:class "color-icon"})
-      [:input {:type "color"
-               :data-bind "bgColor"
-               :data-on:change "localStorage.setItem('sandbox-bg-color', $bgColor)"
-               :title "Preview background color"}]]
+     ;; Background color picker (only on component views, not preview)
+     (when (#{:gallery :components :component} view-type)
+       [:div.color-picker
+        (icons/icon :palette {:class "color-icon"})
+        [:input {:type "color"
+                 :data-bind "bgColor"
+                 :data-on:change "localStorage.setItem('sandbox-bg-color', $bgColor)"
+                 :title "Preview background color"}]])
      (when (and (= view-type :preview) has-preview?)
-       [[:span.uncommitted-badge "uncommitted"]
+       [[:span {:class (if committed? "commit-badge committed" "commit-badge uncommitted")}
+         (if committed? "committed" "uncommitted")]
         [:div.commit-form
          {:data-signals "{commitName: ''}"}
          [:input {:type "text"

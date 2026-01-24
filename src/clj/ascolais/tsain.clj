@@ -152,7 +152,8 @@
          state-atom (atom {:preview {:hiccup nil}
                            :view {:type :preview}
                            :library (load-library components-file)
-                           :sidebar-collapsed? false})]
+                           :sidebar-collapsed? false
+                           :committed? false})]
 
      {::state state-atom
       ::config config
@@ -175,7 +176,8 @@ Example:
         (fn [{:keys [dispatch]} _system hiccup]
           (swap! state-atom assoc
                  :preview {:hiccup hiccup}
-                 :view {:type :preview})
+                 :view {:type :preview}
+                 :committed? false)
           (broadcast-view! dispatch state-atom))}
 
        ::preview-append
@@ -193,12 +195,15 @@ Example:
 
         ::s/handler
         (fn [{:keys [dispatch]} _system hiccup]
-          (swap! state-atom update-in [:preview :hiccup]
-                 (fn [existing]
-                   (if existing
-                     [:div existing hiccup]
-                     hiccup)))
-          (swap! state-atom assoc :view {:type :preview})
+          (swap! state-atom (fn [state]
+                              (-> state
+                                  (update-in [:preview :hiccup]
+                                             (fn [existing]
+                                               (if existing
+                                                 [:div existing hiccup]
+                                                 hiccup)))
+                                  (assoc :view {:type :preview}
+                                         :committed? false))))
           (broadcast-view! dispatch state-atom))}
 
        ::preview-clear
@@ -217,7 +222,8 @@ Example:
         (fn [{:keys [dispatch]} _system]
           (swap! state-atom assoc
                  :preview {:hiccup nil}
-                 :view {:type :preview})
+                 :view {:type :preview}
+                 :committed? false)
           (broadcast-view! dispatch state-atom))}
 
        ::commit
@@ -269,7 +275,10 @@ Examples:
                    :examples [{:label "Default" :hiccup hiccup}]
                    :created-at (java.util.Date.)})]
             (when (or hiccup (:examples opts))
-              (swap! state-atom assoc-in [:library component-name] component-data)
+              (swap! state-atom (fn [state]
+                                  (-> state
+                                      (assoc-in [:library component-name] component-data)
+                                      (assoc :committed? true))))
               (save-library! components-file (:library @state-atom))
               (broadcast-view! dispatch state-atom))))}
 
