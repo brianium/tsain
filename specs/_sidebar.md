@@ -1,9 +1,7 @@
 - [Overview](README.md)
 
-- **Planned**
-  - [Improve Sandbox UI](improve-sandbox-ui/README.md)
-
 - **Completed**
+  - [Improve Sandbox UI](improve-sandbox-ui/README.md)
   - [001 CLAUDE.md Documentation](001-claude-md-documentation/README.md)
   - [002 Development Sandbox](002-dev-sandbox/README.md)
   - [003 CSS Hot Reload](003-css-hot-reload/README.md)
