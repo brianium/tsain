@@ -543,7 +543,7 @@ body {
 .components-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
-  min-height: calc(100vh - 56px);
+  height: calc(100vh - 56px);
   transition: grid-template-columns var(--transition-slow);
 }
 
@@ -669,6 +669,7 @@ body {
 
 .sidebar-list {
   flex: 1;
+  min-height: 0; /* Required for flex child to scroll */
   overflow-y: auto;
   padding: var(--space-2);
 }
