@@ -1,10 +1,6 @@
 # Specifications
 
-*Auto-generated on 2026-01-24 15:23*
-
-## Planned
-
-- [Improve Sandbox UI](improve-sandbox-ui/README.md)
+*Auto-generated on 2026-01-24 15:39*
 
 ## Completed
 
@@ -15,6 +11,7 @@
 - [Component Navigation](005-component-navigation/README.md)
 - [Dynamic Component Iteration](006-dynamic-components/README.md)
 - [Copy Hiccup to Clipboard](007-copy-hiccup/README.md)
+- [Improve Sandbox UI](improve-sandbox-ui/README.md)
 - [CSS Extraction Workflow](008-css-extraction/README.md)
 - [Storybook Sidebar](009-storybook-sidebar/README.md)
 - [Chassis Alias Workflow](010-chassis-alias-workflow/README.md)

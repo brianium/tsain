@@ -1,6 +1,6 @@
 ---
 title: "Improve Sandbox UI"
-status: planned
+status: completed
 date: 2026-01-24
 priority: 30
 ---
@@ -38,7 +38,7 @@ Polish the tsain sandbox developer experience with better icons, improved naviga
 
 See `implementation-plan.md` for detailed task breakdown.
 
-- [ ] Phase 1: Icons infrastructure
-- [ ] Phase 2: UI improvements (scrolling, search)
-- [ ] Phase 3: Background color picker
-- [ ] Phase 4: Polish and testing
+- [x] Phase 1: Icons infrastructure
+- [x] Phase 2: UI improvements (scrolling, search)
+- [x] Phase 3: Background color picker
+- [x] Phase 4: Polish and testing

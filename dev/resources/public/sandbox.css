@@ -134,10 +134,10 @@ body {
   padding: 1.5rem;
   min-height: 180px;
   background:
-    linear-gradient(90deg, #e5e5e5 1px, transparent 1px),
-    linear-gradient(#e5e5e5 1px, transparent 1px),
-    #f5f5f5;
+    linear-gradient(90deg, rgba(128, 128, 128, 0.15) 1px, transparent 1px),
+    linear-gradient(rgba(128, 128, 128, 0.15) 1px, transparent 1px);
   background-size: 20px 20px;
+  background-color: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -185,10 +185,10 @@ body {
 
 .component-render {
   background:
-    linear-gradient(90deg, #e5e5e5 1px, transparent 1px),
-    linear-gradient(#e5e5e5 1px, transparent 1px),
-    #f5f5f5;
+    linear-gradient(90deg, rgba(128, 128, 128, 0.15) 1px, transparent 1px),
+    linear-gradient(rgba(128, 128, 128, 0.15) 1px, transparent 1px);
   background-size: 20px 20px;
+  background-color: #f5f5f5;
   border: 1px solid var(--border-subtle);
   padding: 2.5rem;
   border-radius: var(--radius-lg);
@@ -482,4 +482,127 @@ body {
   .components-layout .sidebar-list {
     display: none;
   }
+}
+
+/* Icon styles */
+.nav-icon,
+.btn-icon,
+.toggle-icon,
+.search-icon,
+.color-icon {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.nav-icon {
+  margin-right: 0.4rem;
+  opacity: 0.8;
+}
+
+.btn-icon {
+  margin-right: 0.35rem;
+}
+
+.toggle-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Icon button layout */
+.sandbox-nav a,
+.sandbox-nav button,
+.component-actions button,
+.nav-prev,
+.nav-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Sidebar search */
+.sidebar-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sidebar-search .search-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.sidebar-search input {
+  flex: 1;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.sidebar-search input:focus {
+  border-color: var(--accent);
+}
+
+.sidebar-search input::placeholder {
+  color: var(--text-muted);
+}
+
+.sidebar-collapsed .sidebar-search {
+  display: none;
+}
+
+/* Color picker */
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 1rem;
+}
+
+.color-picker .color-icon {
+  color: var(--text-muted);
+}
+
+.color-picker input[type="color"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+  transition: border-color var(--transition);
+}
+
+.color-picker input[type="color"]:hover {
+  border-color: var(--accent);
+}
+
+.color-picker input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+.color-picker input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.color-picker input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+/* Dynamic background - override grid pattern when signal is set */
+.component-render,
+.gallery-item-preview {
+  background-size: 20px 20px;
+  transition: background var(--transition);
 }

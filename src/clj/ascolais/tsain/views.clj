@@ -18,7 +18,8 @@
     (views/sandbox-page :components)
     (views/sandbox-page [:component :my-card])"
   (:require [ascolais.twk :as twk]
-            [dev.onionpancakes.chassis.core :as c]))
+            [dev.onionpancakes.chassis.core :as c]
+            [ascolais.tsain.icons :as icons]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation
@@ -32,11 +33,18 @@
     [:nav.sandbox-nav
      [:a {:class (when (= view-type :preview) "active")
           :data-on:click "@post('/sandbox/view/preview')"}
-      "Preview"]
+      (icons/icon :eye {:class "nav-icon"}) "Preview"]
      [:a {:class (when (#{:gallery :components :component} view-type) "active")
           :data-on:click "@post('/sandbox/view/components')"}
-      "Components"]
+      (icons/icon :grid-3x3 {:class "nav-icon"}) "Components"]
      [:div.spacer]
+     ;; Background color picker
+     [:div.color-picker
+      (icons/icon :palette {:class "color-icon"})
+      [:input {:type "color"
+               :data-bind "bgColor"
+               :data-on:change "localStorage.setItem('sandbox-bg-color', $bgColor)"
+               :title "Preview background color"}]]
      (when (and (= view-type :preview) has-preview?)
        [[:span.uncommitted-badge "uncommitted"]
         [:div.commit-form
@@ -46,10 +54,10 @@
                   :data-bind "commitName"}]
          [:button {:data-on:click "@post('/sandbox/commit')"
                    :data-attr-disabled "!$commitName"}
-          "Commit"]]])
+          (icons/icon :save {:class "btn-icon"}) "Commit"]]])
      (when (= view-type :preview)
        [:button {:data-on:click "@post('/sandbox/clear')"}
-        "Clear"])]))
+        (icons/icon :x {:class "btn-icon"}) "Clear"])]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Preview View
@@ -88,7 +96,7 @@
       (for [[component-name component-data] (sort-by key library)]
         [:div.gallery-item
          {:data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")}
-         [:div.gallery-item-preview (get-component-hiccup component-data)]
+         [:div.gallery-item-preview {:data-style:background-color "$bgColor"} (get-component-hiccup component-data)]
          [:div.gallery-item-footer
           (name component-name)
           (when (seq (:description component-data))
@@ -127,7 +135,7 @@
       (if prev
         [:button.nav-prev
          {:data-on:click (str "@post('/sandbox/view/component/" (name prev) "')")}
-         "<- " (name prev)]
+         (icons/icon :chevron-left {:class "btn-icon"}) (name prev)]
         [:span.nav-placeholder])
       [:div.component-title
        [:h2 (name component-name)]
@@ -142,28 +150,29 @@
       (if next
         [:button.nav-next
          {:data-on:click (str "@post('/sandbox/view/component/" (name next) "')")}
-         (name next) " ->"]
+         (name next) (icons/icon :chevron-right {:class "btn-icon"})]
         [:span.nav-placeholder])]
      (when (seq description)
        [:p.component-desc description])
-     [:div.component-render
+     [:div.component-render {:data-style:background-color "$bgColor"}
       (if hiccup
         hiccup
         [:p.empty-state "Component not found"])]
      [:div.component-actions
       [:button {:data-on:click "@post('/sandbox/view/components')"}
-       "<- Back"]
+       (icons/icon :chevron-left {:class "btn-icon"}) "Back"]
       [:button.copy-btn
        {:data-on:click (str "fetch('/sandbox/copy/" (name component-name) "?idx=" example-idx "')"
                             ".then(r => r.text())"
                             ".then(t => {"
                             "  navigator.clipboard.writeText(t);"
-                            "  evt.target.textContent = 'Copied!';"
-                            "  setTimeout(() => evt.target.textContent = 'Copy', 1500);"
+                            "  const btn = evt.target.closest('button');"
+                            "  btn.querySelector('.copy-label').textContent = 'Copied!';"
+                            "  setTimeout(() => btn.querySelector('.copy-label').textContent = 'Copy', 1500);"
                             "})")}
-       "Copy"]
+       (icons/icon :copy {:class "btn-icon"}) [:span.copy-label "Copy"]]
       [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
-       "Delete"]]]))
+       (icons/icon :trash-2 {:class "btn-icon"}) "Delete"]]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Component Detail (Sidebar Layout)
@@ -186,7 +195,7 @@
       (if prev
         [:button.nav-prev
          {:data-on:click (str "@post('/sandbox/view/component/" (name prev) "')")}
-         "<- " (name prev)]
+         (icons/icon :chevron-left {:class "btn-icon"}) (name prev)]
         [:span.nav-placeholder])
       [:div.component-title
        [:h2 (name component-name)]
@@ -199,11 +208,11 @@
       (if next
         [:button.nav-next
          {:data-on:click (str "@post('/sandbox/view/component/" (name next) "')")}
-         (name next) " ->"]
+         (name next) (icons/icon :chevron-right {:class "btn-icon"})]
         [:span.nav-placeholder])]
      (when (seq description)
        [:p.component-desc description])
-     [:div.component-render
+     [:div.component-render {:data-style:background-color "$bgColor"}
       (if hiccup
         hiccup
         [:p.empty-state "Component not found"])]
@@ -213,12 +222,13 @@
                             ".then(r => r.text())"
                             ".then(t => {"
                             "  navigator.clipboard.writeText(t);"
-                            "  evt.target.textContent = 'Copied!';"
-                            "  setTimeout(() => evt.target.textContent = 'Copy', 1500);"
+                            "  const btn = evt.target.closest('button');"
+                            "  btn.querySelector('.copy-label').textContent = 'Copied!';"
+                            "  setTimeout(() => btn.querySelector('.copy-label').textContent = 'Copy', 1500);"
                             "})")}
-       "Copy"]
+       (icons/icon :copy {:class "btn-icon"}) [:span.copy-label "Copy"]]
       [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
-       "Delete"]]]))
+       (icons/icon :trash-2 {:class "btn-icon"}) "Delete"]]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Components View (Sidebar Layout)
@@ -230,7 +240,8 @@
   (let [current-name (:name view)
         sorted-components (sort-by key library)]
     [:div.components-layout
-     {:class (when sidebar-collapsed? "sidebar-collapsed")}
+     {:class (when sidebar-collapsed? "sidebar-collapsed")
+      :data-signals "{searchQuery: ''}"}
 
      ;; Sidebar
      [:aside.sidebar
@@ -238,13 +249,24 @@
        [:span.sidebar-title "Components"]
        [:button.sidebar-toggle
         {:data-on:click "@post('/sandbox/sidebar/toggle')"}
-        (if sidebar-collapsed? ">>" "<<")]]
+        (if sidebar-collapsed?
+          (icons/icon :chevrons-right {:class "toggle-icon"})
+          (icons/icon :chevrons-left {:class "toggle-icon"}))]]
+
+      ;; Search input
+      [:div.sidebar-search
+       (icons/icon :search {:class "search-icon"})
+       [:input {:type "text"
+                :placeholder "Search..."
+                :data-bind "searchQuery"
+                :autocomplete "off"}]]
 
       [:nav.sidebar-list
        (for [[component-name _] sorted-components]
          [:a.sidebar-item
           {:class (when (= component-name current-name) "active")
-           :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")}
+           :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")
+           :data-show (str "$searchQuery === '' || '" (name component-name) "'.toLowerCase().includes($searchQuery.toLowerCase())")}
           (name component-name)])]]
 
      ;; Main content
@@ -262,6 +284,7 @@
   [state]
   (let [view-type (get-in state [:view :type])]
     [:div#app
+     {:data-signals "{bgColor: localStorage.getItem('sandbox-bg-color') || '#f5f5f5'}"}
      (nav-bar state)
      (case view-type
        :preview   [:div#content (preview-view state)]
