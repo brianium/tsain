@@ -68,7 +68,7 @@
          handler    (create-app dispatch state-atom config)
          server     (hk/run-server handler {:port port})
          watch      (watcher/watcher
-                     {:paths ["dev/resources/public"]})]
+                     {:paths ["dev/resources/public" "resources/tsain"]})]
      (alter-var-root #'system/*system*
                      (constantly {:state    state-atom
                                   :config   config
@@ -78,7 +78,7 @@
                                   :watcher  watch}))
      (println (str "Sandbox running at http://localhost:" port "/sandbox"))
      (when watch
-       (println "Watching dev/resources/public for changes"))
+       (println "Watching for CSS changes"))
      system/*system*)))
 
 (defn stop-system []
