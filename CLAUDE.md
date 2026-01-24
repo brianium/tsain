@@ -618,6 +618,38 @@ TWK understands hiccup directly - you do not need to pre-render it to HTML strin
     [:html [:body [:h1 "Hello"]]]]))
 ```
 
+### Server-Side Hiccup (Not Reagent)
+
+This project uses **server-side hiccup** rendered by Chassis, not Reagent/React. Key differences:
+
+**No React fragments** - The `[:<>]` syntax does not work. Use plain vectors instead:
+
+```clojure
+;; WRONG - React fragment syntax doesn't work server-side
+[:<>
+ [:h1 "Title"]
+ [:p "Content"]]
+
+;; CORRECT - plain vector for multiple siblings
+[[:h1 "Title"]
+ [:p "Content"]]
+```
+
+**No `:key` metadata** - React reconciliation keys are not needed:
+
+```clojure
+;; WRONG - unnecessary React key
+(for [item items]
+  ^{:key (:id item)}
+  [:li (:name item)])
+
+;; CORRECT - just render the elements
+(for [item items]
+  [:li (:name item)])
+```
+
+This applies to both tsain components AND the sandbox itself.
+
 ### Handler Response Patterns
 
 ```clojure

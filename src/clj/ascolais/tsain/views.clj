@@ -38,8 +38,7 @@
       "Components"]
      [:div.spacer]
      (when (and (= view-type :preview) has-preview?)
-       [:<>
-        [:span.uncommitted-badge "uncommitted"]
+       [[:span.uncommitted-badge "uncommitted"]
         [:div.commit-form
          {:data-signals "{commitName: ''}"}
          [:input {:type "text"
@@ -88,8 +87,7 @@
      [:div.gallery-grid
       (for [[component-name component-data] (sort-by key library)]
         [:div.gallery-item
-         {:key (str component-name)
-          :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")}
+         {:data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")}
          [:div.gallery-item-preview (get-component-hiccup component-data)]
          [:div.gallery-item-footer
           (name component-name)
@@ -245,8 +243,7 @@
       [:nav.sidebar-list
        (for [[component-name _] sorted-components]
          [:a.sidebar-item
-          {:key (str component-name)
-           :class (when (= component-name current-name) "active")
+          {:class (when (= component-name current-name) "active")
            :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")}
           (name component-name)])]]
 
