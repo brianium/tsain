@@ -1,6 +1,10 @@
 # Specifications
 
-*Auto-generated on 2026-01-24 14:53*
+*Auto-generated on 2026-01-24 15:23*
+
+## Planned
+
+- [Improve Sandbox UI](improve-sandbox-ui/README.md)
 
 ## Completed
 
