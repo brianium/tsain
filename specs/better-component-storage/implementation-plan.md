@@ -32,16 +32,16 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 
 ## Phase 2: Database Foundation
 
-- [ ] Create `ascolais.tsain.db` namespace for database utilities
-- [ ] Implement `create-datasource` function (SQLite file path from config)
-- [ ] Create `resources/tsain/migrations/` directory
-- [ ] Write `001-initial-schema.sql` migration:
+- [x] Create `ascolais.tsain.db` namespace for database utilities
+- [x] Implement `create-datasource` function (SQLite file path from config)
+- [x] Create `resources/tsain/migrations/` directory
+- [x] Write `001-initial-schema.sql` migration:
   - `components` table (id, tag, category, created_at, updated_at)
   - `examples` table (id, component_id, label, hiccup, sort_order)
   - `schema_version` table
   - FTS5 virtual table for search
   - **Note:** No `props` table - html.yeah provides prop schemas
-- [ ] Implement migration runner (check version, run pending SQL)
+- [x] Implement migration runner (check version, run pending SQL)
 - [ ] Add `:database-file` to `default-config` in `tsain.clj`
 - [ ] Initialize datasource in `registry` function
 
