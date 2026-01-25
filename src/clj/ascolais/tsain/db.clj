@@ -121,7 +121,7 @@
   "Find a component by its tag keyword."
   [ds tag]
   (jdbc/execute-one! ds
-                     ["SELECT * FROM components WHERE tag = ?" (str tag)]
+                     ["SELECT * FROM components WHERE tag = ?" (name tag)]
                      {:builder-fn rs/as-unqualified-maps}))
 
 (defn find-all-components
@@ -146,7 +146,7 @@
                      ["INSERT INTO components (tag, category, created_at, updated_at)
       VALUES (?, ?, datetime('now'), datetime('now'))
       RETURNING *"
-                      (str tag) category]
+                      (name tag) category]
                      {:builder-fn rs/as-unqualified-maps}))
 
 (defn update-component!
