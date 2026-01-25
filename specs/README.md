@@ -1,6 +1,10 @@
 # Specifications
 
-*Auto-generated on 2026-01-25 10:20*
+*Auto-generated on 2026-01-25 11:12*
+
+## Planned
+
+- [Barrel Imports In Skill](barrel-imports-in-skill/README.md)
 
 ## Completed
 
