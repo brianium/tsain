@@ -229,7 +229,8 @@
                            :view {:type :preview}
                            :library library
                            :sidebar-collapsed? false
-                           :committed? false})
+                           :committed? false
+                           :ui-namespace (:ui-namespace config)})
          registry   (reset! *tsain-registry
                             {::state state-atom
                              ::config config

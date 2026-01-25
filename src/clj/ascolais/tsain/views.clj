@@ -306,10 +306,18 @@
    [:pre.code-block
     [:code (format-hiccup hiccup)]]])
 
+(defn- qualify-component-tag
+  "Qualify a component name with the UI namespace for html.yeah lookup."
+  [ui-namespace component-name]
+  (if ui-namespace
+    (keyword (name ui-namespace) (name component-name))
+    component-name))
+
 (defn- props-tab
   "Render the props tab content with attribute documentation."
-  [component-name]
-  (let [hy-data (hy/element component-name)
+  [ui-namespace component-name]
+  (let [qualified-tag (qualify-component-tag ui-namespace component-name)
+        hy-data (hy/element qualified-tag)
         props (when hy-data (extract-props (:attributes hy-data)))
         doc (:doc hy-data)]
     [:div.tab-content.tab-props
@@ -336,7 +344,7 @@
 
 (defn- component-detail
   "Render component detail panel with tabs (used in sidebar layout)."
-  [{:keys [library view]}]
+  [{:keys [library view ui-namespace]}]
   (let [component-name (:name view)
         component-data (get library component-name)
         {:keys [examples]} component-data
@@ -346,7 +354,8 @@
                  (:hiccup selected-example)
                  (get-component-hiccup component-data))
         {:keys [prev next]} (component-neighbors library component-name)
-        hy-data (hy/element component-name)
+        qualified-tag (qualify-component-tag ui-namespace component-name)
+        hy-data (hy/element qualified-tag)
         doc (:doc hy-data)]
     [:div.component-detail
      {:data-signals "{activeTab: 'preview'}"}
@@ -394,7 +403,7 @@
      ;; Tab content (all rendered, visibility controlled by data-show)
      (preview-tab hiccup)
      (code-tab component-name hiccup example-idx)
-     (props-tab component-name)]))
+     (props-tab ui-namespace component-name)]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Components View (Sidebar Layout)
@@ -442,7 +451,7 @@
 
 (defn components-view
   "Render sidebar + component view layout."
-  [{:keys [library view sidebar-collapsed?]}]
+  [{:keys [library view sidebar-collapsed? ui-namespace]}]
   (let [current-name (:name view)
         grouped (grouped-components library)
         default-state (build-initial-sidebar-state grouped)]
@@ -483,7 +492,7 @@
      ;; Main content
      [:main.component-main
       (if current-name
-        (component-detail {:library library :view view})
+        (component-detail {:library library :view view :ui-namespace ui-namespace})
         [:div.empty-state "Select a component from the sidebar"])]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
