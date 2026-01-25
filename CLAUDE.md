@@ -184,6 +184,29 @@ Or from the REPL (in the dev namespace):
 
 ---
 
+## Claude Code Skills
+
+Tsain ships with a component development skill in `.claude/skills/tsain/`.
+
+### Available Commands
+
+- `/tsain` - Show available commands
+- `/tsain iterate` - Direct component iteration workflow
+- `/tsain implement` - Spec-driven implementation workflow (uses `/specs implement`)
+
+### Installing in Other Projects
+
+Copy the skill directory from this repo:
+
+```bash
+# From your project root
+cp -r path/to/tsain/.claude/skills/tsain .claude/skills/
+```
+
+The skill reads configuration from `tsain.edn` at your project root.
+
+---
+
 ## Sandestin Effect System
 
 ### Registry Authoring

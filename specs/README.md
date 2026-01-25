@@ -1,6 +1,6 @@
 # Specifications
 
-*Auto-generated on 2026-01-24 21:41*
+*Auto-generated on 2026-01-25 10:20*
 
 ## Completed
 
@@ -8,6 +8,7 @@
 - [Development Sandbox](002-dev-sandbox/README.md)
 - [CSS Hot Reload](003-css-hot-reload/README.md)
 - [Component Library](004-component-library/README.md)
+- [Hiccup Component To Tsain](hiccup-component-to-tsain/README.md)
 - [Component Navigation](005-component-navigation/README.md)
 - [Dynamic Component Iteration](006-dynamic-components/README.md)
 - [Copy Hiccup to Clipboard](007-copy-hiccup/README.md)

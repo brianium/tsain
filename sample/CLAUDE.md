@@ -6,6 +6,20 @@
 
 This is a Clojure Datastar application powered by the sandestin effect dispatch ecosystem, with tsain for REPL-driven component development.
 
+## Claude Code Skills
+
+This project uses the tsain skill for component development workflows:
+
+- `/tsain iterate` - Direct component iteration workflow
+- `/tsain implement` - Spec-driven implementation workflow
+
+To install the skill, copy from the tsain repository:
+
+```bash
+# From your project root
+cp -r path/to/tsain/.claude/skills/tsain .claude/skills/
+```
+
 ## Development Setup
 
 ### Starting the REPL
