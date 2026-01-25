@@ -13,7 +13,6 @@ This is a Clojure Datastar application powered by the sandestin effect dispatch 
 | **sfere** | Connection management and broadcasting | `sfere/registry`, `sfere/store` |
 | **kaiin** | Declarative HTTP routing from registry metadata | `kaiin/routes` |
 | **html.yeah** | Schema-driven HTML components with malli | `defelem`, `hy/element`, `hy/search-elements` |
-| **manse** | Database effects for sandestin (next.jdbc) | `manse/registry`, SQL effect handlers |
 
 ## Architecture
 
@@ -1189,71 +1188,6 @@ html.yeah provides `defelem`, a macro for defining Chassis alias elements with a
 ```
 
 Both compile to the same Chassis alias, but html.yeah adds queryable metadata.
-
----
-
-## Manse (Database Effects)
-
-Manse provides sandestin effects for next.jdbc database operations. It integrates SQLite (or any JDBC database) into the effect dispatch system.
-
-### Registry Setup
-
-```clojure
-(require '[ascolais.manse :as manse]
-         '[next.jdbc :as jdbc])
-
-;; Create datasource
-(def ds (jdbc/get-datasource {:dbtype "sqlite" :dbname "app.db"}))
-
-;; Include manse registry in dispatch
-(def dispatch
-  (s/create-dispatch
-    [(manse/registry ds)  ;; Provides database effects
-     (twk/registry)
-     app-registry]))
-```
-
-### Available Effects
-
-| Effect | Purpose |
-|--------|---------|
-| `::manse/execute!` | Execute SQL (INSERT, UPDATE, DELETE) |
-| `::manse/execute-one!` | Execute and return single row |
-| `::manse/plan` | Lazy reducible query results |
-
-### Usage Examples
-
-```clojure
-;; Insert a row
-[[:ascolais.manse/execute!
-  ["INSERT INTO users (name, email) VALUES (?, ?)" "Alice" "alice@example.com"]]]
-
-;; Query with result
-[[:ascolais.manse/execute-one!
-  ["SELECT * FROM users WHERE id = ?" 42]]]
-
-;; In an action (use result in subsequent effects)
-{::s/actions
- {:app/create-user
-  {::s/handler
-   (fn [state user-data]
-     [[:ascolais.manse/execute!
-       ["INSERT INTO users (name) VALUES (?)" (:name user-data)]]
-      [:ascolais.twk/patch-elements
-       [:div#status "User created!"]]])}}}
-```
-
-### SQLite-Specific Notes
-
-```clojure
-;; SQLite datasource (file-based)
-(jdbc/get-datasource {:dbtype "sqlite" :dbname "path/to/database.db"})
-
-;; In-memory SQLite (useful for tests)
-(jdbc/get-datasource {:dbtype "sqlite" :dbname ":memory:"})
-```
-
-**Important:** In-memory SQLite databases are connection-scoped. Use `with-open` and a single connection for testing, or use a file-based database.
 
 ---
 
