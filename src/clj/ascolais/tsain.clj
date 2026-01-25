@@ -518,7 +518,43 @@ Examples:
             (swap! state-atom assoc :view {:type :components
                                            :name target-name
                                            :example-idx example-idx})
-            (broadcast-view! dispatch state-atom)))}}})))
+            (broadcast-view! dispatch state-atom)))}
+
+       ::migrate-from-edn
+       {::s/description
+        "Migrate components from an EDN file to SQLite database.
+
+Reads existing components.edn (or specified file) and inserts
+all components with their examples into the SQLite database.
+Existing components with the same tag will be updated.
+
+Requires :database-file to be configured.
+
+Examples:
+  [::tsain/migrate-from-edn]                              ;; Use default :components-file
+  [::tsain/migrate-from-edn \"path/to/components.edn\"]   ;; Use specific file"
+
+        ::s/schema [:tuple [:= ::migrate-from-edn] [:maybe :string]]
+
+        ::s/handler
+        (fn [_ctx _system edn-path]
+          (when-not datasource
+            (throw (ex-info "Database not configured. Set :database-file in config." {})))
+          (let [path (or edn-path components-file)
+                edn-library (load-library path)
+                migrated (atom [])]
+            (doseq [[tag component-data] edn-library]
+              (commit-to-db! datasource tag component-data)
+              (swap! migrated conj tag))
+            ;; Reload library from database
+            (swap! state-atom assoc :library (load-library-from-db datasource))
+            (tap> {:tsain/migration-complete
+                   {:source path
+                    :migrated @migrated
+                    :count (count @migrated)}})
+            {:migrated @migrated
+             :count (count @migrated)
+             :source path}))}}})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Discovery API

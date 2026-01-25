@@ -76,7 +76,7 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 
 ## Phase 5: Migration Tooling
 
-- [ ] Implement `::migrate-from-edn` effect
+- [x] Implement `::migrate-from-edn` effect
   - Read existing components.edn
   - Insert each component into SQLite (examples, timestamps)
   - Descriptions: prefer html.yeah `:doc`, fallback to EDN description
@@ -85,12 +85,12 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   - If `:database-file` missing and `:components-file` exists
   - Auto-migrate on first run
   - Emit deprecation warning via tap>
-- [ ] Dogfood: migrate tsain's own `resources/components.edn`
+- [x] Dogfood: migrate tsain's own `resources/components.edn`
   - Run `[::tsain/migrate-from-edn "resources/components.edn"]`
   - Verify all 9 components appear in SQLite
   - Verify examples render correctly in sandbox
   - Verify `tsain/describe` returns merged data (html.yeah + SQLite)
-  - Delete `resources/components.edn` after successful migration
+  - Delete `resources/components.edn` after successful migration (deferred)
 - [ ] Document migration process for consumers
 
 ## Phase 6: Documentation & Cleanup
