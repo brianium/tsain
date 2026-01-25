@@ -1,6 +1,10 @@
 # Specifications
 
-*Auto-generated on 2026-01-24 15:39*
+*Auto-generated on 2026-01-24 21:01*
+
+## Planned
+
+- [Better Component Storage](better-component-storage/README.md)
 
 ## Completed
 
