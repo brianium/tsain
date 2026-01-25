@@ -1,10 +1,6 @@
 # Specifications
 
-*Auto-generated on 2026-01-25 13:04*
-
-## Planned
-
-- [Migrate Existing Component Library](migrate-existing-component-library/README.md)
+*Auto-generated on 2026-01-25 13:19*
 
 ## Completed
 
@@ -26,3 +22,4 @@
 - [Schema Cleanup](013-schema-cleanup/README.md)
 - [Ascolais Project Template](014-ascolais-template/README.md)
 - [Better Component Storage](better-component-storage/README.md)
+- [Migrate Existing Component Library](migrate-existing-component-library/README.md)

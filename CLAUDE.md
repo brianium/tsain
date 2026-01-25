@@ -1201,20 +1201,46 @@ html.yeah provides `defelem`, a macro for defining Chassis alias elements with a
 
 ### Migration from c/resolve-alias
 
+The migration agent at `.claude/agents/migrate-component.md` automates transforming legacy chassis aliases to html.yeah defelem format.
+
+**Basic transformation:**
+
 ```clojure
 ;; Before (raw chassis)
 (defmethod c/resolve-alias ::my-card
-  [_ attrs _]
+  [_ attrs content]
   (let [{:my-card/keys [title]} attrs]
-    [:div.card title]))
+    [:div.card title content]))
 
 ;; After (html.yeah)
 (hy/defelem my-card
   [:map {:doc "A simple card"
          :keys [my-card/title]}
    [:my-card/title :string]]
-  [:div.card my-card/title])
+  [:div.card my-card/title (hy/children)])
 ```
+
+**Key transformations:**
+- `defmethod c/resolve-alias ::name` → `(hy/defelem name`
+- Add malli schema as first argument
+- Replace `content` parameter with `(hy/children)`
+- Preserve body logic
+
+**Schema inference from usage patterns:**
+
+| Usage | Inferred Type |
+|-------|---------------|
+| `(name x)` | `:keyword` |
+| `(str x)` | `:string` |
+| `(when x ...)` | `{:optional true}` |
+| `(for [i x] ...)` | `[:vector ...]` |
+
+**Migration workflow:**
+
+1. Set up barrel import structure (see File Organization)
+2. For each component, apply the migration agent steps
+3. Run data migration: `(dispatch [[::tsain/migrate-from-edn "components.edn"]])`
+4. Archive legacy files
 
 Both compile to the same Chassis alias, but html.yeah adds queryable metadata.
 

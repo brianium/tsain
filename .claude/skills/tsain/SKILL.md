@@ -477,3 +477,102 @@ Keep CSS custom properties in the main stylesheet (not split files):
 ```
 
 This ensures variables are available to all imported stylesheets.
+
+---
+
+## Component Migration
+
+Migrate legacy `defmethod c/resolve-alias` components to modern `hy/defelem` format.
+
+### Migration Agent
+
+The migration agent at `.claude/agents/migrate-component.md` handles individual component transformations. It:
+
+1. Reads the legacy defmethod definition
+2. Infers malli schema from prop usage patterns
+3. Generates defelem with schema, doc, and proper destructuring
+4. Writes to the appropriate category namespace
+5. Updates barrel requires
+6. Extracts CSS (if requested)
+7. Verifies rendering via REPL
+
+### Single Component Migration
+
+To migrate one component:
+
+1. Read the agent instructions at `.claude/agents/migrate-component.md`
+2. Apply the migration steps to your target component
+3. Verify via REPL: `(hy/element :namespace/component-name)`
+
+### Orchestrating Bulk Migration
+
+When asked to migrate multiple components from a namespace:
+
+**Step 1: Extract component list**
+
+```clojure
+;; Find all defmethod c/resolve-alias patterns
+(defmethod c/resolve-alias ::button ...)
+(defmethod c/resolve-alias ::card ...)
+```
+
+**Step 2: Categorize by dependency tier**
+
+| Tier | Components | Rationale |
+|------|------------|-----------|
+| 1 | icon, badge, skeleton | No component dependencies |
+| 2 | button, input, toggle, avatar | May use tier 1 |
+| 3 | toast, alert, card | May use tier 1-2 |
+| 4 | modal, popover, table | May use anything |
+
+**Step 3: Migrate by tier**
+
+Run tier 1 migrations in parallel (all at once), then tier 2, etc. This respects dependencies.
+
+**Step 4: Data migration**
+
+After all code transformations complete, run data migration:
+
+```clojure
+(dispatch [[::tsain/migrate-from-edn "path/to/components.edn"]])
+```
+
+### Migration Flow
+
+```
+1. Setup barrel structure (once)
+   └─ Create components/ CSS directory
+   └─ Create category namespaces
+
+2. For each component (agent, per-component):
+   └─ Read legacy defmethod
+   └─ Generate defelem with schema
+   └─ Write to category namespace
+   └─ Extract CSS to category file
+   └─ Verify rendering
+   └─ Delete old defmethod
+   └─ Commit
+
+3. Data migration (once)
+   └─ (dispatch [[::tsain/migrate-from-edn "components.edn"]])
+
+4. Cleanup
+   └─ Archive/delete legacy components.edn
+   └─ Remove empty source namespace
+```
+
+### Verification Checklist
+
+After each component:
+
+```clojure
+;; 1. Schema registered
+(hy/element :namespace/component)
+;; → {:tag ... :doc ... :attributes ...}
+
+;; 2. Rendering works
+(dispatch [[::tsain/preview [:namespace/component {...}]]])
+
+;; 3. Discovery API works
+(tsain/describe :namespace/component)
+```
