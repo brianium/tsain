@@ -12,53 +12,53 @@ Implement category grouping, tabbed metadata views, and commit form enhancements
 
 ## Phase 1: Sidebar Category Grouping
 
-- [ ] Add `grouped-components` helper that returns `{category -> [components]}`
-- [ ] Update sidebar view to render collapsible category sections
-- [ ] Add CSS for category headers and collapse indicators
-- [ ] Handle "Other" category for uncategorized components
-- [ ] Add signals for collapse state: `$sidebarState`
+- [x] Add `grouped-components` helper that returns `{category -> [components]}` (commit: 2f7dcae)
+- [x] Update sidebar view to render collapsible category sections (commit: 2f7dcae)
+- [x] Add CSS for category headers and collapse indicators (commit: 2f7dcae)
+- [x] Handle "Other" category for uncategorized components (commit: 2f7dcae)
+- [x] Add signals for collapse state: `$sidebarState` (commit: 2f7dcae)
 
 ## Phase 2: Component View Tabs
 
-- [ ] Add tab bar to component view header (Preview | Code | Props)
-- [ ] Add signal for active tab: `$activeTab`
-- [ ] Implement Preview tab (existing component render)
-- [ ] Implement Code tab:
-  - [ ] Format hiccup for display (pprint or custom formatter)
-  - [ ] Move copy button here
-  - [ ] Move delete button here
-- [ ] Implement Props tab:
-  - [ ] Add `extract-props` function for malli schema parsing
-  - [ ] Render props table (Name, Type, Required columns)
-  - [ ] Handle enum types (show values)
-  - [ ] Handle complex types (show "complex" or simplified)
-- [ ] Add description line under component name in header
-- [ ] Add CSS for tabs (match cyberpunk aesthetic)
+- [x] Add tab bar to component view header (Preview | Code | Props) (commit: 8b651a7)
+- [x] Add signal for active tab: `$activeTab` (commit: 8b651a7)
+- [x] Implement Preview tab (existing component render) (commit: 8b651a7)
+- [x] Implement Code tab: (commit: 8b651a7)
+  - [x] Format hiccup for display (pprint or custom formatter)
+  - [x] Move copy button here
+  - [x] Move delete button here
+- [x] Implement Props tab: (commit: 8b651a7)
+  - [x] Add `extract-props` function for malli schema parsing
+  - [x] Render props table (Name, Type, Required columns)
+  - [x] Handle enum types (show values)
+  - [x] Handle complex types (show "complex" or simplified)
+- [x] Add description line under component name in header (commit: 8b651a7)
+- [x] Add CSS for tabs (match cyberpunk aesthetic) (commit: 8b651a7)
 
 ## Phase 3: Category Selection on Commit
 
-- [ ] Update commit form to include category select
-- [ ] Populate select with existing categories from `tsain/categories`
-- [ ] Add "+ New category..." option that reveals text input
-- [ ] Wire up signals: `$commitCategory`, `$newCategory`, `$showNewCategory`
-- [ ] Pass category to `::tsain/commit` effect
-- [ ] Update `::tsain/commit` handler to accept category parameter
+- [x] Update commit form to include category select (commit: cf38016)
+- [x] Populate select with existing categories from `tsain/categories` (commit: cf38016)
+- [x] Add "+ New category..." option that reveals text input (commit: cf38016)
+- [x] Wire up signals: `$commitCategory`, `$newCategory`, `$showNewCategory` (commit: cf38016)
+- [x] Pass category to `::tsain/commit` effect (commit: cf38016)
+- [x] Update `::tsain/commit` handler to accept category parameter (commit: cf38016)
 
 ## Phase 4: localStorage Persistence
 
-- [ ] Add `data-on-load` to initialize `$sidebarState` from localStorage
-- [ ] Add `data-effect` to persist `$sidebarState` changes
-- [ ] Test persistence across page reloads
-- [ ] Handle missing/corrupt localStorage gracefully
+- [x] Add `data-on-load` to initialize `$sidebarState` from localStorage (commit: c8e943a)
+- [x] Add `data-effect` to persist `$sidebarState` changes (commit: c8e943a)
+- [x] Test persistence across page reloads (commit: c8e943a)
+- [x] Handle missing/corrupt localStorage gracefully (commit: c8e943a)
 
 ## Phase 5: Testing & Polish
 
-- [ ] Test tab switching on all components
-- [ ] Test category grouping with various component sets
-- [ ] Test commit flow with new/existing categories
-- [ ] Test localStorage persistence
-- [ ] Verify hot reload still works
-- [ ] Visual polish and consistency check
+- [x] Test tab switching on all components
+- [x] Test category grouping with various component sets
+- [x] Test commit flow with new/existing categories
+- [x] Test localStorage persistence
+- [x] Verify hot reload still works
+- [x] Visual polish and consistency check
 
 ## Rollout Plan
 

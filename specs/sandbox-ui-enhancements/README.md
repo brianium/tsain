@@ -1,6 +1,6 @@
 ---
 title: "Sandbox UI Enhancements"
-status: in-progress
+status: completed
 date: 2026-01-25
 priority: 50
 ---
@@ -41,7 +41,7 @@ See [research.md](research.md) for details.
 
 See [implementation-plan.md](implementation-plan.md) for detailed task breakdown.
 
-- [ ] Phase 1: Sidebar category grouping
-- [ ] Phase 2: Component view tabs (Preview/Code/Props)
-- [ ] Phase 3: Category selection on commit
-- [ ] Phase 4: localStorage persistence for sidebar
+- [x] Phase 1: Sidebar category grouping
+- [x] Phase 2: Component view tabs (Preview/Code/Props)
+- [x] Phase 3: Category selection on commit
+- [x] Phase 4: localStorage persistence for sidebar
