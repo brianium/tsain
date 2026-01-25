@@ -564,21 +564,83 @@ body {
   font-size: 0.9375rem;
 }
 
-/* Component title with config selector */
-.component-title {
+/* ============================================
+   COMPONENT DETAIL HEADER (NEW)
+   ============================================ */
+
+.component-detail .component-header {
+  margin-bottom: var(--space-5);
+}
+
+.component-detail .component-name {
+  margin: 0 0 var(--space-2) 0;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.component-detail .component-desc {
+  margin: 0 0 var(--space-4) 0;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ============================================
+   VARIANT CHIPS
+   ============================================ */
+
+.variant-chips {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
-  flex: 1;
+  margin-top: var(--space-3);
 }
 
-.component-title h2 {
-  margin: 0;
-  font-weight: 600;
-  font-size: 1.25rem;
+.variant-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: var(--space-1);
 }
 
+.variant-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-muted);
+  border-radius: 99px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.variant-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.variant-chip.active {
+  background: var(--accent-subtle);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: var(--accent);
+}
+
+.variant-chip.active:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: var(--accent);
+}
+
+/* Legacy config-selector (keeping for backward compat) */
 .config-selector {
   padding: var(--space-2) var(--space-3);
   background: var(--bg-elevated);
@@ -600,6 +662,21 @@ body {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Legacy component-title (keeping for backward compat) */
+.component-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.component-title h2 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.25rem;
 }
 
 /* ============================================

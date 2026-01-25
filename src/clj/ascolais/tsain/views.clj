@@ -314,16 +314,14 @@
     component-name))
 
 (defn- props-tab
-  "Render the props tab content with attribute documentation."
+  "Render the props tab content with attribute documentation.
+   Note: Description is shown in the header, not here (to avoid duplication)."
   [ui-namespace component-name]
   (let [qualified-tag (qualify-component-tag ui-namespace component-name)
         hy-data (hy/element qualified-tag)
-        props (when hy-data (extract-props (:attributes hy-data)))
-        doc (:doc hy-data)]
+        props (when hy-data (extract-props (:attributes hy-data)))]
     [:div.tab-content.tab-props
      {:data-show "$activeTab === 'props'"}
-     (when doc
-       [:p.props-doc doc])
      (if (seq props)
        [:table.props-table
         [:thead
@@ -342,6 +340,19 @@
                [:span.badge-optional "optional"])]])]]
        [:p.empty-state "No props defined"])]))
 
+(defn- variant-chips
+  "Render clickable chip buttons for component examples.
+   Returns nil if there's only one example (or none)."
+  [component-name examples example-idx]
+  (when (and examples (> (count examples) 1))
+    [:div.variant-chips
+     [:span.variant-label "Examples:"]
+     (for [[idx {:keys [label]}] (map-indexed vector examples)]
+       [:button.variant-chip
+        {:class (when (= idx example-idx) "active")
+         :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "?idx=" idx "')")}
+        (or label (str "Example " (inc idx)))])]))
+
 (defn- component-detail
   "Render component detail panel with tabs (used in sidebar layout)."
   [{:keys [library view ui-namespace]}]
@@ -353,37 +364,18 @@
         hiccup (if examples
                  (:hiccup selected-example)
                  (get-component-hiccup component-data))
-        {:keys [prev next]} (component-neighbors library component-name)
         qualified-tag (qualify-component-tag ui-namespace component-name)
         hy-data (hy/element qualified-tag)
         doc (:doc hy-data)]
     [:div.component-detail
      {:data-signals "{activeTab: 'preview'}"}
 
-     ;; Header with navigation and title
-     [:div.component-nav
-      (if prev
-        [:button.nav-prev
-         {:data-on:click (str "@post('/sandbox/view/component/" (name prev) "')")}
-         (icons/icon :chevron-left {:class "btn-icon"}) (name prev)]
-        [:span.nav-placeholder])
-      [:div.component-title
-       [:h2 (name component-name)]
-       (when (and examples (> (count examples) 1))
-         [:select.config-selector
-          {:id (str "variant-" (name component-name))
-           :data-on:change (str "@post('/sandbox/view/component/" (name component-name) "?idx=' + evt.target.value)")}
-          (for [[idx {:keys [label]}] (map-indexed vector examples)]
-            [:option {:value idx :selected (= idx example-idx)} (or label (str "Example " (inc idx)))])])]
-      (if next
-        [:button.nav-next
-         {:data-on:click (str "@post('/sandbox/view/component/" (name next) "')")}
-         (name next) (icons/icon :chevron-right {:class "btn-icon"})]
-        [:span.nav-placeholder])]
-
-     ;; Description below header
-     (when (seq doc)
-       [:p.component-desc doc])
+     ;; Clean header: name, description, variant chips
+     [:div.component-header
+      [:h2.component-name (name component-name)]
+      (when (seq doc)
+        [:p.component-desc doc])
+      (variant-chips component-name examples example-idx)]
 
      ;; Tab bar
      [:div.tab-bar
