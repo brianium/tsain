@@ -78,9 +78,35 @@
 ;; Navigation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn- commit-form
+  "Render the commit form with category selection."
+  [categories]
+  [:div.commit-form
+   {:data-signals "{commitName: '', commitCategory: '', newCategory: '', showNewCategory: false}"}
+   [:input.commit-name
+    {:type "text"
+     :placeholder "component-name"
+     :data-bind "commitName"}]
+   [:div.category-select-wrapper
+    [:select.category-select
+     {:data-bind "commitCategory"
+      :data-on:change "if ($commitCategory === '__new__') { $showNewCategory = true } else { $showNewCategory = false; $newCategory = '' }"}
+     [:option {:value ""} "Category..."]
+     (for [cat categories]
+       [:option {:value cat} cat])
+     [:option {:value "__new__"} "+ New category..."]]
+    [:input.new-category-input
+     {:type "text"
+      :placeholder "New category name"
+      :data-bind "newCategory"
+      :data-show "$showNewCategory"}]]
+   [:button {:data-on:click "@post('/sandbox/commit')"
+             :data-attr-disabled "!$commitName"}
+    (icons/icon :save {:class "btn-icon"}) "Commit"]])
+
 (defn nav-bar
   "Navigation bar with view controls."
-  [{:keys [view preview committed?]}]
+  [{:keys [view preview committed? categories]}]
   (let [view-type (:type view)
         has-preview? (some? (:hiccup preview))]
     [:nav.sandbox-nav
@@ -102,14 +128,7 @@
      (when (and (= view-type :preview) has-preview?)
        [[:span {:class (if committed? "commit-badge committed" "commit-badge uncommitted")}
          (if committed? "committed" "uncommitted")]
-        [:div.commit-form
-         {:data-signals "{commitName: ''}"}
-         [:input {:type "text"
-                  :placeholder "component-name"
-                  :data-bind "commitName"}]
-         [:button {:data-on:click "@post('/sandbox/commit')"
-                   :data-attr-disabled "!$commitName"}
-          (icons/icon :save {:class "btn-icon"}) "Commit"]]])
+        (commit-form categories)])
      (when (= view-type :preview)
        [:button {:data-on:click "@post('/sandbox/clear')"}
         (icons/icon :x {:class "btn-icon"}) "Clear"])]))
@@ -463,13 +482,24 @@
 ;; Main Render
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn- extract-categories
+  "Extract unique categories from library."
+  [library]
+  (->> library
+       vals
+       (keep :category)
+       distinct
+       sort))
+
 (defn render-view
   "Render the appropriate view based on state."
   [state]
-  (let [view-type (get-in state [:view :type])]
+  (let [view-type (get-in state [:view :type])
+        categories (extract-categories (:library state))
+        nav-state (assoc state :categories categories)]
     [:div#app
      {:data-signals "{bgColor: localStorage.getItem('sandbox-bg-color') || '#f5f5f5'}"}
-     (nav-bar state)
+     (nav-bar nav-state)
      (case view-type
        :preview   [:div#content (preview-view state)]
        :gallery   [:div#content (gallery-view state)]

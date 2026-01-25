@@ -126,9 +126,19 @@
   "Handler to commit current preview to library."
   []
   (fn [{:keys [signals dispatch]}]
-    (let [component-name (keyword (:commitName signals))]
+    (let [component-name (keyword (:commitName signals))
+          ;; Handle new category or existing category selection
+          category (let [selected (:commitCategory signals)
+                         new-cat (:newCategory signals)]
+                     (cond
+                       ;; User entered a new category
+                       (and (= selected "__new__") (seq new-cat)) new-cat
+                       ;; User selected an existing category
+                       (and (seq selected) (not= selected "__new__")) selected
+                       ;; No category selected
+                       :else nil))]
       (when (and component-name (not= component-name (keyword "")))
-        (dispatch [[::tsain/commit component-name nil]])))
+        (dispatch [[::tsain/commit component-name {:category category}]])))
     {::twk/with-open-sse? true}))
 
 (defn- clear-handler

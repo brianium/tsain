@@ -313,12 +313,12 @@ Components should use chassis aliases (see :ui-namespace in tsain.edn).
 Accepts three forms:
 1. Name only: uses current preview as single 'Default' example
 2. Name + description string: adds description to preview-based example
-3. Name + options map: full control with :description and :examples
+3. Name + options map: full control with :description, :examples, and :category
 
 Examples:
   [::tsain/commit :my-card]
   [::tsain/commit :my-card \"Card component\"]
-  [::tsain/commit :my-card {:description \"...\" :examples [...]}]"
+  [::tsain/commit :my-card {:description \"...\" :category \"cards\" :examples [...]}]"
 
                                ::s/schema [:tuple [:= ::commit] ComponentNameSchema ComponentOptsSchema]
 
@@ -326,31 +326,33 @@ Examples:
                                (fn [{:keys [dispatch]} _system component-name opts]
                                  (let [{:keys [preview]} @state-atom
                                        hiccup (:hiccup preview)
+                                       category (when (map? opts) (:category opts))
                                        component-data
-                                       (cond
-                                         ;; Map with explicit examples
-                                         (and (map? opts) (:examples opts))
-                                         {:description (or (:description opts) "")
-                                          :examples (:examples opts)
-                                          :created-at (java.util.Date.)}
+                                       (cond-> (cond
+                                                 ;; Map with explicit examples
+                                                 (and (map? opts) (:examples opts))
+                                                 {:description (or (:description opts) "")
+                                                  :examples (:examples opts)
+                                                  :created-at (java.util.Date.)}
 
-                                         ;; String description (old API)
-                                         (string? opts)
-                                         {:description opts
-                                          :examples [{:label "Default" :hiccup hiccup}]
-                                          :created-at (java.util.Date.)}
+                                                 ;; String description (old API)
+                                                 (string? opts)
+                                                 {:description opts
+                                                  :examples [{:label "Default" :hiccup hiccup}]
+                                                  :created-at (java.util.Date.)}
 
-                                         ;; Map without examples (description only)
-                                         (map? opts)
-                                         {:description (or (:description opts) "")
-                                          :examples [{:label "Default" :hiccup hiccup}]
-                                          :created-at (java.util.Date.)}
+                                                 ;; Map without examples (description only)
+                                                 (map? opts)
+                                                 {:description (or (:description opts) "")
+                                                  :examples [{:label "Default" :hiccup hiccup}]
+                                                  :created-at (java.util.Date.)}
 
-                                         ;; nil - no description, use preview
-                                         :else
-                                         {:description ""
-                                          :examples [{:label "Default" :hiccup hiccup}]
-                                          :created-at (java.util.Date.)})]
+                                                 ;; nil - no description, use preview
+                                                 :else
+                                                 {:description ""
+                                                  :examples [{:label "Default" :hiccup hiccup}]
+                                                  :created-at (java.util.Date.)})
+                                         category (assoc :category category))]
                                    (when (or hiccup (:examples opts))
                                      (swap! state-atom (fn [state]
                                                          (-> state
