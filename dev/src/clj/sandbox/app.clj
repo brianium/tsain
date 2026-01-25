@@ -11,6 +11,7 @@
             [ascolais.sfere :as sfere]
             [ascolais.tsain :as tsain]
             [ascolais.tsain.routes :as tsain.routes]
+            [clojure.string :as str]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.params :refer [wrap-params]]
             [starfederation.datastar.clojure.adapter.http-kit :as ds-hk]
@@ -31,6 +32,18 @@
    [(twk/registry)
     (sfere/registry store)
     tsain-registry]))
+
+(defn- wrap-no-cache-css
+  "Disable browser caching for CSS files in development.
+  Ensures @import'ed stylesheets are re-fetched when parent is reloaded."
+  [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (if (and response
+               (some-> (:uri request) (str/ends-with? ".css")))
+        (assoc-in response [:headers "Cache-Control"]
+                  "no-cache, no-store, must-revalidate")
+        response))))
 
 (defn- wrap-request-logging [handler]
   (fn [request]
@@ -55,6 +68,7 @@
        (rr/create-default-handler))
       wrap-params
       (wrap-resource "public")
+      wrap-no-cache-css
       wrap-request-logging))
 
 (defn start-system

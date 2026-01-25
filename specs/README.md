@@ -1,6 +1,6 @@
 # Specifications
 
-*Auto-generated on 2026-01-25 13:19*
+*Auto-generated on 2026-01-25 16:28*
 
 ## Completed
 
@@ -21,5 +21,6 @@
 - [Portable Library](012-portable-library/README.md)
 - [Schema Cleanup](013-schema-cleanup/README.md)
 - [Ascolais Project Template](014-ascolais-template/README.md)
+- [Barrel CSS Watcher Support](barrel-css-watcher-support/README.md)
 - [Better Component Storage](better-component-storage/README.md)
 - [Migrate Existing Component Library](migrate-existing-component-library/README.md)
