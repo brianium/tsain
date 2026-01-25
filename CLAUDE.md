@@ -12,6 +12,8 @@ This is a Clojure Datastar application powered by the sandestin effect dispatch 
 | **twk** | Datastar SSE integration | `twk/registry`, `twk/with-datastar` middleware |
 | **sfere** | Connection management and broadcasting | `sfere/registry`, `sfere/store` |
 | **kaiin** | Declarative HTTP routing from registry metadata | `kaiin/routes` |
+| **html.yeah** | Schema-driven HTML components with malli | `defelem`, `hy/element`, `hy/search-elements` |
+| **manse** | Database effects for sandestin (next.jdbc) | `manse/registry`, SQL effect handlers |
 
 ## Architecture
 
@@ -1099,6 +1101,136 @@ Chassis automatically elides namespaced attributes from HTML output. **Conventio
 | `dev/src/clj/sandbox/views.clj` | Requires `sandbox.ui` for alias resolution |
 
 **Note:** The `sandbox.views` namespace requires `sandbox.ui` to ensure aliases are registered before hiccup is rendered. Without this require, alias keywords like `:sandbox.ui/game-card` won't expand.
+
+---
+
+## html.yeah (Schema-Driven Components)
+
+html.yeah provides `defelem`, a macro for defining Chassis alias elements with attached malli schemas. This enables runtime validation and discoverability.
+
+### defelem Syntax
+
+```clojure
+(require '[html.yeah :as hy])
+
+(hy/defelem button
+  [:map {:doc "Primary action button with variants"
+         :keys [button/label button/variant]
+         :or {button/variant :primary}
+         :as attrs}
+   [:button/label :string]
+   [:button/variant [:enum :primary :secondary :ghost]]]
+  [:button.btn {:class (str "btn--" (name button/variant))}
+   button/label
+   (hy/children)])
+```
+
+**Key points:**
+- Schema uses malli vector syntax in the first argument
+- Use `:keys` in the schema map to destructure attributes
+- Use `:or` for default values
+- Use `:as attrs` to bind the full attribute map
+- `(hy/children)` renders child elements passed to the component
+
+### Querying Element Metadata
+
+```clojure
+;; Get component metadata (returns nil if not found)
+(hy/element :myapp.ui/button)
+;; => {:tag :myapp.ui/button
+;;     :doc "Primary action button with variants"
+;;     :attributes [:map [:button/label :string] ...]
+;;     :children [:* :any]
+;;     :ns myapp.ui}
+
+;; Search components by text in doc strings
+(hy/search-elements "button")
+;; => [{:tag :myapp.ui/button :doc "Primary action..."} ...]
+```
+
+### Migration from c/resolve-alias
+
+```clojure
+;; Before (raw chassis)
+(defmethod c/resolve-alias ::my-card
+  [_ attrs _]
+  (let [{:my-card/keys [title]} attrs]
+    [:div.card title]))
+
+;; After (html.yeah)
+(hy/defelem my-card
+  [:map {:doc "A simple card"
+         :keys [my-card/title]}
+   [:my-card/title :string]]
+  [:div.card my-card/title])
+```
+
+Both compile to the same Chassis alias, but html.yeah adds queryable metadata.
+
+---
+
+## Manse (Database Effects)
+
+Manse provides sandestin effects for next.jdbc database operations. It integrates SQLite (or any JDBC database) into the effect dispatch system.
+
+### Registry Setup
+
+```clojure
+(require '[ascolais.manse :as manse]
+         '[next.jdbc :as jdbc])
+
+;; Create datasource
+(def ds (jdbc/get-datasource {:dbtype "sqlite" :dbname "app.db"}))
+
+;; Include manse registry in dispatch
+(def dispatch
+  (s/create-dispatch
+    [(manse/registry ds)  ;; Provides database effects
+     (twk/registry)
+     app-registry]))
+```
+
+### Available Effects
+
+| Effect | Purpose |
+|--------|---------|
+| `::manse/execute!` | Execute SQL (INSERT, UPDATE, DELETE) |
+| `::manse/execute-one!` | Execute and return single row |
+| `::manse/plan` | Lazy reducible query results |
+
+### Usage Examples
+
+```clojure
+;; Insert a row
+[[:ascolais.manse/execute!
+  ["INSERT INTO users (name, email) VALUES (?, ?)" "Alice" "alice@example.com"]]]
+
+;; Query with result
+[[:ascolais.manse/execute-one!
+  ["SELECT * FROM users WHERE id = ?" 42]]]
+
+;; In an action (use result in subsequent effects)
+{::s/actions
+ {:app/create-user
+  {::s/handler
+   (fn [state user-data]
+     [[:ascolais.manse/execute!
+       ["INSERT INTO users (name) VALUES (?)" (:name user-data)]]
+      [:ascolais.twk/patch-elements
+       [:div#status "User created!"]]])}}}
+```
+
+### SQLite-Specific Notes
+
+```clojure
+;; SQLite datasource (file-based)
+(jdbc/get-datasource {:dbtype "sqlite" :dbname "path/to/database.db"})
+
+;; In-memory SQLite (useful for tests)
+(jdbc/get-datasource {:dbtype "sqlite" :dbname ":memory:"})
+```
+
+**Important:** In-memory SQLite databases are connection-scoped. Use `with-open` and a single connection for testing, or use a file-based database.
 
 ## Git Commits
 

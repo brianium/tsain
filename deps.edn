@@ -1,6 +1,15 @@
 {:paths ["src/clj" "resources"]
 
- :deps {org.clojure/clojure {:mvn/version "1.12.0"}}
+ :deps {org.clojure/clojure {:mvn/version "1.12.0"}
+
+        ;; HTML component definitions with malli schemas
+        io.github.brianium/html.yeah {:git/tag "0.2.0" :git/sha "abf1346"}
+
+        ;; next.jdbc effects for sandestin
+        io.github.brianium/manse {:git/tag "v0.2.0" :git/sha "2f29123"}
+
+        ;; SQLite JDBC driver
+        org.xerial/sqlite-jdbc {:mvn/version "3.51.1.0"}}
 
  :aliases
  {:dev

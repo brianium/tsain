@@ -1,6 +1,6 @@
 ---
 title: "Better Component Storage"
-status: planned
+status: in-progress
 date: 2026-01-24
 priority: 50
 ---

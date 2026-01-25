@@ -6,10 +6,10 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 
 ## Prerequisites
 
-- [ ] Add html.yeah dependency to tsain
-- [ ] Add manse dependency to tsain
-- [ ] Add SQLite JDBC driver: `org.xerial/sqlite-jdbc {:mvn/version "3.51.1.0"}`
-- [ ] Verify SQLite works in consumer project context
+- [x] Add html.yeah dependency to tsain
+- [x] Add manse dependency to tsain
+- [x] Add SQLite JDBC driver: `org.xerial/sqlite-jdbc {:mvn/version "3.51.1.0"}`
+- [x] Verify SQLite works in consumer project context
 
 ## Phase 1: html.yeah Integration
 
