@@ -1,10 +1,9 @@
 # Specifications
 
-*Auto-generated on 2026-01-25 12:51*
+*Auto-generated on 2026-01-25 13:04*
 
 ## Planned
 
-- [Barrel Imports In Skill](barrel-imports-in-skill/README.md)
 - [Migrate Existing Component Library](migrate-existing-component-library/README.md)
 
 ## Completed
@@ -21,6 +20,7 @@
 - [CSS Extraction Workflow](008-css-extraction/README.md)
 - [Storybook Sidebar](009-storybook-sidebar/README.md)
 - [Chassis Alias Workflow](010-chassis-alias-workflow/README.md)
+- [Barrel Imports In Skill](barrel-imports-in-skill/README.md)
 - [Discoverable Dev Registry](011-discoverable-dev-registry/README.md)
 - [Portable Library](012-portable-library/README.md)
 - [Schema Cleanup](013-schema-cleanup/README.md)

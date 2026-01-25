@@ -1124,6 +1124,35 @@ Chassis automatically elides namespaced attributes from HTML output. **Conventio
 
 **Note:** The `sandbox.views` namespace requires `sandbox.ui` to ensure aliases are registered before hiccup is rendered. Without this require, alias keywords like `:sandbox.ui/game-card` won't expand.
 
+### File Organization (Barrel Imports)
+
+When files exceed ~1500 lines, split them using barrel imports. Configure the threshold in `tsain.edn`:
+
+```clojure
+{:split-threshold 1500}  ;; nil to disable checking
+```
+
+**Conventions (not configurable):**
+
+| File | Split To | Import Style |
+|------|----------|--------------|
+| Main stylesheet | `components/<category>.css` | `@import "./components/cards.css";` |
+| UI namespace | Sub-namespace by category | `(:require [sandbox.ui.cards])` |
+
+**Categories:**
+
+| Category | Contains |
+|----------|----------|
+| `cards` | Card-based layouts, tiles, panels |
+| `controls` | Buttons, inputs, selects, toggles |
+| `layout` | Grids, containers, spacing utilities |
+| `feedback` | Toasts, alerts, loaders, progress |
+| `navigation` | Menus, tabs, breadcrumbs |
+| `display` | Text treatments, badges, avatars |
+| `overlays` | Modals, popovers, tooltips |
+
+See the tsain skill (`/tsain iterate`) for detailed split procedures.
+
 ---
 
 ## html.yeah (Schema-Driven Components)

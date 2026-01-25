@@ -28,8 +28,9 @@ End-to-end workflow for implementing components from specs to production.
 1. **Run `/specs implement`** to identify the next spec to work on
 2. **Use `/tsain iterate`** to develop the component
 3. **Use `/clojure-eval`** for REPL interaction
-4. **Update CLAUDE.md** with component reference when done
-5. **Commit** means: commit to component library with tsain AND git
+4. **Check file sizes** before committing - see File Size Management section
+5. **Update CLAUDE.md** with component reference when done
+6. **Commit** means: commit to component library with tsain AND git
 
 Do not assume a REPL connection needs to be restarted. Always run `clj-nrepl-eval --discover-ports` before your first REPL expression. The REPL is likely still running. If it is not, stop and ask the user what they want you to do.
 
@@ -48,7 +49,8 @@ Read `tsain.edn` at project root for file locations:
 {:ui-namespace myapp.ui        ;; Where chassis aliases live
  :database-file "tsain.db"     ;; Component library (SQLite)
  :stylesheet "resources/styles.css"  ;; CSS for hot reload
- :port 3000}
+ :port 3000
+ :split-threshold 1500}        ;; Lines before suggesting barrel splits (nil to disable)
 ```
 
 Alternative legacy configuration:
@@ -180,7 +182,18 @@ clj-nrepl-eval -p <PORT> "(dispatch [[::tsain/preview
 3. **Re-preview** to see changes
 4. **Add CSS** to the stylesheet (from `:stylesheet`) - hot-reloads automatically
 
-#### Step 4: Commit to Library
+#### Step 4: Check File Sizes (Before Commit)
+
+Before committing, check if files are approaching the split threshold:
+
+```bash
+wc -l <stylesheet-path>   # e.g., dev/resources/public/styles.css
+wc -l <ui-namespace-path> # e.g., dev/src/clj/sandbox/ui.clj
+```
+
+If either file exceeds or approaches `:split-threshold` (default 1500 lines), consider splitting before adding more components. See the **File Size Management** section for split procedures.
+
+#### Step 5: Commit to Library
 
 ```bash
 clj-nrepl-eval -p <PORT> "(dispatch [[::tsain/commit :my-card
@@ -335,3 +348,132 @@ Use `.theme-light` wrapper class - CSS custom properties handle the rest:
 [:div.theme-light
  [:myapp.ui/card {:card/title "Hello"}]]
 ```
+
+---
+
+## File Size Management
+
+As component libraries grow, large files become unwieldy. Before committing components, check if files are approaching the split threshold (default: 1500 lines, configured via `:split-threshold` in `tsain.edn`).
+
+### Conventions
+
+These paths are conventions, not configurable:
+
+| File Type | Split Location | Import Style |
+|-----------|----------------|--------------|
+| CSS | `components/` subdirectory | `@import "./components/<category>.css";` |
+| Clojure | Sub-namespace from `:ui-namespace` | `(:require [<ui-ns>.<category>])` |
+
+### When to Split
+
+- **Stylesheet exceeds threshold** → Split into `components/<category>.css`
+- **UI namespace exceeds threshold** → Split into sub-namespaces by category
+
+### Category Taxonomy
+
+Organize components by semantic category:
+
+| Category | Contains |
+|----------|----------|
+| `cards` | Card-based layouts, tiles, panels |
+| `controls` | Buttons, inputs, selects, toggles |
+| `layout` | Grids, containers, spacing utilities |
+| `feedback` | Toasts, alerts, loaders, progress bars |
+| `navigation` | Menus, tabs, breadcrumbs, pagination |
+| `display` | Text treatments, badges, avatars, icons |
+| `overlays` | Modals, popovers, tooltips, drawers |
+
+Add new categories as needed. When unsure, prefer fewer larger categories over many small ones.
+
+### CSS Split Procedure
+
+Given stylesheet at `dev/resources/public/styles.css`:
+
+1. Create `components/` directory:
+   ```bash
+   mkdir -p dev/resources/public/components
+   ```
+
+2. Create category file (e.g., `components/cards.css`):
+   ```css
+   /* Card components */
+   .game-card { /* ... */ }
+   .game-card-header { /* ... */ }
+   ```
+
+3. Move related styles from main stylesheet to category file
+
+4. Add import to main stylesheet (at the top, after any variables):
+   ```css
+   /* Component imports */
+   @import "./components/cards.css";
+   @import "./components/controls.css";
+   ```
+
+5. Verify hot-reload still works
+
+### Namespace Split Procedure
+
+Given `:ui-namespace sandbox.ui` in `tsain.edn`:
+
+1. Create directory for sub-namespaces:
+   ```bash
+   mkdir -p dev/src/clj/sandbox/ui
+   ```
+
+2. Create category namespace (e.g., `sandbox/ui/cards.clj`):
+   ```clojure
+   (ns sandbox.ui.cards
+     (:require [chassis.core :as c]
+               [html.yeah :as hy]))
+
+   (hy/defelem game-card
+     [:map {:doc "Game card component"
+            :keys [game-card/title]}
+      [:game-card/title :string]]
+     [:div.game-card attrs
+      [:h2.game-card-title game-card/title]])
+   ```
+
+3. Move `defelem` definitions from main namespace to category namespace
+
+4. Add require to main UI namespace:
+   ```clojure
+   (ns sandbox.ui
+     (:require [chassis.core :as c]
+               [sandbox.ui.cards]    ;; Just require, aliases auto-register
+               [sandbox.ui.controls]))
+   ```
+
+5. Reload and verify aliases still resolve:
+   ```bash
+   clj-nrepl-eval -p <PORT> "(reload)"
+   clj-nrepl-eval -p <PORT> "(tsain/describe :sandbox.ui/game-card)"
+   ```
+
+### When to Suggest Splits
+
+Check file sizes before committing new components. If approaching the threshold:
+
+1. **Identify the category** for the new component
+2. **Check if category file exists** - if not, suggest creating it
+3. **Recommend adding** the new component directly to the category file
+4. **If category file is also large**, consider subcategories (rare)
+
+### CSS Variables
+
+Keep CSS custom properties in the main stylesheet (not split files):
+
+```css
+/* styles.css - keep variables here */
+:root {
+  --accent-cyan: #00f0ff;
+  --bg-primary: #0a0a0f;
+  /* ... */
+}
+
+/* Import component styles after variables */
+@import "./components/cards.css";
+```
+
+This ensures variables are available to all imported stylesheets.
