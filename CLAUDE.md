@@ -1251,18 +1251,20 @@ Tsain provides a discovery API that merges component metadata from html.yeah (sc
 
 ### Discovery Functions
 
+All discovery functions work with a default registry (populated when `tsain/registry` is called) or accept an explicit registry as the first argument.
+
 ```clojure
 (require '[ascolais.tsain :as tsain])
 
-;; Create registry
-(def reg (tsain/registry {:database-file "tsain.db"}))
+;; Create registry - this also sets the default registry for discovery functions
+(tsain/registry {:database-file "tsain.db"})
 
-;; List all components
-(tsain/describe reg)
+;; List all components (uses default registry)
+(tsain/describe)
 ;; => [{:tag :sandbox.ui/game-card :doc "..." :attributes [...]} ...]
 
-;; Get details for one component
-(tsain/describe reg :sandbox.ui/game-card)
+;; Get details for one component (uses default registry)
+(tsain/describe :sandbox.ui/game-card)
 ;; => {:tag :sandbox.ui/game-card
 ;;     :doc "Cyberpunk-styled game card..."
 ;;     :attributes [:map [:game-card/title :string] ...]
@@ -1270,21 +1272,29 @@ Tsain provides a discovery API that merges component metadata from html.yeah (sc
 ;;     :category "cards"
 ;;     :examples [{:label "Dark" :hiccup [...]}]}
 
-;; Search by keyword
-(tsain/grep reg "button")
+;; Search by keyword (uses default registry)
+(tsain/grep "button")
 ;; => [{:tag :sandbox.ui/btn ...} {:tag :sandbox.ui/action-buttons ...}]
 
-;; Find components with specific prop
-(tsain/props reg :variant)
+;; Find components with specific prop (uses default registry)
+(tsain/props :variant)
 ;; => [{:tag :sandbox.ui/btn ...} {:tag :sandbox.ui/toast ...}]
 
-;; List categories
-(tsain/categories reg)
+;; List categories (uses default registry)
+(tsain/categories)
 ;; => ("cards" "controls" "display")
 
-;; Filter by category
-(tsain/by-category reg "cards")
+;; Filter by category (uses default registry)
+(tsain/by-category "cards")
 ;; => [{:tag :sandbox.ui/game-card ...}]
+
+;; All functions also accept an explicit registry as first arg:
+(def reg (tsain/registry {:database-file "other.db"}))
+(tsain/describe reg :sandbox.ui/game-card)
+(tsain/grep reg "button")
+(tsain/props reg :variant)
+(tsain/categories reg)
+(tsain/by-category reg "cards")
 ```
 
 ### Migration from EDN

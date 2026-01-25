@@ -279,3 +279,83 @@
                                                    :hiccup [:div "test"]}]}}
                  :sidebar-collapsed? false}]
       (is (vector? (views/render-view state))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Discovery API Tests
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deftest discovery-api-uses-default-registry
+  (testing "registry function populates the default registry atom"
+    ;; Create a registry - this should populate *tsain-registry
+    (let [reg (tsain/registry {:components-file test-components-file})]
+      ;; The atom should now be set
+      (is (some? @tsain/*tsain-registry))
+      (is (= reg @tsain/*tsain-registry)))))
+
+(deftest describe-function-arities
+  (testing "describe with 0 args uses default registry"
+    (let [_reg (tsain/registry {:components-file test-components-file})
+          result (tsain/describe)]
+      ;; Should return a seq (possibly empty)
+      (is (seqable? result))))
+
+  (testing "describe with 1 arg (tag) uses default registry"
+    (let [_reg (tsain/registry {:components-file test-components-file})
+          result (tsain/describe :nonexistent-component)]
+      ;; Should return a map with :tag
+      (is (map? result))
+      (is (= :nonexistent-component (:tag result)))))
+
+  (testing "describe with 2 args uses explicit registry"
+    (let [reg (tsain/registry {:components-file test-components-file})
+          result (tsain/describe reg :nonexistent-component)]
+      (is (map? result))
+      (is (= :nonexistent-component (:tag result))))))
+
+(deftest grep-function-arities
+  (testing "grep with 1 arg uses default registry"
+    (let [_reg (tsain/registry {:components-file test-components-file})
+          result (tsain/grep "nonexistent")]
+      ;; Should return a seq (possibly empty)
+      (is (seqable? result))))
+
+  (testing "grep with 2 args uses explicit registry"
+    (let [reg (tsain/registry {:components-file test-components-file})
+          result (tsain/grep reg "nonexistent")]
+      (is (seqable? result)))))
+
+(deftest props-function-arities
+  (testing "props with 1 arg uses default registry"
+    (let [_reg (tsain/registry {:components-file test-components-file})
+          result (tsain/props :variant)]
+      ;; Should return a seq (possibly empty)
+      (is (seqable? result))))
+
+  (testing "props with 2 args uses explicit registry"
+    (let [reg (tsain/registry {:components-file test-components-file})
+          result (tsain/props reg :variant)]
+      (is (seqable? result)))))
+
+(deftest categories-function-arities
+  (testing "categories with 0 args uses default registry"
+    (let [_reg (tsain/registry {:components-file test-components-file})
+          result (tsain/categories)]
+      ;; Should return a seq (possibly empty)
+      (is (seqable? result))))
+
+  (testing "categories with 1 arg uses explicit registry"
+    (let [reg (tsain/registry {:components-file test-components-file})
+          result (tsain/categories reg)]
+      (is (seqable? result)))))
+
+(deftest by-category-function-arities
+  (testing "by-category with 1 arg uses default registry"
+    (let [_reg (tsain/registry {:components-file test-components-file})
+          result (tsain/by-category "cards")]
+      ;; Should return a seq (possibly empty)
+      (is (seqable? result))))
+
+  (testing "by-category with 2 args uses explicit registry"
+    (let [reg (tsain/registry {:components-file test-components-file})
+          result (tsain/by-category reg "cards")]
+      (is (seqable? result)))))

@@ -566,8 +566,10 @@ Examples:
 (defn describe
   "Get component metadata, merging html.yeah and SQLite data.
 
-  With 1 arg (registry): returns seq of all components with basic info
-  With 2 args (registry, tag): returns full details for one component
+  Arities:
+    (describe)              - list all components (uses default registry)
+    (describe tag)          - get one component (uses default registry)
+    (describe registry tag) - get one component (explicit registry)
 
   Returns:
     {:tag :sandbox.ui/game-card
@@ -576,6 +578,8 @@ Examples:
      :children [:* :any]
      :category \"cards\"
      :examples [{:label \"Default\" :hiccup [...]}]}"
+  ([]
+   (discovery/describe @*tsain-registry))
   ([tag]
    (discovery/describe @*tsain-registry tag))
   ([registry tag]
@@ -583,6 +587,10 @@ Examples:
 
 (defn grep
   "Search components by keyword in docs, tags, and categories.
+
+  Arities:
+    (grep query)          - search (uses default registry)
+    (grep registry query) - search (explicit registry)
 
   Searches:
   - html.yeah :doc strings
@@ -598,8 +606,12 @@ Examples:
 (defn props
   "Find components that have a specific attribute/prop.
 
+  Arities:
+    (props prop-name)          - search (uses default registry)
+    (props registry prop-name) - search (explicit registry)
+
   Example:
-    (props registry :variant)  ;; Find components with :*/variant props
+    (props :variant)  ;; Find components with :*/variant props
 
   Returns seq of component summaries."
   ([prop-name]
@@ -608,14 +620,26 @@ Examples:
    (discovery/props registry prop-name)))
 
 (defn categories
-  "List all unique categories from the component library."
+  "List all unique categories from the component library.
+
+  Arities:
+    (categories)         - list (uses default registry)
+    (categories registry) - list (explicit registry)
+
+  Returns sorted seq of category strings."
   ([]
    (discovery/categories @*tsain-registry))
   ([registry]
    (discovery/categories registry)))
 
 (defn by-category
-  "Get components filtered by category."
+  "Get components filtered by category.
+
+  Arities:
+    (by-category category)          - filter (uses default registry)
+    (by-category registry category) - filter (explicit registry)
+
+  Returns seq of component summaries."
   ([category]
    (discovery/by-category @*tsain-registry category))
   ([registry category]
