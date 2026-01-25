@@ -23,6 +23,7 @@
     (s/sample dispatch ::tsain/preview)"
   (:require [ascolais.sandestin :as s]
             [ascolais.sfere :as sfere]
+            [ascolais.tsain.db :as db]
             [ascolais.tsain.views :as views]
             [ascolais.twk :as twk]
             [ascolais.twk.schema :as twk.schema]
@@ -37,7 +38,8 @@
 
 (def default-config
   {:ui-namespace 'sandbox.ui
-   :components-file "resources/components.edn"
+   :components-file "resources/components.edn"  ;; DEPRECATED - use :database-file
+   :database-file nil                            ;; SQLite file path (e.g., "tsain.db")
    :stylesheet "dev/resources/public/styles.css"
    :port 3000})
 
@@ -68,6 +70,57 @@
   [path library]
   (io/make-parents path)
   (spit path (with-out-str (pprint/pprint library))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Database Persistence
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- load-library-from-db
+  "Load component library from SQLite database.
+  Returns map of component-keyword -> component-data."
+  [ds]
+  (let [components (db/find-all-components ds)]
+    (into {}
+          (map (fn [comp]
+                 (let [tag (keyword (:tag comp))
+                       examples (db/find-examples-for-component ds (:id comp))]
+                   [tag {:description ""  ;; html.yeah provides docs
+                         :category (:category comp)
+                         :examples (mapv (fn [ex]
+                                           {:label (:label ex)
+                                            :hiccup (db/parse-hiccup (:hiccup ex))})
+                                         examples)
+                         :created-at (:created_at comp)}]))
+               components))))
+
+(defn- commit-to-db!
+  "Commit a component to SQLite database."
+  [ds component-name {:keys [category examples]}]
+  (let [tag (str component-name)
+        existing (db/find-component-by-tag ds component-name)]
+    (if existing
+      ;; Update existing: delete old examples, insert new ones
+      (do
+        (db/delete-examples-for-component! ds (:id existing))
+        (db/update-component! ds (:id existing) {:category category})
+        (doseq [[idx ex] (map-indexed vector examples)]
+          (db/insert-example! ds {:component-id (:id existing)
+                                  :label (:label ex)
+                                  :hiccup (:hiccup ex)
+                                  :sort-order idx})))
+      ;; Insert new component
+      (let [comp (db/insert-component! ds {:tag component-name :category category})]
+        (doseq [[idx ex] (map-indexed vector examples)]
+          (db/insert-example! ds {:component-id (:id comp)
+                                  :label (:label ex)
+                                  :hiccup (:hiccup ex)
+                                  :sort-order idx}))))))
+
+(defn- uncommit-from-db!
+  "Remove a component from SQLite database."
+  [ds component-name]
+  (when-let [existing (db/find-component-by-tag ds component-name)]
+    (db/delete-component! ds (:id existing))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; View Rendering
@@ -148,15 +201,36 @@
    (registry {}))
   ([overrides]
    (let [config (load-config overrides)
+         database-file (:database-file config)
          components-file (:components-file config)
+
+         ;; Initialize database if configured
+         datasource (when database-file
+                      (let [ds (db/create-datasource config)]
+                        (db/migrate! ds)
+                        ds))
+
+         ;; Load library from database or EDN
+         library (if datasource
+                   (do
+                     (tap> {:tsain/storage :database :file database-file})
+                     (load-library-from-db datasource))
+                   (do
+                     (when components-file
+                       (tap> {:tsain/storage :edn :file components-file
+                              :deprecated true
+                              :message "Use :database-file instead of :components-file"}))
+                     (load-library components-file)))
+
          state-atom (atom {:preview {:hiccup nil}
                            :view {:type :preview}
-                           :library (load-library components-file)
+                           :library library
                            :sidebar-collapsed? false
                            :committed? false})]
 
      {::state state-atom
       ::config config
+      ::datasource datasource
 
       ::s/effects
       {::preview
@@ -279,14 +353,17 @@ Examples:
                                   (-> state
                                       (assoc-in [:library component-name] component-data)
                                       (assoc :committed? true))))
-              (save-library! components-file (:library @state-atom))
+              ;; Persist to database or EDN
+              (if datasource
+                (commit-to-db! datasource component-name component-data)
+                (save-library! components-file (:library @state-atom)))
               (broadcast-view! dispatch state-atom))))}
 
        ::uncommit
        {::s/description
         "Remove a component from the library.
 
-Deletes from both in-memory library and components.edn.
+Deletes from both in-memory library and database/components.edn.
 Use with caution - this cannot be undone (though git can help).
 
 Example:
@@ -297,7 +374,10 @@ Example:
         ::s/handler
         (fn [{:keys [dispatch]} _system component-name]
           (swap! state-atom update :library dissoc component-name)
-          (save-library! components-file (:library @state-atom))
+          ;; Delete from database or EDN
+          (if datasource
+            (uncommit-from-db! datasource component-name)
+            (save-library! components-file (:library @state-atom)))
           (broadcast-view! dispatch state-atom))}
 
        ::show

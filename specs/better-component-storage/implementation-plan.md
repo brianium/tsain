@@ -42,20 +42,20 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   - FTS5 virtual table for search
   - **Note:** No `props` table - html.yeah provides prop schemas
 - [x] Implement migration runner (check version, run pending SQL)
-- [ ] Add `:database-file` to `default-config` in `tsain.clj`
-- [ ] Initialize datasource in `registry` function
+- [x] Add `:database-file` to `default-config` in `tsain.clj`
+- [x] Initialize datasource in `registry` function
 
 ## Phase 3: Core Effects Migration
 
-- [ ] Refactor `::commit` effect to write to SQLite
+- [x] Refactor `::commit` effect to write to SQLite
   - Insert into `components` table (tag, category, timestamps)
   - Insert examples into `examples` table
-  - Update FTS index
+  - Update FTS index (via triggers)
   - **Simplified:** No props storage - html.yeah provides those
-- [ ] Refactor `::uncommit` effect to delete from SQLite
-- [ ] Refactor library loading in `registry` to read from SQLite
-- [ ] Update `::show-components` to query SQLite
-- [ ] Ensure all sandbox views work with SQLite-backed data
+- [x] Refactor `::uncommit` effect to delete from SQLite
+- [x] Refactor library loading in `registry` to read from SQLite
+- [x] Update `::show-components` to query SQLite (works via in-memory library sync)
+- [x] Ensure all sandbox views work with SQLite-backed data
 - [ ] Remove EDN persistence code (keep for migration only)
 
 ## Phase 4: Discovery API
