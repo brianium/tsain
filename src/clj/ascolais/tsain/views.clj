@@ -445,10 +445,18 @@
   [{:keys [library view sidebar-collapsed?]}]
   (let [current-name (:name view)
         grouped (grouped-components library)
-        initial-state (build-initial-sidebar-state grouped)]
+        default-state (build-initial-sidebar-state grouped)]
     [:div.components-layout
      {:class (when sidebar-collapsed? "sidebar-collapsed")
-      :data-signals (str "{searchQuery: '', sidebarState: " initial-state "}")}
+      ;; Initialize with default, then override from localStorage on load
+      :data-signals (str "{searchQuery: '', sidebarState: " default-state "}")
+      ;; Load saved state from localStorage (merge with defaults for new categories)
+      :data-on-load (str "try { "
+                         "const saved = JSON.parse(localStorage.getItem('tsain-sidebar-state') || '{}'); "
+                         "$sidebarState = {...$sidebarState, ...saved}; "
+                         "} catch (e) { console.warn('Failed to load sidebar state:', e); }")
+      ;; Persist state changes to localStorage
+      :data-effect "localStorage.setItem('tsain-sidebar-state', JSON.stringify($sidebarState))"}
 
      ;; Sidebar
      [:aside.sidebar
