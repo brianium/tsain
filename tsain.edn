@@ -1,4 +1,5 @@
 {:ui-namespace sandbox.ui
- :components-file "resources/components.edn"
+ :database-file "tsain.db"
  :stylesheet "dev/resources/public/styles.css"
- :port 3000}
+ :port 3000
+ :split-threshold 1500}

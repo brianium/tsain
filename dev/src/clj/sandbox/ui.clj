@@ -1,10 +1,12 @@
 (ns sandbox.ui
-  "Chassis alias definitions for sandbox components.
+  "Chassis alias definitions for sandbox components using html.yeah.
 
-   ## Alias-First Development
+   ## defelem Components
 
-   Component structure lives here as chassis aliases. The `components.edn`
-   file stores lean alias invocations with config props, not verbose hiccup.
+   Components are defined with `hy/defelem`, which provides:
+   - Malli schemas for attribute validation
+   - Queryable metadata via `(hy/element :sandbox.ui/component)`
+   - Automatic Chassis alias registration
 
    ## Naming Conventions
 
@@ -22,16 +24,26 @@
      :game-card/attack \"3\"
      :data-signals:selected \"false\"}]
 
-   ;; Renders to full HTML with structure + config interpolated
+   ;; Query component metadata
+   (hy/element :sandbox.ui/game-card)
    ```"
-  (:require [dev.onionpancakes.chassis.core :as c]))
+  (:require [html.yeah :as hy]))
 
 ;; =============================================================================
 ;; Game Card Component
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::game-card
-  [_ attrs _]
+(hy/defelem game-card
+  [:map {:doc "Cyberpunk-styled game card with cost, stats, and ability text"
+         :as attrs}
+   [:game-card/title :string]
+   [:game-card/type :string]
+   [:game-card/cost :string]
+   [:game-card/attack :string]
+   [:game-card/defense :string]
+   [:game-card/icon :string]
+   [:game-card/ability :string]
+   [:game-card/flavor :string]]
   (let [{:game-card/keys [title type cost attack defense icon ability flavor]} attrs]
     [:div.game-card.clip-corners-lg attrs
      [:div.game-card-corner.game-card-corner--top-h]
@@ -71,8 +83,14 @@
 ;; Combat Log Component
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::combat-log-entry
-  [_ attrs _]
+(hy/defelem combat-log-entry
+  [:map {:doc "Single entry in a combat log with timestamp and optional detail"
+         :as attrs}
+   [:combat-log-entry/time :string]
+   [:combat-log-entry/message :string]
+   [:combat-log-entry/detail {:optional true} [:maybe :string]]
+   [:combat-log-entry/detail-type {:optional true} [:maybe :keyword]]
+   [:combat-log-entry/highlight {:optional true} [:maybe :keyword]]]
   (let [{:combat-log-entry/keys [time message detail detail-type highlight]} attrs
         entry-class (when highlight (str "combat-log-entry--highlight-" (name highlight)))]
     [:div.combat-log-entry {:class entry-class}
@@ -80,10 +98,20 @@
      [:div
       [:div.combat-log-message message]
       (when detail
-        [:div.combat-log-detail {:class (when detail-type (str "combat-log-" (name detail-type)))} detail])]]))
+        [:div.combat-log-detail
+         {:class (when detail-type (str "combat-log-" (name detail-type)))}
+         detail])]]))
 
-(defmethod c/resolve-alias ::combat-log
-  [_ attrs _]
+(hy/defelem combat-log
+  [:map {:doc "Combat log panel showing turn-based game events"
+         :as attrs}
+   [:combat-log/turn :int]
+   [:combat-log/entries [:vector [:map
+                                  [:time :string]
+                                  [:message :string]
+                                  [:detail {:optional true} :string]
+                                  [:detail-type {:optional true} :keyword]
+                                  [:highlight {:optional true} :keyword]]]]]
   (let [{:combat-log/keys [turn entries]} attrs]
     [:div.combat-log attrs
      [:div.scanline-overlay]
@@ -92,7 +120,7 @@
       [:span.combat-log-turn (str "TURN " turn)]]
      [:div.combat-log-entries
       (for [{:keys [time message detail detail-type highlight]} entries]
-        [::combat-log-entry
+        [:sandbox.ui/combat-log-entry
          {:combat-log-entry/time time
           :combat-log-entry/message message
           :combat-log-entry/detail detail
@@ -106,37 +134,57 @@
 ;; Badge Components
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::badge
-  [_ attrs _]
+(hy/defelem badge
+  [:map {:doc "Small icon+label badge with type-based styling"
+         :as attrs}
+   [:badge/icon :string]
+   [:badge/label :string]
+   [:badge/type [:enum :attack :defense :speed :stealth]]]
   (let [{:badge/keys [icon label type]} attrs]
     [:div.badge.clip-badge {:class (str "badge--" (name type))}
      [:span.badge-icon icon]
      [:span.badge-label label]]))
 
-(defmethod c/resolve-alias ::badge-rarity
-  [_ attrs _]
+(hy/defelem badge-rarity
+  [:map {:doc "Rarity indicator badge with colored dot"
+         :as attrs}
+   [:badge-rarity/label :string]
+   [:badge-rarity/rarity [:enum :common :uncommon :rare :legendary]]]
   (let [{:badge-rarity/keys [label rarity]} attrs
         dot-class (if (= rarity :legendary) "clip-diamond" nil)]
     [:div.badge-rarity {:class (str "badge-rarity--" (name rarity))}
      [:div.badge-rarity-dot {:class dot-class}]
      [:span.badge-rarity-label label]]))
 
-(defmethod c/resolve-alias ::card-type-badges
-  [_ attrs _]
+(hy/defelem card-type-badges
+  [:map {:doc "Collection of type badges and rarity indicators for a card"
+         :as attrs}
+   [:card-type-badges/badges [:vector [:map
+                                       [:icon :string]
+                                       [:label :string]
+                                       [:type :keyword]]]]
+   [:card-type-badges/rarities [:vector [:map
+                                         [:label :string]
+                                         [:rarity :keyword]]]]]
   (let [{:card-type-badges/keys [badges rarities]} attrs]
     [:div attrs
      (for [{:keys [icon label type]} badges]
-       [::badge {:badge/icon icon :badge/label label :badge/type type}])
+       [:sandbox.ui/badge {:badge/icon icon :badge/label label :badge/type type}])
      [:div {:style "margin-top: 16px; width: 100%; display: flex; gap: 12px;"}
       (for [{:keys [label rarity]} rarities]
-        [::badge-rarity {:badge-rarity/label label :badge-rarity/rarity rarity}])]]))
+        [:sandbox.ui/badge-rarity {:badge-rarity/label label :badge-rarity/rarity rarity}])]]))
 
 ;; =============================================================================
 ;; Player HUD Component
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::player-hud-bar
-  [_ attrs _]
+(hy/defelem player-hud-bar
+  [:map {:doc "Progress bar for player stats (health, energy)"
+         :as attrs}
+   [:player-hud-bar/label :string]
+   [:player-hud-bar/value :string]
+   [:player-hud-bar/percent :string]
+   [:player-hud-bar/type [:enum :health :energy]]]
   (let [{:player-hud-bar/keys [label value percent type]} attrs]
     [:div.player-hud-bar
      [:div.player-hud-bar-header
@@ -147,15 +195,26 @@
                                  :style (str "width: " percent ";")}]
       [:div.player-hud-bar-segments]]]))
 
-(defmethod c/resolve-alias ::player-hud-counter
-  [_ attrs _]
+(hy/defelem player-hud-counter
+  [:map {:doc "Numeric counter display for player resources"
+         :as attrs}
+   [:player-hud-counter/label :string]
+   [:player-hud-counter/value :string]
+   [:player-hud-counter/type [:enum :shield :cards]]]
   (let [{:player-hud-counter/keys [label value type]} attrs]
     [:div.player-hud-counter
      [:div.player-hud-counter-label label]
      [:div.player-hud-counter-value {:class (str "player-hud-counter-value--" (name type))} value]]))
 
-(defmethod c/resolve-alias ::player-hud
-  [_ attrs _]
+(hy/defelem player-hud
+  [:map {:doc "Full player HUD panel with avatar, health, energy, and counters"
+         :as attrs}
+   [:player-hud/name :string]
+   [:player-hud/rank :string]
+   [:player-hud/avatar :string]
+   [:player-hud/health [:map [:current :int] [:max :int] [:percent :string]]]
+   [:player-hud/energy [:map [:current :int] [:max :int] [:percent :string]]]
+   [:player-hud/counters [:vector [:map [:label :string] [:value :string] [:type :keyword]]]]]
   (let [{:player-hud/keys [name rank avatar health energy counters]} attrs
         {:keys [current max percent]} health
         health-value (str current "/" max)
@@ -171,26 +230,30 @@
       [:div
        [:div.player-hud-name name]
        [:div.player-hud-rank (str "// RANK: " rank)]]]
-     [::player-hud-bar {:player-hud-bar/label "◆ INTEGRITY"
-                        :player-hud-bar/value health-value
-                        :player-hud-bar/percent (:percent health)
-                        :player-hud-bar/type :health}]
-     [::player-hud-bar {:player-hud-bar/label "◆ ENERGY"
-                        :player-hud-bar/value energy-value
-                        :player-hud-bar/percent (:percent energy-data)
-                        :player-hud-bar/type :energy}]
+     [:sandbox.ui/player-hud-bar {:player-hud-bar/label "◆ INTEGRITY"
+                                  :player-hud-bar/value health-value
+                                  :player-hud-bar/percent (:percent health)
+                                  :player-hud-bar/type :health}]
+     [:sandbox.ui/player-hud-bar {:player-hud-bar/label "◆ ENERGY"
+                                  :player-hud-bar/value energy-value
+                                  :player-hud-bar/percent (:percent energy-data)
+                                  :player-hud-bar/type :energy}]
      [:div.player-hud-counters
       (for [{:keys [label value type]} counters]
-        [::player-hud-counter {:player-hud-counter/label label
-                               :player-hud-counter/value value
-                               :player-hud-counter/type type}])]]))
+        [:sandbox.ui/player-hud-counter {:player-hud-counter/label label
+                                         :player-hud-counter/value value
+                                         :player-hud-counter/type type}])]]))
 
 ;; =============================================================================
 ;; Action Buttons Component
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::btn
-  [_ attrs content]
+(hy/defelem btn
+  [:map {:doc "Button component with variant, color, and size options"
+         :as attrs}
+   [:btn/variant {:optional true} [:maybe [:enum :primary :secondary]]]
+   [:btn/color {:optional true} [:maybe [:enum :cyan :magenta :red]]]
+   [:btn/size {:optional true} [:maybe [:enum :small]]]]
   (let [{:btn/keys [variant color size]} attrs
         base-class "btn"
         variant-class (when variant (str "btn--" (name variant)))
@@ -203,60 +266,78 @@
                           (when size-class (str " " size-class))
                           (when small-color-class (str " " small-color-class))
                           " clip-corners-sm")}
-     content]))
+     (hy/children)]))
 
-(defmethod c/resolve-alias ::action-buttons
-  [_ attrs _]
+(hy/defelem action-buttons
+  [:map {:doc "Group of action buttons with primary, secondary, and small variants"
+         :as attrs}
+   [:action-buttons/primary [:vector [:map [:label :string] [:icon :string]]]]
+   [:action-buttons/secondary [:vector [:map [:label :string] [:icon :string] [:color :keyword]]]]
+   [:action-buttons/small {:optional true} [:maybe [:vector [:map [:label :string] [:color :keyword]]]]]]
   (let [{:action-buttons/keys [primary secondary small]} attrs]
     [:div attrs
      (for [{:keys [label icon]} primary]
-       [::btn {:btn/variant :primary} (str icon " " label)])
+       [:sandbox.ui/btn {:btn/variant :primary} (str icon " " label)])
      (for [{:keys [label icon color]} secondary]
-       [::btn {:btn/variant :secondary :btn/color color} (str icon " " label)])
+       [:sandbox.ui/btn {:btn/variant :secondary :btn/color color} (str icon " " label)])
      (when (seq small)
        [:div {:style "display: flex; gap: 8px; margin-top: 16px;"}
         (for [{:keys [label color]} small]
-          [::btn {:btn/size :small :btn/color color} label])])]))
+          [:sandbox.ui/btn {:btn/size :small :btn/color color} label])])]))
 
 ;; =============================================================================
 ;; Resource Display Component
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::energy-orbs
-  [_ attrs _]
+(hy/defelem energy-orbs
+  [:map {:doc "Visual energy orb display showing active/total"
+         :as attrs}
+   [:energy-orbs/active :int]
+   [:energy-orbs/total :int]]
   (let [{:energy-orbs/keys [active total]} attrs]
     [:div.energy-orbs
      (for [i (range total)]
        [:div.energy-orb {:class (if (< i active) "energy-orb--active" "energy-orb--empty")}])]))
 
-(defmethod c/resolve-alias ::credit-chips
-  [_ attrs _]
+(hy/defelem credit-chips
+  [:map {:doc "Visual credit chip display showing active/total"
+         :as attrs}
+   [:credit-chips/active :int]
+   [:credit-chips/total :int]]
   (let [{:credit-chips/keys [active total]} attrs]
     [:div.credits-chips
      (for [i (range total)]
        [:div.credit-chip.clip-hexagon {:class (if (< i active) "credit-chip--active" "credit-chip--empty")}])]))
 
-(defmethod c/resolve-alias ::resource-display
-  [_ attrs _]
+(hy/defelem resource-display
+  [:map {:doc "Combined energy and credits resource panel"
+         :as attrs}
+   [:resource-display/energy [:map [:active :int] [:total :int]]]
+   [:resource-display/credits [:map [:active :int] [:total :int] [:value :int]]]]
   (let [{:resource-display/keys [energy credits]} attrs
         {:keys [active total]} energy
         {:keys [active total value] :as credits-data} credits]
     [:div attrs
      [:div.resource-panel.resource-panel--energy
       [:div.resource-label.resource-label--energy "◆ Available Energy"]
-      [::energy-orbs {:energy-orbs/active (:active energy) :energy-orbs/total (:total energy)}]]
+      [:sandbox.ui/energy-orbs {:energy-orbs/active (:active energy) :energy-orbs/total (:total energy)}]]
      [:div.resource-panel.resource-panel--credits
       [:div.credits-header
        [:span.resource-label.resource-label--credits "◆ Credits"]
        [:span.credits-value (str "₵ " (:value credits-data))]]
-      [::credit-chips {:credit-chips/active (:active credits-data) :credit-chips/total (:total credits-data)}]]]))
+      [:sandbox.ui/credit-chips {:credit-chips/active (:active credits-data) :credit-chips/total (:total credits-data)}]]]))
 
 ;; =============================================================================
 ;; Toast Component
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::toast
-  [_ attrs _]
+(hy/defelem toast
+  [:map {:doc "Notification toast with icon, message, and dismiss button"
+         :as attrs}
+   [:toast/variant {:optional true} [:enum :info :success :warning :error]]
+   [:toast/label :string]
+   [:toast/message :string]
+   [:toast/icon :string]]
   (let [{:toast/keys [variant label message icon]} attrs
         variant-class (str "toast--" (name (or variant :info)))]
     [:div.toast {:class variant-class}
@@ -271,8 +352,13 @@
 ;; Player Portrait Component (16-bit Cyberpunk)
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::player-portrait-stat
-  [_ attrs _]
+(hy/defelem player-portrait-stat
+  [:map {:doc "Single stat bar for player portrait"
+         :as attrs}
+   [:player-portrait-stat/label :string]
+   [:player-portrait-stat/value :string]
+   [:player-portrait-stat/percent :string]
+   [:player-portrait-stat/type [:enum :hp :mp :exp]]]
   (let [{:player-portrait-stat/keys [label value percent type]} attrs
         type-class (str "player-portrait-stat--" (name type))]
     [:div.player-portrait-stat {:class type-class}
@@ -282,8 +368,20 @@
       [:div.player-portrait-stat-segments]]
      [:span.player-portrait-stat-value value]]))
 
-(defmethod c/resolve-alias ::player-portrait
-  [_ attrs _]
+(hy/defelem player-portrait
+  [:map {:doc "16-bit style player portrait with pixel art and stats"
+         :as attrs}
+   [:player-portrait/name :string]
+   [:player-portrait/class :string]
+   [:player-portrait/level :int]
+   [:player-portrait/theme {:optional true} [:enum :cyan :magenta :green]]
+   [:player-portrait/active? {:optional true} :boolean]
+   [:player-portrait/pixels :string]
+   [:player-portrait/stats [:vector [:map
+                                     [:label :string]
+                                     [:value :string]
+                                     [:percent :string]
+                                     [:type :keyword]]]]]
   (let [{:player-portrait/keys [name class level theme active? pixels stats]} attrs
         theme-class (str "player-portrait--" (clojure.core/name (or theme :cyan)))]
     [:div.player-portrait {:class theme-class}
@@ -300,7 +398,7 @@
       [:span.player-portrait-name-text name]]
      [:div.player-portrait-stats
       (for [{:keys [label value percent type]} stats]
-        [::player-portrait-stat
+        [:sandbox.ui/player-portrait-stat
          {:player-portrait-stat/label label
           :player-portrait-stat/value value
           :player-portrait-stat/percent percent
@@ -310,11 +408,62 @@
        [:span.player-portrait-class class]]]]))
 
 ;; =============================================================================
+;; Accordion Component
+;; =============================================================================
+
+(hy/defelem accordion-item
+  [:map {:doc "Single collapsible accordion item with header and content"
+         :as attrs}
+   [:accordion-item/title :string]
+   [:accordion-item/icon {:optional true} [:maybe :string]]
+   [:accordion-item/index :int]
+   [:accordion-item/default-open {:optional true} [:maybe :boolean]]]
+  (let [{:accordion-item/keys [title icon index default-open]} attrs
+        signal-name (str "accordionOpen" index)]
+    [:div.accordion-item attrs
+     [:button.accordion-item-header
+      {:data-signals (str "{" signal-name ": " (if default-open "true" "false") "}")
+       :data-on:click (str "$" signal-name " = !$" signal-name)}
+      [:div.accordion-item-icon-wrapper
+       (when icon [:span.accordion-item-icon icon])]
+      [:span.accordion-item-title title]
+      [:span.accordion-item-chevron
+       {:data-class (str "{\"accordion-item-chevron--open\": $" signal-name "}")}
+       "▶"]]
+     [:div.accordion-item-content
+      {:data-class (str "{\"accordion-item-content--open\": $" signal-name "}")}
+      [:div.accordion-item-content-inner
+       (hy/children)]]]))
+
+(hy/defelem accordion
+  [:map {:doc "Cyberpunk-styled accordion container for collapsible sections"
+         :as attrs}
+   [:accordion/variant {:optional true} [:maybe [:enum :cyan :magenta :pink]]]]
+  (let [{:accordion/keys [variant]} attrs
+        variant-class (when variant (str "accordion--" (name variant)))]
+    [:div.accordion {:class variant-class}
+     [:div.accordion-corner.accordion-corner--tl-h]
+     [:div.accordion-corner.accordion-corner--tl-v]
+     [:div.accordion-corner.accordion-corner--br-h]
+     [:div.accordion-corner.accordion-corner--br-v]
+     [:div.scanline-overlay]
+     (hy/children)]))
+
+;; =============================================================================
 ;; Event Modal Component
 ;; =============================================================================
 
-(defmethod c/resolve-alias ::event-modal
-  [_ attrs _]
+(hy/defelem event-modal
+  [:map {:doc "Modal dialog for game events with icon, message, and action buttons"
+         :as attrs}
+   [:event-modal/title :string]
+   [:event-modal/subtitle {:optional true} [:maybe :string]]
+   [:event-modal/icon :string]
+   [:event-modal/message :string]
+   [:event-modal/actions {:optional true} [:maybe [:vector [:map
+                                                            [:label :string]
+                                                            [:primary? {:optional true} :boolean]]]]]
+   [:event-modal/variant {:optional true} [:enum :info :warning :success :error]]]
   (let [{:event-modal/keys [title subtitle icon message actions variant]} attrs
         variant-class (str "event-modal--" (clojure.core/name (or variant :info)))]
     [:div.event-modal {:class variant-class}

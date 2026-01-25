@@ -12,6 +12,7 @@ This is a Clojure Datastar application powered by the sandestin effect dispatch 
 | **twk** | Datastar SSE integration | `twk/registry`, `twk/with-datastar` middleware |
 | **sfere** | Connection management and broadcasting | `sfere/registry`, `sfere/store` |
 | **kaiin** | Declarative HTTP routing from registry metadata | `kaiin/routes` |
+| **html.yeah** | Schema-driven HTML components with malli | `defelem`, `hy/element`, `hy/search-elements` |
 
 ## Architecture
 
@@ -179,6 +180,29 @@ Or from the REPL (in the dev namespace):
 (require '[clojure.test :refer [run-tests]])
 (run-tests 'ascolais.tsain-test)
 ```
+
+---
+
+## Claude Code Skills
+
+Tsain ships with a component development skill in `.claude/skills/tsain/`.
+
+### Available Commands
+
+- `/tsain` - Show available commands
+- `/tsain iterate` - Direct component iteration workflow
+- `/tsain implement` - Spec-driven implementation workflow (uses `/specs implement`)
+
+### Installing in Other Projects
+
+Copy the skill directory from this repo:
+
+```bash
+# From your project root
+cp -r path/to/tsain/.claude/skills/tsain .claude/skills/
+```
+
+The skill reads configuration from `tsain.edn` at your project root.
 
 ---
 
@@ -1099,6 +1123,199 @@ Chassis automatically elides namespaced attributes from HTML output. **Conventio
 | `dev/src/clj/sandbox/views.clj` | Requires `sandbox.ui` for alias resolution |
 
 **Note:** The `sandbox.views` namespace requires `sandbox.ui` to ensure aliases are registered before hiccup is rendered. Without this require, alias keywords like `:sandbox.ui/game-card` won't expand.
+
+### File Organization (Barrel Imports)
+
+When files exceed ~1500 lines, split them using barrel imports. Configure the threshold in `tsain.edn`:
+
+```clojure
+{:split-threshold 1500}  ;; nil to disable checking
+```
+
+**Conventions (not configurable):**
+
+| File | Split To | Import Style |
+|------|----------|--------------|
+| Main stylesheet | `components/<category>.css` | `@import "./components/cards.css";` |
+| UI namespace | Sub-namespace by category | `(:require [sandbox.ui.cards])` |
+
+**Categories:**
+
+| Category | Contains |
+|----------|----------|
+| `cards` | Card-based layouts, tiles, panels |
+| `controls` | Buttons, inputs, selects, toggles |
+| `layout` | Grids, containers, spacing utilities |
+| `feedback` | Toasts, alerts, loaders, progress |
+| `navigation` | Menus, tabs, breadcrumbs |
+| `display` | Text treatments, badges, avatars |
+| `overlays` | Modals, popovers, tooltips |
+
+See the tsain skill (`/tsain iterate`) for detailed split procedures.
+
+---
+
+## html.yeah (Schema-Driven Components)
+
+html.yeah provides `defelem`, a macro for defining Chassis alias elements with attached malli schemas. This enables runtime validation and discoverability.
+
+### defelem Syntax
+
+```clojure
+(require '[html.yeah :as hy])
+
+(hy/defelem button
+  [:map {:doc "Primary action button with variants"
+         :keys [button/label button/variant]
+         :or {button/variant :primary}
+         :as attrs}
+   [:button/label :string]
+   [:button/variant [:enum :primary :secondary :ghost]]]
+  [:button.btn {:class (str "btn--" (name button/variant))}
+   button/label
+   (hy/children)])
+```
+
+**Key points:**
+- Schema uses malli vector syntax in the first argument
+- Use `:keys` in the schema map to destructure attributes
+- Use `:or` for default values
+- Use `:as attrs` to bind the full attribute map
+- `(hy/children)` renders child elements passed to the component
+
+### Querying Element Metadata
+
+```clojure
+;; Get component metadata (returns nil if not found)
+(hy/element :myapp.ui/button)
+;; => {:tag :myapp.ui/button
+;;     :doc "Primary action button with variants"
+;;     :attributes [:map [:button/label :string] ...]
+;;     :children [:* :any]
+;;     :ns myapp.ui}
+
+;; Search components by text in doc strings
+(hy/search-elements "button")
+;; => [{:tag :myapp.ui/button :doc "Primary action..."} ...]
+```
+
+### Migration from c/resolve-alias
+
+The migration agent at `.claude/agents/migrate-component.md` automates transforming legacy chassis aliases to html.yeah defelem format.
+
+**Basic transformation:**
+
+```clojure
+;; Before (raw chassis)
+(defmethod c/resolve-alias ::my-card
+  [_ attrs content]
+  (let [{:my-card/keys [title]} attrs]
+    [:div.card title content]))
+
+;; After (html.yeah)
+(hy/defelem my-card
+  [:map {:doc "A simple card"
+         :keys [my-card/title]}
+   [:my-card/title :string]]
+  [:div.card my-card/title (hy/children)])
+```
+
+**Key transformations:**
+- `defmethod c/resolve-alias ::name` → `(hy/defelem name`
+- Add malli schema as first argument
+- Replace `content` parameter with `(hy/children)`
+- Preserve body logic
+
+**Schema inference from usage patterns:**
+
+| Usage | Inferred Type |
+|-------|---------------|
+| `(name x)` | `:keyword` |
+| `(str x)` | `:string` |
+| `(when x ...)` | `{:optional true}` |
+| `(for [i x] ...)` | `[:vector ...]` |
+
+**Migration workflow:**
+
+1. Set up barrel import structure (see File Organization)
+2. For each component, apply the migration agent steps
+3. Run data migration: `(dispatch [[::tsain/migrate-from-edn "components.edn"]])`
+4. Archive legacy files
+
+Both compile to the same Chassis alias, but html.yeah adds queryable metadata.
+
+---
+
+## Tsain Discovery API
+
+Tsain provides a discovery API that merges component metadata from html.yeah (schemas, docs) with SQLite (examples, categories).
+
+### Configuration
+
+```clojure
+;; In tsain.edn - use database storage (recommended)
+{:database-file "tsain.db"
+ :ui-namespace 'sandbox.ui}
+
+;; Legacy EDN storage (deprecated)
+{:components-file "resources/components.edn"}
+```
+
+### Discovery Functions
+
+All discovery functions work with a default registry (populated when `tsain/registry` is called) or accept an explicit registry as the first argument.
+
+```clojure
+(require '[ascolais.tsain :as tsain])
+
+;; Create registry - this also sets the default registry for discovery functions
+(tsain/registry {:database-file "tsain.db"})
+
+;; List all components (uses default registry)
+(tsain/describe)
+;; => [{:tag :sandbox.ui/game-card :doc "..." :attributes [...]} ...]
+
+;; Get details for one component (uses default registry)
+(tsain/describe :sandbox.ui/game-card)
+;; => {:tag :sandbox.ui/game-card
+;;     :doc "Cyberpunk-styled game card..."
+;;     :attributes [:map [:game-card/title :string] ...]
+;;     :children [:* :any]
+;;     :category "cards"
+;;     :examples [{:label "Dark" :hiccup [...]}]}
+
+;; Search by keyword (uses default registry)
+(tsain/grep "button")
+;; => [{:tag :sandbox.ui/btn ...} {:tag :sandbox.ui/action-buttons ...}]
+
+;; Find components with specific prop (uses default registry)
+(tsain/props :variant)
+;; => [{:tag :sandbox.ui/btn ...} {:tag :sandbox.ui/toast ...}]
+
+;; List categories (uses default registry)
+(tsain/categories)
+;; => ("cards" "controls" "display")
+
+;; Filter by category (uses default registry)
+(tsain/by-category "cards")
+;; => [{:tag :sandbox.ui/game-card ...}]
+
+;; All functions also accept an explicit registry as first arg:
+(def reg (tsain/registry {:database-file "other.db"}))
+(tsain/describe reg :sandbox.ui/game-card)
+(tsain/grep reg "button")
+(tsain/props reg :variant)
+(tsain/categories reg)
+(tsain/by-category reg "cards")
+```
+
+### Migration from EDN
+
+```clojure
+;; Migrate existing components.edn to SQLite
+(dispatch {} {} [[::tsain/migrate-from-edn "resources/components.edn"]])
+;; => {:migrated [:game-card :player-hud ...] :count 9}
+```
 
 ## Git Commits
 

@@ -16,10 +16,15 @@ A REPL-driven component sandbox for Clojure + Datastar applications. Design, ite
 Create `tsain.edn` at your project root:
 
 ```clojure
-{:ui-namespace myapp.ui                      ;; Where chassis aliases live
- :components-file "resources/components.edn" ;; Component library persistence
+{:ui-namespace myapp.ui                        ;; Where chassis aliases live
+ :database-file "tsain.db"                     ;; Component library (SQLite)
  :stylesheet "dev/resources/public/styles.css" ;; CSS for hot reload
  :port 3000}
+```
+
+Legacy EDN storage is also supported:
+```clojure
+{:components-file "resources/components.edn"} ;; Instead of :database-file
 ```
 
 ### 3. Create UI Namespace
@@ -123,13 +128,22 @@ Commit, browse, and copy components with a storybook-style sidebar.
 ```
 
 ### Discoverable API
-All effects are self-documenting via sandestin:
+
+Tsain provides component discovery functions:
+
+```clojure
+(tsain/describe)                         ;; List all components with schemas
+(tsain/describe :myapp.ui/card)          ;; Get details for specific component
+(tsain/grep "button")                    ;; Search by keyword
+(tsain/props :variant)                   ;; Find components with specific prop
+```
+
+Effects are also discoverable via sandestin:
 
 ```clojure
 (s/describe dispatch)                    ;; List all effects
 (s/describe dispatch ::tsain/preview)    ;; Inspect specific effect
 (s/sample dispatch ::tsain/preview)      ;; Generate example invocation
-(s/grep dispatch "component")            ;; Search by keyword
 ```
 
 ### CSS Hot Reload
@@ -177,6 +191,19 @@ The `sample/` directory contains starter templates:
 - `sample/ui.clj` - Starter chassis alias namespace
 
 Copy and adapt these for your project.
+
+## Claude Code Skill
+
+Tsain includes a skill for REPL-driven component development workflows:
+
+- `/tsain iterate` - Direct component iteration workflow
+- `/tsain implement` - Spec-driven implementation workflow
+
+Install by copying from this repo:
+
+```bash
+cp -r path/to/tsain/.claude/skills/tsain .claude/skills/
+```
 
 ## Tech Stack
 
@@ -232,6 +259,7 @@ src/clj/ascolais/tsain/routes.clj   # Route factory
 src/clj/ascolais/tsain/views.clj    # View rendering
 resources/tsain/sandbox.css         # Sandbox chrome (classpath)
 sample/                             # Starter templates for consumers
+.claude/skills/tsain/               # Claude Code skill for component workflow
 dev/src/clj/sandbox/                # Development sandbox (dogfooding)
 specs/                              # Living specifications
 ```
