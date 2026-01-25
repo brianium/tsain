@@ -1,10 +1,11 @@
 # Specifications
 
-*Auto-generated on 2026-01-25 11:12*
+*Auto-generated on 2026-01-25 12:51*
 
 ## Planned
 
 - [Barrel Imports In Skill](barrel-imports-in-skill/README.md)
+- [Migrate Existing Component Library](migrate-existing-component-library/README.md)
 
 ## Completed
 
