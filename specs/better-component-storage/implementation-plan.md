@@ -99,7 +99,7 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   - New configuration options (`:database-file`)
   - html.yeah requirement
   - `defelem` examples
-- [ ] Update CLAUDE.md with:
+- [x] Update CLAUDE.md with:
   - Discovery API examples
   - `defelem` patterns for component authoring
 - [ ] Update hiccup-component skill:

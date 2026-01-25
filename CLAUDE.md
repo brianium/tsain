@@ -1232,6 +1232,69 @@ Manse provides sandestin effects for next.jdbc database operations. It integrate
 
 **Important:** In-memory SQLite databases are connection-scoped. Use `with-open` and a single connection for testing, or use a file-based database.
 
+---
+
+## Tsain Discovery API
+
+Tsain provides a discovery API that merges component metadata from html.yeah (schemas, docs) with SQLite (examples, categories).
+
+### Configuration
+
+```clojure
+;; In tsain.edn - use database storage (recommended)
+{:database-file "tsain.db"
+ :ui-namespace 'sandbox.ui}
+
+;; Legacy EDN storage (deprecated)
+{:components-file "resources/components.edn"}
+```
+
+### Discovery Functions
+
+```clojure
+(require '[ascolais.tsain :as tsain])
+
+;; Create registry
+(def reg (tsain/registry {:database-file "tsain.db"}))
+
+;; List all components
+(tsain/describe reg)
+;; => [{:tag :sandbox.ui/game-card :doc "..." :attributes [...]} ...]
+
+;; Get details for one component
+(tsain/describe reg :sandbox.ui/game-card)
+;; => {:tag :sandbox.ui/game-card
+;;     :doc "Cyberpunk-styled game card..."
+;;     :attributes [:map [:game-card/title :string] ...]
+;;     :children [:* :any]
+;;     :category "cards"
+;;     :examples [{:label "Dark" :hiccup [...]}]}
+
+;; Search by keyword
+(tsain/grep reg "button")
+;; => [{:tag :sandbox.ui/btn ...} {:tag :sandbox.ui/action-buttons ...}]
+
+;; Find components with specific prop
+(tsain/props reg :variant)
+;; => [{:tag :sandbox.ui/btn ...} {:tag :sandbox.ui/toast ...}]
+
+;; List categories
+(tsain/categories reg)
+;; => ("cards" "controls" "display")
+
+;; Filter by category
+(tsain/by-category reg "cards")
+;; => [{:tag :sandbox.ui/game-card ...}]
+```
+
+### Migration from EDN
+
+```clojure
+;; Migrate existing components.edn to SQLite
+(dispatch {} {} [[::tsain/migrate-from-edn "resources/components.edn"]])
+;; => {:migrated [:game-card :player-hud ...] :count 9}
+```
+
 ## Git Commits
 
 Use conventional commits format:
