@@ -31,25 +31,26 @@ Document the barrel import pattern so it can be referenced by the skill and copi
 
 ## Phase 2: Update tsain.edn Configuration
 
-Add configuration options for split behavior.
+Add minimal configuration - paths are derived by convention.
 
 - [ ] Add `:split-threshold` option (default 1500, nil to disable)
-- [ ] Add `:css-split-dir` option (default "components")
-- [ ] Add `:ns-split-dir` option (default "ui")
-- [ ] Document new options in tsain.edn comments
-- [ ] Update skill to read and respect these options
+- [ ] Document conventions in skill (not config):
+  - CSS splits always go to `components/` subdirectory
+  - Namespace splits derive from `:ui-namespace` (e.g., `sandbox.ui` → `sandbox/ui/`)
+- [ ] Update skill to read threshold option
 
 **Example tsain.edn addition:**
 ```clojure
 {:database-file "tsain.db"
  :ui-namespace 'sandbox.ui
 
- ;; Barrel import configuration
- :split-threshold 1500        ;; lines before suggesting split (nil to disable)
- :css-split-dir "components"  ;; subdirectory for split CSS files
- :ns-split-dir "ui"           ;; subdirectory for split namespaces
- :default-categories ["cards" "controls" "layout" "feedback" "display"]}
+ ;; Barrel import configuration (paths are convention, not config)
+ :split-threshold 1500}  ;; lines before suggesting split (nil to disable)
 ```
+
+**Conventions (not configurable):**
+- CSS: `styles.css` → `components/<category>.css`
+- Clojure: `sandbox.ui` → `sandbox/ui/<category>.clj` (standard namespace path rules)
 
 ## Phase 3: Update Skill Instructions
 
@@ -75,24 +76,32 @@ Modify the tsain skill to include barrel import guidance.
 Before committing components, check if files are approaching the split threshold
 (default: 1500 lines, configured in tsain.edn as `:split-threshold`).
 
+### Conventions
+
+These paths are conventions, not configurable:
+- CSS splits → `components/` subdirectory (relative to main stylesheet)
+- Namespace splits → standard Clojure path from `:ui-namespace`
+
 ### When to Split
 
 - `styles.css` exceeds threshold → split into `components/<category>.css`
-- `ui.clj` exceeds threshold → split into `ui/<category>.clj`
+- UI namespace exceeds threshold → split into sub-namespaces by category
 
 ### CSS Split Procedure
 
-1. Create `dev/resources/public/components/` directory
+1. Create `components/` directory next to main stylesheet
 2. Move related styles to `components/<category>.css`
-3. Add `@import "./components/<category>.css";` to main `styles.css`
+3. Add `@import "./components/<category>.css";` to main stylesheet
 4. Verify hot-reload still works
 
 ### Namespace Split Procedure
 
-1. Create `dev/src/clj/sandbox/ui/` directory
-2. Create `sandbox.ui.<category>` namespace
+Given `:ui-namespace 'sandbox.ui`:
+
+1. Create directory matching namespace path (e.g., `sandbox/ui/`)
+2. Create `sandbox.ui.<category>` namespace in `sandbox/ui/<category>.clj`
 3. Move `defelem` definitions to the new namespace
-4. Add `(:require [sandbox.ui.<category>])` to main `sandbox.ui`
+4. Add `(:require [sandbox.ui.<category>])` to main UI namespace
 5. Verify aliases still resolve
 ```
 
@@ -111,12 +120,14 @@ Add barrel import conventions to the CLAUDE.md section that tsain projects use.
 
 ### Split Thresholds
 
-When files exceed ~1500 lines, split them using barrel imports:
+When files exceed ~1500 lines, split them using barrel imports.
+
+**Conventions (not configurable):**
 
 | File | Split To | Import Style |
 |------|----------|--------------|
-| `styles.css` | `components/<category>.css` | `@import "./components/cards.css";` |
-| `ui.clj` | `ui/<category>.clj` | `(:require [sandbox.ui.cards])` |
+| Main stylesheet | `components/<category>.css` | `@import "./components/cards.css";` |
+| UI namespace | Sub-namespace by category | `(:require [<ui-ns>.cards])` |
 
 ### Categories
 
@@ -127,10 +138,15 @@ Organize splits by semantic category:
 - `feedback` - Toasts, alerts, loaders
 - `display` - Text, badges, avatars
 
-Configure threshold in `tsain.edn`:
+### Configuration
+
+Only the threshold is configurable in `tsain.edn`:
 ```clojure
-{:split-threshold 1500}  ;; nil to disable
+{:split-threshold 1500}  ;; nil to disable checking
 ```
+
+Paths are derived by convention - CSS always splits to `components/`,
+namespaces split according to Clojure's standard namespace-to-path rules.
 ```
 
 ## Phase 5: Testing & Validation

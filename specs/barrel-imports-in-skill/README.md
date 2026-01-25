@@ -18,9 +18,8 @@ This spec defines a "barrel import" pattern where large files are split into log
 - Define clear thresholds for when to split files (default: 1500 lines)
 - Establish consistent patterns for CSS `@import` composition
 - Establish consistent patterns for Clojure namespace composition
-- Make thresholds configurable via `tsain.edn`
 - Update the tsain skill to proactively guide splits
-- Ensure the pattern is portable across all tsain-powered projects
+- Use convention over configuration - minimal tsain.edn additions
 
 ## Non-Goals
 
@@ -34,9 +33,11 @@ This spec defines a "barrel import" pattern where large files are split into log
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
 | Default threshold | 1500 lines | Large enough for substantial work, small enough to stay navigable |
-| CSS split location | `components/` subdirectory | Groups related styles, mirrors component structure |
+| CSS split location | `components/` (convention) | Always use `components/` subdirectory - no config needed |
+| NS split location | Derived from `:ui-namespace` | `sandbox.ui` → `sandbox/ui/` per Clojure's namespace rules |
 | NS split pattern | By category (cards, controls, etc.) | More stable than per-component splits |
 | Re-export strategy | Require only (Clojure) | Alias registration is the goal, not re-exporting vars |
+| Configuration | Convention over config | Only `:split-threshold` is configurable; paths are derived |
 
 ## Implementation Status
 

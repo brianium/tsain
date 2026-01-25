@@ -20,7 +20,7 @@ The "barrel import" pattern addresses this by splitting large files into logical
 2. The skill must recognize when files approach the threshold
 3. The skill must suggest appropriate split strategies for CSS and Clojure
 4. The skill must guide the split execution with consistent naming/structure
-5. Configuration must be readable from `tsain.edn`
+5. Threshold configurable via `tsain.edn`; paths are convention-based (not configurable)
 
 ### Non-Functional Requirements
 
@@ -144,10 +144,25 @@ For the rare case where a component is truly complex (200+ lines of styles, mult
 
 Projects add categories as needed. Start with what you have, split when a category grows.
 
+## Convention Over Configuration
+
+Since Claude is the only consumer of this guidance, we favor convention over configuration:
+
+| Aspect | Convention | Rationale |
+|--------|------------|-----------|
+| CSS split directory | Always `components/` | Universal, no thought required |
+| Namespace split path | Derived from `:ui-namespace` | Follows Clojure's namespace→path rules |
+| Category naming | Semantic (cards, controls, etc.) | Discoverable without docs |
+
+**Only configurable:** `:split-threshold` (default 1500, nil to disable)
+
+This eliminates two config keys (`:css-split-dir`, `:ns-split-dir`) that would add cognitive overhead without meaningful flexibility.
+
 ## Open Questions
 
 - [x] What's the right default threshold? → 1500 lines
 - [x] Should we track line counts automatically? → No, Claude checks on commit
+- [x] Should split directories be configurable? → No, use conventions
 - [ ] How do we handle CSS custom properties (variables)? → Keep in main `styles.css` or dedicated `variables.css`
 - [ ] Should the skill auto-detect current file sizes? → Nice to have, not required
 
