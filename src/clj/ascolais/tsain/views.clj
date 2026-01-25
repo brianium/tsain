@@ -18,9 +18,61 @@
     (views/sandbox-page :components)
     (views/sandbox-page [:component :my-card])"
   (:require [ascolais.twk :as twk]
+            [clojure.pprint :as pprint]
             [clojure.string :as str]
             [dev.onionpancakes.chassis.core :as c]
+            [html.yeah :as hy]
+            [malli.core :as m]
             [ascolais.tsain.icons :as icons]))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Props Extraction from Malli
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- format-type
+  "Format a malli schema type for display."
+  [schema]
+  (try
+    (case (m/type schema)
+      :string "string"
+      :int "int"
+      :keyword "keyword"
+      :boolean "boolean"
+      :any "any"
+      :enum (str/join " | " (map pr-str (m/children schema)))
+      :map "map"
+      :vector "vector"
+      :sequential "seq"
+      :set "set"
+      :tuple "tuple"
+      ;; Default: show simplified form
+      (let [form (m/form schema)]
+        (if (keyword? form)
+          (name form)
+          "complex")))
+    (catch Exception _
+      "unknown")))
+
+(defn- extract-props
+  "Extract prop information from a malli schema.
+  Returns a seq of {:name :type :required} maps."
+  [schema]
+  (when (and schema (vector? schema) (= :map (first schema)))
+    (for [entry (rest schema)
+          :when (vector? entry)
+          :let [[key props-or-schema & rest] entry
+                ;; Handle both [:key schema] and [:key {:optional true} schema]
+                [props child-schema] (if (map? props-or-schema)
+                                       [props-or-schema (first rest)]
+                                       [{} props-or-schema])]]
+      {:name (name key)
+       :type (format-type child-schema)
+       :required (not (:optional props))})))
+
+(defn- format-hiccup
+  "Format hiccup for display with pretty-printing."
+  [hiccup]
+  (with-out-str (pprint/pprint hiccup)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation
@@ -204,19 +256,83 @@
 ;; Component Detail (Sidebar Layout)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn- preview-tab
+  "Render the preview tab content."
+  [hiccup]
+  [:div.tab-content.tab-preview
+   {:data-show "$activeTab === 'preview'"}
+   [:div.component-render {:data-style:background-color "$bgColor"}
+    (if hiccup
+      hiccup
+      [:p.empty-state "Component not found"])]])
+
+(defn- code-tab
+  "Render the code tab content with formatted hiccup."
+  [component-name hiccup example-idx]
+  [:div.tab-content.tab-code
+   {:data-show "$activeTab === 'code'"}
+   [:div.code-toolbar
+    [:button.copy-btn
+     {:data-on:click (str "fetch('/sandbox/copy/" (name component-name) "?idx=" example-idx "')"
+                          ".then(r => r.text())"
+                          ".then(t => {"
+                          "  navigator.clipboard.writeText(t);"
+                          "  const btn = evt.target.closest('button');"
+                          "  btn.querySelector('.copy-label').textContent = 'Copied!';"
+                          "  setTimeout(() => btn.querySelector('.copy-label').textContent = 'Copy', 1500);"
+                          "})")}
+     (icons/icon :copy {:class "btn-icon"}) [:span.copy-label "Copy"]]
+    [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
+     (icons/icon :trash-2 {:class "btn-icon"}) "Delete"]]
+   [:pre.code-block
+    [:code (format-hiccup hiccup)]]])
+
+(defn- props-tab
+  "Render the props tab content with attribute documentation."
+  [component-name]
+  (let [hy-data (hy/element component-name)
+        props (when hy-data (extract-props (:attributes hy-data)))
+        doc (:doc hy-data)]
+    [:div.tab-content.tab-props
+     {:data-show "$activeTab === 'props'"}
+     (when doc
+       [:p.props-doc doc])
+     (if (seq props)
+       [:table.props-table
+        [:thead
+         [:tr
+          [:th "Name"]
+          [:th "Type"]
+          [:th "Required"]]]
+        [:tbody
+         (for [{:keys [name type required]} props]
+           [:tr
+            [:td.prop-name name]
+            [:td.prop-type type]
+            [:td.prop-required
+             (if required
+               [:span.badge-required "required"]
+               [:span.badge-optional "optional"])]])]]
+       [:p.empty-state "No props defined"])]))
+
 (defn- component-detail
-  "Render component detail panel (used in sidebar layout)."
+  "Render component detail panel with tabs (used in sidebar layout)."
   [{:keys [library view]}]
   (let [component-name (:name view)
         component-data (get library component-name)
-        {:keys [description examples]} component-data
+        {:keys [examples]} component-data
         example-idx (or (:example-idx view) 0)
         selected-example (when examples (nth examples example-idx (first examples)))
         hiccup (if examples
                  (:hiccup selected-example)
                  (get-component-hiccup component-data))
-        {:keys [prev next]} (component-neighbors library component-name)]
+        {:keys [prev next]} (component-neighbors library component-name)
+        hy-data (hy/element component-name)
+        doc (:doc hy-data)]
     [:div.component-detail
+     {:data-signals "{activeTab: 'preview'}"}
+
+     ;; Header with navigation and title
      [:div.component-nav
       (if prev
         [:button.nav-prev
@@ -236,25 +352,30 @@
          {:data-on:click (str "@post('/sandbox/view/component/" (name next) "')")}
          (name next) (icons/icon :chevron-right {:class "btn-icon"})]
         [:span.nav-placeholder])]
-     (when (seq description)
-       [:p.component-desc description])
-     [:div.component-render {:data-style:background-color "$bgColor"}
-      (if hiccup
-        hiccup
-        [:p.empty-state "Component not found"])]
-     [:div.component-actions
-      [:button.copy-btn
-       {:data-on:click (str "fetch('/sandbox/copy/" (name component-name) "?idx=" example-idx "')"
-                            ".then(r => r.text())"
-                            ".then(t => {"
-                            "  navigator.clipboard.writeText(t);"
-                            "  const btn = evt.target.closest('button');"
-                            "  btn.querySelector('.copy-label').textContent = 'Copied!';"
-                            "  setTimeout(() => btn.querySelector('.copy-label').textContent = 'Copy', 1500);"
-                            "})")}
-       (icons/icon :copy {:class "btn-icon"}) [:span.copy-label "Copy"]]
-      [:button {:data-on:click (str "@post('/sandbox/uncommit/" (name component-name) "')")}
-       (icons/icon :trash-2 {:class "btn-icon"}) "Delete"]]]))
+
+     ;; Description below header
+     (when (seq doc)
+       [:p.component-desc doc])
+
+     ;; Tab bar
+     [:div.tab-bar
+      [:button.tab-btn
+       {:data-class:active "$activeTab === 'preview'"
+        :data-on:click "$activeTab = 'preview'"}
+       (icons/icon :eye {:class "tab-icon"}) "Preview"]
+      [:button.tab-btn
+       {:data-class:active "$activeTab === 'code'"
+        :data-on:click "$activeTab = 'code'"}
+       (icons/icon :code {:class "tab-icon"}) "Code"]
+      [:button.tab-btn
+       {:data-class:active "$activeTab === 'props'"
+        :data-on:click "$activeTab = 'props'"}
+       (icons/icon :list {:class "tab-icon"}) "Props"]]
+
+     ;; Tab content (all rendered, visibility controlled by data-show)
+     (preview-tab hiccup)
+     (code-tab component-name hiccup example-idx)
+     (props-tab component-name)]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Components View (Sidebar Layout)
