@@ -1,10 +1,6 @@
 # Specifications
 
-*Auto-generated on 2026-01-24 21:01*
-
-## Planned
-
-- [Better Component Storage](better-component-storage/README.md)
+*Auto-generated on 2026-01-24 21:41*
 
 ## Completed
 
@@ -23,3 +19,4 @@
 - [Portable Library](012-portable-library/README.md)
 - [Schema Cleanup](013-schema-cleanup/README.md)
 - [Ascolais Project Template](014-ascolais-template/README.md)
+- [Better Component Storage](better-component-storage/README.md)

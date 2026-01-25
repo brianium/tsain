@@ -1,6 +1,6 @@
 ---
 title: "Better Component Storage"
-status: in-progress
+status: completed
 date: 2026-01-24
 priority: 50
 ---
@@ -42,9 +42,9 @@ Replace the flat `components.edn` file with SQLite-backed storage using manse, a
 
 See `implementation-plan.md` for detailed task breakdown.
 
-- [ ] Phase 1: html.yeah integration
-- [ ] Phase 2: Database foundation
-- [ ] Phase 3: Core effects migration
-- [ ] Phase 4: Discovery API
-- [ ] Phase 5: Migration tooling
-- [ ] Phase 6: Documentation & polish
+- [x] Phase 1: html.yeah integration
+- [x] Phase 2: Database foundation
+- [x] Phase 3: Core effects migration
+- [x] Phase 4: Discovery API
+- [x] Phase 5: Migration tooling
+- [x] Phase 6: Documentation & polish
