@@ -13,8 +13,8 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 
 ## Phase 1: html.yeah Integration
 
-- [ ] Add html.yeah to deps.edn
-- [ ] Convert `dev/src/clj/sandbox/ui.clj` from `c/resolve-alias` to `defelem`:
+- [x] Add html.yeah to deps.edn
+- [x] Convert `dev/src/clj/sandbox/ui.clj` from `c/resolve-alias` to `defelem`:
   - `::game-card` → `(defelem game-card ...)`
   - `::player-hud` → `(defelem player-hud ...)`
   - `::toast` → `(defelem toast ...)`
@@ -26,9 +26,9 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   - `::player-portrait` → `(defelem player-portrait ...)`
   - Add malli schemas for attributes on each
   - Add `:doc` metadata to each element
-- [ ] Verify `hy/element` returns expected metadata for converted elements
+- [x] Verify `hy/element` returns expected metadata for converted elements
 - [ ] Test runtime validation with malli.dev instrumentation
-- [ ] Update CLAUDE.md with `defelem` patterns
+- [x] Update CLAUDE.md with `defelem` patterns
 
 ## Phase 2: Database Foundation
 
