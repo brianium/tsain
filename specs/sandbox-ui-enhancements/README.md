@@ -1,6 +1,6 @@
 ---
 title: "Sandbox UI Enhancements"
-status: planned
+status: in-progress
 date: 2026-01-25
 priority: 50
 ---

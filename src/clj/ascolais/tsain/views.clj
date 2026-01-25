@@ -18,6 +18,7 @@
     (views/sandbox-page :components)
     (views/sandbox-page [:component :my-card])"
   (:require [ascolais.twk :as twk]
+            [clojure.string :as str]
             [dev.onionpancakes.chassis.core :as c]
             [ascolais.tsain.icons :as icons]))
 
@@ -60,6 +61,29 @@
      (when (= view-type :preview)
        [:button {:data-on:click "@post('/sandbox/clear')"}
         (icons/icon :x {:class "btn-icon"}) "Clear"])]))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Category Grouping
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- grouped-components
+  "Group components by category.
+  Returns a sorted map of {category -> [[component-name component-data] ...]}
+  Uncategorized components are placed in 'Other'."
+  [library]
+  (let [groups (group-by (fn [[_ data]]
+                           (or (:category data) "Other"))
+                         library)
+        ;; Sort categories alphabetically, but put "Other" last
+        category-set (set (keys groups))
+        sorted-keys (-> (disj category-set "Other")
+                        sort
+                        vec
+                        (cond-> (contains? category-set "Other") (conj "Other")))]
+    (into (array-map)
+          (map (fn [cat]
+                 [cat (sort-by (comp name first) (get groups cat))]))
+          sorted-keys)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Preview View
@@ -236,14 +260,55 @@
 ;; Components View (Sidebar Layout)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn- category-slug
+  "Convert category name to a valid JavaScript identifier."
+  [category]
+  (-> category
+      str/lower-case
+      (str/replace #"[^a-z0-9]+" "_")))
+
+(defn- sidebar-category
+  "Render a collapsible category section in the sidebar."
+  [category components current-name]
+  (let [slug (category-slug category)]
+    [:div.sidebar-category
+     {:data-show (str "$searchQuery === '' || "
+                      (str/join " || "
+                                (map (fn [[comp-name _]]
+                                       (str "'" (name comp-name) "'.toLowerCase().includes($searchQuery.toLowerCase())"))
+                                     components)))}
+     [:button.category-header
+      {:data-on:click (str "$sidebarState." slug " = !$sidebarState." slug)}
+      (icons/icon :chevron-down {:class "category-chevron"
+                                 :data-class:rotated (str "!$sidebarState." slug)})
+      [:span.category-name category]
+      [:span.category-count (count components)]]
+     [:div.category-items
+      {:data-show (str "$sidebarState." slug)}
+      (for [[component-name _] components]
+        [:a.sidebar-item
+         {:class (when (= component-name current-name) "active")
+          :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")
+          :data-show (str "$searchQuery === '' || '" (name component-name) "'.toLowerCase().includes($searchQuery.toLowerCase())")}
+         (name component-name)])]]))
+
+(defn- build-initial-sidebar-state
+  "Build initial sidebar state with all categories expanded."
+  [grouped]
+  (let [slugs (map (comp category-slug first) grouped)]
+    (str "{"
+         (str/join ", " (map #(str % ": true") slugs))
+         "}")))
+
 (defn components-view
   "Render sidebar + component view layout."
   [{:keys [library view sidebar-collapsed?]}]
   (let [current-name (:name view)
-        sorted-components (sort-by key library)]
+        grouped (grouped-components library)
+        initial-state (build-initial-sidebar-state grouped)]
     [:div.components-layout
      {:class (when sidebar-collapsed? "sidebar-collapsed")
-      :data-signals "{searchQuery: ''}"}
+      :data-signals (str "{searchQuery: '', sidebarState: " initial-state "}")}
 
      ;; Sidebar
      [:aside.sidebar
@@ -264,12 +329,8 @@
                 :autocomplete "off"}]]
 
       [:nav.sidebar-list
-       (for [[component-name _] sorted-components]
-         [:a.sidebar-item
-          {:class (when (= component-name current-name) "active")
-           :data-on:click (str "@post('/sandbox/view/component/" (name component-name) "')")
-           :data-show (str "$searchQuery === '' || '" (name component-name) "'.toLowerCase().includes($searchQuery.toLowerCase())")}
-          (name component-name)])]]
+       (for [[category components] grouped]
+         (sidebar-category category components current-name))]]
 
      ;; Main content
      [:main.component-main

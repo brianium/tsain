@@ -733,6 +733,73 @@ body {
 }
 
 /* ============================================
+   SIDEBAR CATEGORIES
+   ============================================ */
+
+.sidebar-category {
+  margin-bottom: var(--space-1);
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.category-header:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.category-chevron {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--transition);
+  flex-shrink: 0;
+}
+
+.category-chevron.rotated {
+  transform: rotate(-90deg);
+}
+
+.category-name {
+  flex: 1;
+  text-align: left;
+}
+
+.category-count {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  padding: 2px 6px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+
+.category-items {
+  margin-left: var(--space-4);
+  border-left: 1px solid var(--border-subtle);
+  padding-left: var(--space-2);
+}
+
+.category-items .sidebar-item {
+  font-size: 0.8125rem;
+}
+
+/* ============================================
    MAIN CONTENT AREA
    ============================================ */
 
