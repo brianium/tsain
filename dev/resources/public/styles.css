@@ -2,6 +2,9 @@
    Component Library Styles
    ========================================================================== */
 
+/* Barrel imports */
+@import "./components/cards.css";
+
 /* --------------------------------------------------------------------------
    CSS Custom Properties (Theme Variables)
    -------------------------------------------------------------------------- */
@@ -535,23 +538,7 @@
   color: var(--text-primary);
 }
 
-.game-card-stat--attack {
-  background: linear-gradient(135deg, var(--accent-red-bright) 0%, #aa0000 100%);
-}
-
-.theme-light .game-card-stat--attack {
-  background: linear-gradient(135deg, #ff4444, #cc0000);
-  box-shadow: 0 2px 8px rgba(200, 0, 0, 0.3);
-}
-
-.game-card-stat--defense {
-  background: linear-gradient(135deg, var(--accent-blue) 0%, #0044aa 100%);
-}
-
-.theme-light .game-card-stat--defense {
-  background: linear-gradient(135deg, #0099ff, #0066cc);
-  box-shadow: 0 2px 8px rgba(0, 100, 200, 0.3);
-}
+/* game-card-stat--attack and game-card-stat--defense moved to components/cards.css */
 
 /* --------------------------------------------------------------------------
    Combat Log
