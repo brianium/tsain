@@ -408,6 +408,48 @@
        [:span.player-portrait-class class]]]]))
 
 ;; =============================================================================
+;; Accordion Component
+;; =============================================================================
+
+(hy/defelem accordion-item
+  [:map {:doc "Single collapsible accordion item with header and content"
+         :as attrs}
+   [:accordion-item/title :string]
+   [:accordion-item/icon {:optional true} [:maybe :string]]
+   [:accordion-item/index :int]
+   [:accordion-item/default-open {:optional true} [:maybe :boolean]]]
+  (let [{:accordion-item/keys [title icon index default-open]} attrs
+        signal-name (str "accordionOpen" index)]
+    [:div.accordion-item attrs
+     [:button.accordion-item-header
+      {:data-signals (str "{" signal-name ": " (if default-open "true" "false") "}")
+       :data-on:click (str "$" signal-name " = !$" signal-name)}
+      [:div.accordion-item-icon-wrapper
+       (when icon [:span.accordion-item-icon icon])]
+      [:span.accordion-item-title title]
+      [:span.accordion-item-chevron
+       {:data-class (str "{\"accordion-item-chevron--open\": $" signal-name "}")}
+       "▶"]]
+     [:div.accordion-item-content
+      {:data-class (str "{\"accordion-item-content--open\": $" signal-name "}")}
+      [:div.accordion-item-content-inner
+       (hy/children)]]]))
+
+(hy/defelem accordion
+  [:map {:doc "Cyberpunk-styled accordion container for collapsible sections"
+         :as attrs}
+   [:accordion/variant {:optional true} [:maybe [:enum :cyan :magenta :pink]]]]
+  (let [{:accordion/keys [variant]} attrs
+        variant-class (when variant (str "accordion--" (name variant)))]
+    [:div.accordion {:class variant-class}
+     [:div.accordion-corner.accordion-corner--tl-h]
+     [:div.accordion-corner.accordion-corner--tl-v]
+     [:div.accordion-corner.accordion-corner--br-h]
+     [:div.accordion-corner.accordion-corner--br-v]
+     [:div.scanline-overlay]
+     (hy/children)]))
+
+;; =============================================================================
 ;; Event Modal Component
 ;; =============================================================================
 
