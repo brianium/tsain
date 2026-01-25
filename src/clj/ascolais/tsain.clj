@@ -24,6 +24,7 @@
   (:require [ascolais.sandestin :as s]
             [ascolais.sfere :as sfere]
             [ascolais.tsain.db :as db]
+            [ascolais.tsain.discovery :as discovery]
             [ascolais.tsain.views :as views]
             [ascolais.twk :as twk]
             [ascolais.twk.schema :as twk.schema]
@@ -518,3 +519,57 @@ Examples:
                                            :name target-name
                                            :example-idx example-idx})
             (broadcast-view! dispatch state-atom)))}}})))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Discovery API
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn describe
+  "Get component metadata, merging html.yeah and SQLite data.
+
+  With 1 arg (registry): returns seq of all components with basic info
+  With 2 args (registry, tag): returns full details for one component
+
+  Returns:
+    {:tag :sandbox.ui/game-card
+     :doc \"Cyberpunk-styled game card...\"
+     :attributes [:map [:game-card/title :string] ...]
+     :children [:* :any]
+     :category \"cards\"
+     :examples [{:label \"Default\" :hiccup [...]}]}"
+  ([registry]
+   (discovery/describe registry))
+  ([registry tag]
+   (discovery/describe registry tag)))
+
+(defn grep
+  "Search components by keyword in docs, tags, and categories.
+
+  Searches:
+  - html.yeah :doc strings
+  - Component tags (substring match)
+  - SQLite categories via FTS5
+
+  Returns seq of component summaries."
+  [registry query]
+  (discovery/grep registry query))
+
+(defn props
+  "Find components that have a specific attribute/prop.
+
+  Example:
+    (props registry :variant)  ;; Find components with :*/variant props
+
+  Returns seq of component summaries."
+  [registry prop-name]
+  (discovery/props registry prop-name))
+
+(defn categories
+  "List all unique categories from the component library."
+  [registry]
+  (discovery/categories registry))
+
+(defn by-category
+  "Get components filtered by category."
+  [registry category]
+  (discovery/by-category registry category))

@@ -60,19 +60,19 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 
 ## Phase 4: Discovery API
 
-- [ ] Create `ascolais.tsain.discovery` namespace
-- [ ] Implement `describe` function:
+- [x] Create `ascolais.tsain.discovery` namespace
+- [x] Implement `describe` function:
   - 1-arity: list all components, merge html.yeah metadata with SQLite data
   - 2-arity: full details for specific component
   - Returns: `{:tag :doc :attributes :children :category :examples}`
-- [ ] Implement `grep` function:
+- [x] Implement `grep` function:
   - Search html.yeah docs via `hy/search-elements`
   - Search SQLite categories via FTS5
   - Merge and dedupe results
-- [ ] Implement `props` function:
+- [x] Implement `props` function:
   - Query html.yeah for components with matching attribute names
   - Use malli schema introspection
-- [ ] Export discovery functions from main `ascolais.tsain` namespace
+- [x] Export discovery functions from main `ascolais.tsain` namespace
 
 ## Phase 5: Migration Tooling
 
