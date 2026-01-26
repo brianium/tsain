@@ -149,13 +149,18 @@ For components with schema validation, use `html.yeah/defelem`:
 (require '[html.yeah :as hy])
 
 (hy/defelem my-card
-  [:map {:doc "Card with title and body"
-         :keys [my-card/title my-card/body]}
-   [:my-card/title :string]
-   [:my-card/body :string]]
-  [:div.my-card attrs
-   [:h2.my-card-title my-card/title]
-   [:p.my-card-body my-card/body]])
+  [:map {:doc "Content card with title and body text.
+               Use for displaying discrete content blocks in grids or lists.
+               Supports optional variant for visual emphasis."
+         :my-card/keys [title body variant]}
+   [:my-card/title [:string {:min 1}]]
+   [:my-card/body :string]
+   [:my-card/variant {:optional true} [:enum :default :elevated :outlined]]]
+  (let [variant-class (when my-card/variant
+                        (str "my-card--" (name my-card/variant)))]
+    [:div.my-card {:class variant-class}
+     [:h2.my-card-title my-card/title]
+     [:p.my-card-body my-card/body]]))
 ```
 
 After adding the alias, reload the namespace:
@@ -297,6 +302,88 @@ All sandbox functionality is available via dispatch effects. Use `(s/describe (d
 
 ---
 
+## Component Schema Quality
+
+Write robust schemas and documentation for every component. These power the discovery API and enable runtime validation.
+
+### Documentation Standards
+
+Write `:doc` strings that explain:
+
+- **What** the component renders (structure, visual appearance)
+- **When** to use it vs alternatives
+- **Behavior** notes (interactions, edge cases, responsive behavior)
+
+```clojure
+;; GOOD: Comprehensive documentation
+[:map {:doc "Dismissible alert banner for user feedback.
+             Renders a colored banner with icon, title, and optional message.
+             Use for transient feedback after user actions (form submit, delete, etc.).
+             For persistent system status, use StatusBanner instead.
+             Supports Datastar signals for dismiss animation."
+       :alert/keys [variant title message dismissible]}
+ ...]
+
+;; BAD: Minimal documentation
+[:map {:doc "An alert"
+       :alert/keys [variant title]}
+ ...]
+```
+
+### Prop Schema Standards
+
+Use specific malli types - never use `:string` when a more precise type applies:
+
+| Use Case | Schema | Not |
+|----------|--------|-----|
+| Variants/modes | `[:enum :small :medium :large]` | `:string` |
+| Counts/indices | `[:int {:min 0}]` | `:int` or `:string` |
+| Boolean flags | `:boolean` | `:string` |
+| Optional props | `{:optional true}` | Omitting from schema |
+| Constrained strings | `[:string {:min 1 :max 100}]` | `:string` |
+| URLs | `[:string {:re #"^https?://.*"}]` | `:string` |
+
+### Complete Example
+
+```clojure
+(hy/defelem alert
+  [:map {:doc "Dismissible alert banner for user feedback.
+               Renders a colored banner with optional icon, title, and message body.
+               Use for transient feedback after user actions.
+               Pass :dismissible true to show close button with Datastar dismiss behavior."
+         :alert/keys [variant title message icon dismissible]}
+   [:alert/variant [:enum :info :success :warning :error]]
+   [:alert/title :string]
+   [:alert/message {:optional true} :string]
+   [:alert/icon {:optional true} :string]
+   [:alert/dismissible {:optional true} :boolean]]
+  (let [variant-class (str "alert--" (name alert/variant))]
+    [:div.alert {:class variant-class
+                 :role "alert"}
+     (when alert/icon
+       [:span.alert-icon alert/icon])
+     [:div.alert-content
+      [:strong.alert-title alert/title]
+      (when alert/message
+        [:p.alert-message alert/message])]
+     (when alert/dismissible
+       [:button.alert-dismiss {:data-on:click "$dismissed = true"
+                               :aria-label "Dismiss"}
+        "×"])]))
+```
+
+### Schema Checklist
+
+Before committing a component, verify:
+
+- [ ] `:doc` explains what, when, and behavior
+- [ ] All props use appropriate malli types (not just `:string`)
+- [ ] Optional props marked with `{:optional true}`
+- [ ] Enum variants cover all valid values
+- [ ] Numeric props have sensible constraints (`:min`, `:max`)
+
+---
+
 ## Dynamic Components with Datastar
 
 For interactive components, Datastar attrs pass through to HTML:
@@ -428,11 +515,20 @@ Given `:ui-namespace sandbox.ui` in `tsain.edn`:
                [html.yeah :as hy]))
 
    (hy/defelem game-card
-     [:map {:doc "Game card component"
-            :keys [game-card/title]}
-      [:game-card/title :string]]
+     [:map {:doc "Card displaying game information with title, stats, and optional image.
+                  Use in game library grids or search results.
+                  Supports selection state via Datastar signals."
+            :game-card/keys [title subtitle image-url stats]}
+      [:game-card/title [:string {:min 1}]]
+      [:game-card/subtitle {:optional true} :string]
+      [:game-card/image-url {:optional true} :string]
+      [:game-card/stats {:optional true} [:map-of :keyword [:or :string :int]]]]
      [:div.game-card attrs
-      [:h2.game-card-title game-card/title]])
+      (when game-card/image-url
+        [:img.game-card-image {:src game-card/image-url :alt game-card/title}])
+      [:h2.game-card-title game-card/title]
+      (when game-card/subtitle
+        [:p.game-card-subtitle game-card/subtitle])])
    ```
 
 3. Move `defelem` definitions from main namespace to category namespace
