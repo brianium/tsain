@@ -6,10 +6,12 @@
   2. Create dispatch with tsain + twk + sfere registries
   3. Generate routes from tsain.routes
   4. Wire up middleware and server"
-  (:require [ascolais.sandestin :as s]
+  (:require [ascolais.phandaal :as phandaal]
+            [ascolais.sandestin :as s]
             [ascolais.twk :as twk]
             [ascolais.sfere :as sfere]
             [ascolais.tsain :as tsain]
+            [ascolais.tsain.css :as css]
             [ascolais.tsain.routes :as tsain.routes]
             [clojure.string :as str]
             [ring.middleware.resource :refer [wrap-resource]]
@@ -27,10 +29,20 @@
                 :duration-ms 1800000  ;; 30 minutes for dev
                 :expiry-mode :sliding}))
 
+(defn- create-phandaal-registry []
+  (let [project-root (css/infer-project-root)
+        css-formatter (css/detect-css-formatter)]
+    (phandaal/registry
+     {:project-root project-root
+      :source-paths ["src/clj" "dev/src/clj"]
+      :formatters {".css" css-formatter}
+      :default-threshold 1500})))
+
 (defn- create-dispatch [store tsain-registry]
   (s/create-dispatch
    [(twk/registry)
     (sfere/registry store)
+    (create-phandaal-registry)
     tsain-registry]))
 
 (defn- wrap-no-cache-css

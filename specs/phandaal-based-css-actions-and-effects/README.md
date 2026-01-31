@@ -1,6 +1,6 @@
 ---
 title: "Phandaal Based CSS Actions And Effects"
-status: planned
+status: in-progress
 date: 2026-01-31
 priority: 50
 ---
@@ -46,8 +46,10 @@ Summarize important decisions made during research. See [research.md](research.m
 
 See [implementation-plan.md](implementation-plan.md) for detailed task breakdown.
 
-- [ ] Phase 1: Add phandaal dependency and registry composition
-- [ ] Phase 2: CSS write actions (`::tsain/write-css`, `::tsain/write-css-file`)
-- [ ] Phase 3: Hints interceptor for threshold detection
-- [ ] Phase 4: Split action (`::tsain/split-css`)
-- [ ] Phase 5: Update SKILL.md with new workflow
+- [x] Phase 1: Add phandaal dependency and registry composition
+- [x] Phase 2: CSS write actions (`::tsain/write-css`, `::tsain/write-css-to`)
+- [x] Phase 3: Hints interceptor for threshold detection
+- [x] Phase 4: CSS parser integration (jStyleParser)
+- [x] Phase 5: Replace CSS effect (`::tsain/replace-css`)
+- [x] Phase 6: Split effect (`::tsain/split-css`)
+- [ ] Phase 9: Update SKILL.md with new workflow
