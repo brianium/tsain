@@ -9,7 +9,7 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 - [x] Phandaal v0.1.0+ available (already in deps.edn)
 - [x] Sandestin v0.6.0+ (for interceptor composition)
 - [ ] Existing tsain registry functional
-- [ ] Add jStyleParser dependency for CSS parsing:
+- [x] Add jStyleParser dependency for CSS parsing:
   ```clojure
   net.sf.cssbox/jstyleparser {:mvn/version "4.0.0"}
   ```

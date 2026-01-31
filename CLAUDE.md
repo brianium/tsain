@@ -963,6 +963,21 @@ This ensures dependencies are immediately available without restarting the REPL.
 - Prefer pure functions where possible
 - Use `tap>` for debugging output (appears in Portal)
 
+### Namespace Aliases Over Fully Qualified Names
+
+Always require namespaces with aliases. Never use fully qualified function calls inline.
+
+```clojure
+;; WRONG - fully qualified
+(clojure.string/join ", " items)
+
+;; RIGHT - require with alias
+(ns ascolais.tsain
+  (:require [clojure.string :as str]))
+
+(str/join ", " items)
+```
+
 ### Namespaced Keywords
 
 Clojure has two syntaxes for namespaced keywords:
