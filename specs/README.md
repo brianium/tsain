@@ -1,6 +1,10 @@
 # Specifications
 
-*Auto-generated on 2026-01-31 10:40*
+*Auto-generated on 2026-01-31 10:59*
+
+## Planned
+
+- [Sandbox Theme System](sandbox-theme-system/README.md)
 
 ## Completed
 
