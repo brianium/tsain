@@ -359,3 +359,75 @@
     (let [reg (tsain/registry {:components-file test-components-file})
           result (tsain/by-category reg "cards")]
       (is (seqable? result)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; CSS Utility Tests
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require '[ascolais.tsain.css :as css])
+
+(deftest find-rule-end-line-test
+  (testing "simple single-line rule"
+    (is (= 1 (css/find-rule-end-line ".foo { color: red; }" 1))))
+
+  (testing "multi-line rule"
+    (let [css ".card {\n  color: red;\n  background: blue;\n}"]
+      (is (= 4 (css/find-rule-end-line css 1)))))
+
+  (testing "rule with braces in string content"
+    (let [css ".icon::before {\n  content: \"}\";\n  color: red;\n}"]
+      (is (= 4 (css/find-rule-end-line css 1)))))
+
+  (testing "rule with comment containing braces"
+    (let [css ".card {\n  /* } fake brace */\n  color: red;\n}"]
+      (is (= 4 (css/find-rule-end-line css 1)))))
+
+  (testing "rule at end of file without trailing newline"
+    (let [css ".header { color: red; }\n.footer { color: blue; }"]
+      (is (= 2 (css/find-rule-end-line css 2)))))
+
+  (testing "multiple rules - finds correct end"
+    (let [css ".first {\n  color: red;\n}\n\n.second {\n  color: blue;\n}"]
+      (is (= 3 (css/find-rule-end-line css 1)))
+      (is (= 7 (css/find-rule-end-line css 5))))))
+
+(deftest remove-rules-test
+  (testing "removes single rule"
+    (let [css ".keep { color: red; }\n\n.remove {\n  color: blue;\n}\n\n.also-keep { color: green; }"
+          parsed (css/parse-stylesheet css)
+          rules-to-remove (css/find-rules-by-pattern parsed ".remove")
+          [remaining _removed] (css/remove-rules css rules-to-remove)]
+      (is (clojure.string/includes? remaining ".keep { color: red; }"))
+      (is (clojure.string/includes? remaining ".also-keep { color: green; }"))
+      (is (not (clojure.string/includes? remaining ".remove")))))
+
+  (testing "removes multiple non-adjacent rules"
+    (let [css ".card {\n  color: red;\n}\n\n.button {\n  color: blue;\n}\n\n.card-header {\n  color: green;\n}"
+          parsed (css/parse-stylesheet css)
+          rules-to-remove (css/find-rules-by-pattern parsed ".card")
+          [remaining _removed] (css/remove-rules css rules-to-remove)]
+      (is (clojure.string/includes? remaining ".button"))
+      (is (not (clojure.string/includes? remaining ".card")))
+      (is (not (clojure.string/includes? remaining ".card-header")))))
+
+  (testing "removes adjacent rules"
+    (let [css ".card {\n  color: red;\n}\n.card-body {\n  color: blue;\n}\n\n.other { color: green; }"
+          parsed (css/parse-stylesheet css)
+          rules-to-remove (css/find-rules-by-pattern parsed ".card")
+          [remaining _removed] (css/remove-rules css rules-to-remove)]
+      (is (clojure.string/includes? remaining ".other"))
+      (is (not (clojure.string/includes? remaining ".card")))
+      (is (not (clojure.string/includes? remaining ".card-body")))))
+
+  (testing "handles empty rules-to-remove"
+    (let [css ".keep { color: red; }"
+          [remaining _removed] (css/remove-rules css [])]
+      (is (= ".keep { color: red; }\n" remaining))))
+
+  (testing "returns removed css"
+    (let [css ".keep { color: red; }\n\n.remove {\n  color: blue;\n}"
+          parsed (css/parse-stylesheet css)
+          rules-to-remove (css/find-rules-by-pattern parsed ".remove")
+          [_remaining removed] (css/remove-rules css rules-to-remove)]
+      (is (clojure.string/includes? removed ".remove"))
+      (is (clojure.string/includes? removed "color: blue")))))

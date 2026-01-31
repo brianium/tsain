@@ -128,21 +128,133 @@
        (filter #(rule-matches-pattern? % pattern))
        vec))
 
+(defn find-rule-end-line
+  "Find the line number where a CSS rule ends (closing brace).
+   start-line is 1-indexed. Returns 1-indexed end line.
+
+   Scans from start-line counting braces until balanced.
+   Handles:
+   - Multi-line rules
+   - Braces inside strings (content: \"}\")
+   - Braces in comments"
+  [css-string start-line]
+  (let [lines (vec (str/split-lines css-string))
+        start-idx (dec start-line)
+        ;; Join lines from start position into single string for scanning
+        text (str/join "\n" (subvec lines start-idx))]
+    (loop [i 0
+           brace-count 0
+           in-string false
+           string-char nil
+           in-comment false
+           line-offset 0]
+      (if (>= i (count text))
+        ;; End of text - return last line
+        (count lines)
+        (let [ch (nth text i)
+              prev-ch (when (pos? i) (nth text (dec i)))
+              next-ch (when (< (inc i) (count text)) (nth text (inc i)))]
+          (cond
+            ;; Newline - track line position
+            (= ch \newline)
+            (recur (inc i) brace-count in-string string-char in-comment (inc line-offset))
+
+            ;; Comment start /*
+            (and (not in-string) (not in-comment) (= ch \/) (= next-ch \*))
+            (recur (+ i 2) brace-count in-string string-char true line-offset)
+
+            ;; Comment end */
+            (and in-comment (= ch \*) (= next-ch \/))
+            (recur (+ i 2) brace-count in-string string-char false line-offset)
+
+            ;; Inside comment - skip
+            in-comment
+            (recur (inc i) brace-count in-string string-char in-comment line-offset)
+
+            ;; String start
+            (and (not in-string) (or (= ch \") (= ch \')))
+            (recur (inc i) brace-count true ch in-comment line-offset)
+
+            ;; String end
+            (and in-string (= ch string-char) (not= prev-ch \\))
+            (recur (inc i) brace-count false nil in-comment line-offset)
+
+            ;; Inside string - skip brace counting
+            in-string
+            (recur (inc i) brace-count in-string string-char in-comment line-offset)
+
+            ;; Opening brace
+            (= ch \{)
+            (recur (inc i) (inc brace-count) in-string string-char in-comment line-offset)
+
+            ;; Closing brace
+            (= ch \})
+            (let [new-count (dec brace-count)]
+              (if (zero? new-count)
+                ;; Found closing brace - return 1-indexed line number
+                (+ start-line line-offset)
+                (recur (inc i) new-count in-string string-char in-comment line-offset)))
+
+            :else
+            (recur (inc i) brace-count in-string string-char in-comment line-offset)))))))
+
+(defn- find-selector-line
+  "Find the 1-indexed line number where a selector appears in CSS.
+   Returns nil if not found.
+
+   Searches for the selector followed by whitespace then comma or brace.
+   Works for selectors anywhere in a line (e.g., inside @media blocks)."
+  [css-string selector-text]
+  (let [lines (vec (str/split-lines css-string))
+        ;; Escape regex special chars in selector
+        escaped (str/replace selector-text #"[.*+?^${}()|\\[\\]\\\\]" "\\\\$0")
+        ;; Match selector followed by optional whitespace then comma or opening brace
+        ;; No ^ anchor - selector can appear anywhere in the line
+        pattern (re-pattern (str escaped "\\s*[,{]"))]
+    (loop [idx 0]
+      (when (< idx (count lines))
+        (if (re-find pattern (nth lines idx))
+          (inc idx)  ;; 1-indexed
+          (recur (inc idx)))))))
+
 (defn remove-rules
   "Remove rules from stylesheet content string, return [remaining-css removed-css].
-   Uses jStyleParser for reliable parsing."
+   Finds rules by their selector text and removes by line range."
   [css-string rules-to-remove]
-  (let [lines (str/split-lines css-string)
-        rule-texts (set (map str rules-to-remove))
-        ;; Simple approach: serialize rules to remove and filter from original
-        removed-css (str/join "\n\n" rule-texts)
-        remaining-css (reduce (fn [css rule-text]
-                                (str/replace css rule-text ""))
-                              css-string
-                              rule-texts)
-        ;; Clean up extra blank lines
-        remaining-css (str/replace remaining-css #"\n{3,}" "\n\n")]
-    [remaining-css removed-css]))
+  (if (empty? rules-to-remove)
+    [(-> css-string str/trim (str "\n")) ""]
+    (let [lines (vec (str/split-lines css-string))
+          ;; Build line ranges for each rule by finding selector in source
+          ranges (for [^RuleSet rule rules-to-remove
+                       :let [;; Get the first selector's text
+                             selector-text (str (first (.getSelectors rule)))
+                             start-line (find-selector-line css-string selector-text)]
+                       :when start-line
+                       :let [end-line (find-rule-end-line css-string start-line)]]
+                   {:start start-line
+                    :end end-line
+                    :selector selector-text})
+          ;; Sort descending by start line to preserve line numbers during removal
+          sorted-ranges (sort-by :start > ranges)
+          ;; Extract removed content before modifying
+          removed-sections (for [{:keys [start end]} (sort-by :start ranges)]
+                             (str/join "\n" (subvec lines (dec start) end)))
+          removed-css (str/join "\n\n" removed-sections)
+          ;; Remove ranges from lines (bottom-up to preserve indices)
+          remaining-lines (reduce (fn [ls {:keys [start end]}]
+                                    ;; Convert 1-indexed to 0-indexed
+                                    (let [start-idx (dec start)
+                                          end-idx end]
+                                      (vec (concat (subvec ls 0 start-idx)
+                                                   (subvec ls end-idx)))))
+                                  lines
+                                  sorted-ranges)
+          remaining-css (str/join "\n" remaining-lines)
+          ;; Clean up excessive blank lines (3+ consecutive blank lines -> 2)
+          remaining-css (str/replace remaining-css #"\n{3,}" "\n\n")
+          ;; Trim leading/trailing whitespace but preserve single trailing newline
+          remaining-css (-> remaining-css str/trim (str "\n"))]
+      [remaining-css removed-css])))
 
 (defn serialize
   "Convert StyleSheet back to CSS string."
