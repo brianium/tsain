@@ -259,8 +259,9 @@ Examples:
                  [:comment {:optional true} [:string {:description "CSS comment header"}]]]]
 
     ::s/handler
-    (fn [_state content opts]
-      (let [{:keys [category comment]} opts
+    (fn [_state content & [opts]]
+      (let [opts (or opts {})
+            {:keys [category comment]} opts
             content' (if comment
                        (str "\n/* " comment " */\n" content)
                        (str "\n" content))]
@@ -316,8 +317,9 @@ Examples:
                  [:path {:optional true} [:string {:description "CSS file path (defaults to main stylesheet)"}]]]]
 
     ::s/handler
-    (fn [{:keys [dispatch]} _system selector-pattern new-content opts]
-      (let [path (or (:path opts) stylesheet)
+    (fn [{:keys [dispatch]} _system selector-pattern new-content & [opts]]
+      (let [opts (or opts {})
+            path (or (:path opts) stylesheet)
             existing-css (slurp path)
             parsed (css/parse-stylesheet existing-css)
             matched-rules (css/find-rules-by-pattern parsed selector-pattern)
@@ -359,8 +361,9 @@ Examples:
                  [:patterns {:optional true} [:vector [:string {:description "Custom selector patterns"}]]]]]
 
     ::s/handler
-    (fn [{:keys [dispatch]} _system category opts]
-      (let [patterns (or (:patterns opts) (css/patterns-for-category category))
+    (fn [{:keys [dispatch]} _system category & [opts]]
+      (let [opts (or opts {})
+            patterns (or (:patterns opts) (css/patterns-for-category category))
             existing-css (slurp stylesheet)
             parsed (css/parse-stylesheet existing-css)
             ;; Find all rules matching any pattern
