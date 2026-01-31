@@ -1009,10 +1009,62 @@ Clojure has two syntaxes for namespaced keywords:
 
 When building UI components for the sandbox:
 
+### CSS Authoring via Effects (Required)
+
+**All CSS modifications must go through the tsain effect system via REPL dispatch.** Never use file editing tools (Edit, Write, Bash with sed/echo) directly on CSS files.
+
+```clojure
+;; CORRECT - use effects via dispatch
+(dispatch [[::tsain/write-css ".my-card { background: var(--bg-secondary); }"
+            {:category "cards" :comment "Card component styles"}]])
+
+;; WRONG - never edit CSS files directly
+;; (Edit tool on styles.css) ← DON'T DO THIS
+```
+
+**Why effects?** The `::tsain/write-css` action:
+- Tracks line counts automatically
+- Runs prettier formatting
+- Returns actionable hints when the stylesheet exceeds threshold
+- Enables hot-reload in the browser
+
+**Always include `:category`** to enable split suggestions:
+
+```clojure
+;; Categories: cards, controls, layout, feedback, navigation, display, overlays
+(dispatch [[::tsain/write-css ".btn-primary { ... }" {:category "controls"}]])
+```
+
+**Check results for hints.** When threshold is exceeded, the result includes a hint:
+
+```clojure
+;; Result when threshold exceeded:
+{:results [{:res {:hints [{:type :split-suggested
+                           :category "cards"
+                           :target "components/cards.css"
+                           :action {:effect ::tsain/split-css :args ["cards"]}}]}}]}
+```
+
+**Act on split hints immediately:**
+
+```clojure
+(dispatch [[::tsain/split-css "cards"]])
+;; Extracts .card* styles to components/cards.css and adds @import
+```
+
+**Replacing existing styles** (when refactoring a component):
+
+```clojure
+(dispatch [[::tsain/replace-css ".game-card"
+            ".game-card { /* new styles */ }
+             .game-card-header { /* ... */ }"]])
+;; Finds all .game-card* rules, removes them, appends new content
+```
+
 ### Development Workflow
 
 1. **Exploration phase** - Use inline styles for rapid iteration with `preview!`
-2. **Before commit** - Extract all styles to `dev/resources/public/styles.css`
+2. **Before commit** - Extract styles via `::tsain/write-css` with category
 3. **Commit** - Component hiccup should use CSS classes, not inline styles
 
 ### Naming Convention (BEM-like)
