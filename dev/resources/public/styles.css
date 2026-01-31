@@ -3161,3 +3161,89 @@
 .theme-light .accordion-item-content-inner {
 	color: var(--text-primary);
 }
+
+/* Status indicator component */
+
+.status-indicator {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 16px;
+	background: var(--bg-secondary);
+	border: 1px solid rgba(0, 240, 255, 0.2);
+	font-family: "JetBrains Mono", monospace;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+}
+
+.status-indicator-light {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: currentColor;
+	box-shadow:
+		0 0 8px currentColor,
+		0 0 16px currentColor;
+}
+
+.status-indicator--pulse .status-indicator-light {
+	animation: status-pulse 2s ease-in-out infinite;
+}
+
+.status-indicator--online {
+	color: #00ff88;
+	border-color: rgba(0, 255, 136, 0.3);
+}
+
+.status-indicator--offline {
+	color: #666;
+	border-color: rgba(102, 102, 102, 0.3);
+}
+
+.status-indicator--offline .status-indicator-light {
+	box-shadow: none;
+}
+
+.status-indicator--warning {
+	color: #ffcc00;
+	border-color: rgba(255, 204, 0, 0.3);
+}
+
+.status-indicator--error {
+	color: #ff3366;
+	border-color: rgba(255, 51, 102, 0.3);
+}
+
+.status-indicator-label {
+	color: var(--text-primary);
+}
+
+@keyframes status-pulse {
+	0%,
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.6;
+		transform: scale(0.9);
+	}
+}
+
+.theme-light .status-indicator {
+	background: rgba(255, 255, 255, 0.9);
+	border-color: rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .status-indicator--online {
+	color: #00aa55;
+}
+
+.theme-light .status-indicator--warning {
+	color: #cc9900;
+}
+
+.theme-light .status-indicator--error {
+	color: #cc2244;
+}

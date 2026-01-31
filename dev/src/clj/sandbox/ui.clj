@@ -493,3 +493,22 @@
            [:button.event-modal-btn
             {:class (when primary? "event-modal-btn--primary")}
             label])])]]))
+
+;; =============================================================================
+;; Status Indicator Component
+;; =============================================================================
+
+(hy/defelem status-indicator
+  [:map {:doc "Glowing status indicator with pulsing animation.
+               Use for showing system status, connection state, or health indicators.
+               Supports online/offline/warning/error states with matching colors."
+         :as attrs}
+   [:status-indicator/label :string]
+   [:status-indicator/status [:enum :online :offline :warning :error]]
+   [:status-indicator/pulse {:optional true} [:maybe :boolean]]]
+  (let [{:status-indicator/keys [label status pulse]} attrs
+        status-class (str "status-indicator--" (name status))
+        pulse-class (when (not= false pulse) "status-indicator--pulse")]
+    [:div.status-indicator {:class [status-class pulse-class]}
+     [:div.status-indicator-light]
+     [:span.status-indicator-label label]]))
