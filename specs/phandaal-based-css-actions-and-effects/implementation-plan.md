@@ -129,10 +129,10 @@ Future work - not part of this spec.
 
 ## Phase 9: Documentation & SKILL.md Update
 
-- [ ] Update SKILL.md "Alias-First Workflow" to use new effects
-- [ ] Remove manual `wc -l` instructions
-- [ ] Add "CSS Write Effects" section with examples
-- [ ] Document hint structure and how to respond to hints
+- [x] Update SKILL.md "Alias-First Workflow" to use new effects
+- [x] Remove manual `wc -l` instructions
+- [x] Add "CSS Write Effects" section with examples
+- [x] Document hint structure and how to respond to hints
 
 ## Phase 10: Testing & Polish
 

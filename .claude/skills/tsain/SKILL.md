@@ -253,6 +253,44 @@ All sandbox functionality is available via dispatch effects. Use `(s/describe (d
 | `[::tsain/show-preview]` | Return to preview view |
 | `[::tsain/patch-signals {:key val}]` | Patch Datastar signals on all clients |
 
+### CSS Write Effects (Phandaal-Based)
+
+These effects provide tracked CSS writes with threshold detection and actionable hints:
+
+| Effect | Purpose |
+|--------|---------|
+| `[::tsain/write-css content opts]` | Append CSS to main stylesheet with LOC tracking |
+| `[::tsain/write-css-to path content]` | Write CSS to specific file (for barrel imports) |
+| `[::tsain/replace-css pattern new-css opts]` | Replace rules matching selector pattern |
+| `[::tsain/split-css category opts]` | Extract category styles to barrel file |
+
+**Example: Write CSS with hints**
+```clojure
+;; Write with category tracking - hints appear when threshold exceeded
+(dispatch [[::tsain/write-css ".my-card { background: red; }"
+            {:category "cards" :comment "My card styles"}]])
+
+;; Result when threshold exceeded:
+;; {:results [{:res {:hints [{:type :split-suggested
+;;                            :category "cards"
+;;                            :target "components/cards.css"
+;;                            :action {:effect ::tsain/split-css
+;;                                     :args ["cards"]}}]}}]}
+```
+
+**Example: Split by category**
+```clojure
+;; Extract all card-related styles to components/cards.css
+(dispatch [[::tsain/split-css "cards"]])
+
+;; Result:
+;; {:category "cards"
+;;  :extracted 15
+;;  :selectors [".card" ".card-header" ".card-body" ...]
+;;  :target-path "/project/dev/resources/public/components/cards.css"
+;;  :import-added? true}
+```
+
 ---
 
 ## Discovery Functions
@@ -440,7 +478,39 @@ Use `.theme-light` wrapper class - CSS custom properties handle the rest:
 
 ## File Size Management
 
-As component libraries grow, large files become unwieldy. Before committing components, check if files are approaching the split threshold (default: 1500 lines, configured via `:split-threshold` in `tsain.edn`).
+As component libraries grow, large files become unwieldy. Tsain provides effect-based CSS writes that automatically track line counts and suggest splits when the threshold is exceeded.
+
+### Automatic Threshold Detection
+
+When using `::tsain/write-css`, phandaal tracks line counts and returns hints when the configured `:split-threshold` (default 1500 lines) is exceeded:
+
+```clojure
+;; Write with category tracking
+(dispatch [[::tsain/write-css ".btn { padding: 1rem; }"
+            {:category "controls"}]])
+
+;; If threshold exceeded, result includes actionable hint:
+;; {:hints [{:type :split-suggested
+;;           :category "controls"
+;;           :target "components/controls.css"
+;;           :message "Stylesheet exceeds 1500 lines. Extract controls styles to components/controls.css"
+;;           :action {:effect ::tsain/split-css :args ["controls"]}}]}
+```
+
+### Responding to Split Hints
+
+When you see a `:split-suggested` hint, dispatch the suggested action:
+
+```clojure
+(dispatch [[::tsain/split-css "controls"]])
+```
+
+This will:
+1. Parse the stylesheet with jStyleParser
+2. Find all rules matching `.btn*`, `.button*`, `.input*`, etc.
+3. Extract them to `components/controls.css`
+4. Add `@import "./components/controls.css";` to the main stylesheet
+5. Return a summary of extracted selectors
 
 ### Conventions
 
@@ -451,53 +521,44 @@ These paths are conventions, not configurable:
 | CSS | `components/` subdirectory | `@import "./components/<category>.css";` |
 | Clojure | Sub-namespace from `:ui-namespace` | `(:require [<ui-ns>.<category>])` |
 
-### When to Split
-
-- **Stylesheet exceeds threshold** → Split into `components/<category>.css`
-- **UI namespace exceeds threshold** → Split into sub-namespaces by category
-
 ### Category Taxonomy
 
-Organize components by semantic category:
+Categories map to selector patterns automatically:
 
-| Category | Contains |
-|----------|----------|
-| `cards` | Card-based layouts, tiles, panels |
-| `controls` | Buttons, inputs, selects, toggles |
-| `layout` | Grids, containers, spacing utilities |
-| `feedback` | Toasts, alerts, loaders, progress bars |
-| `navigation` | Menus, tabs, breadcrumbs, pagination |
-| `display` | Text treatments, badges, avatars, icons |
-| `overlays` | Modals, popovers, tooltips, drawers |
+| Category | Matches Patterns |
+|----------|-----------------|
+| `cards` | `.card*`, `.cards*` |
+| `controls` | `.btn*`, `.button*`, `.input*`, `.select*`, `.toggle*` |
+| `layout` | `.container*`, `.grid*`, `.flex*`, `.row*`, `.col*` |
+| `feedback` | `.toast*`, `.alert*`, `.loader*`, `.progress*` |
+| `navigation` | `.nav*`, `.menu*`, `.tab*`, `.breadcrumb*` |
+| `display` | `.badge*`, `.avatar*`, `.text*`, `.heading*` |
+| `overlays` | `.modal*`, `.popover*`, `.tooltip*`, `.dropdown*` |
 
-Add new categories as needed. When unsure, prefer fewer larger categories over many small ones.
+For custom patterns, pass them explicitly:
 
-### CSS Split Procedure
+```clojure
+(dispatch [[::tsain/split-css "game"
+            {:patterns [".game-card" ".player-hud" ".game-board"]}]])
+```
 
-Given stylesheet at `dev/resources/public/styles.css`:
+### Manual CSS Split (If Needed)
+
+For cases where the automatic split doesn't work, you can still split manually:
 
 1. Create `components/` directory:
    ```bash
    mkdir -p dev/resources/public/components
    ```
 
-2. Create category file (e.g., `components/cards.css`):
-   ```css
-   /* Card components */
-   .game-card { /* ... */ }
-   .game-card-header { /* ... */ }
-   ```
+2. Create category file with extracted styles
 
-3. Move related styles from main stylesheet to category file
-
-4. Add import to main stylesheet (at the top, after any variables):
+3. Add import to main stylesheet:
    ```css
-   /* Component imports */
    @import "./components/cards.css";
-   @import "./components/controls.css";
    ```
 
-5. Verify hot-reload still works
+4. Verify hot-reload still works
 
 ### Namespace Split Procedure
 
