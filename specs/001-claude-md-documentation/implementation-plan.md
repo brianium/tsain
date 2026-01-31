@@ -7,7 +7,6 @@ Create comprehensive CLAUDE.md documentation for the tsain project covering the 
 ## Prerequisites
 
 - [x] Understand sandestin registry structure
-- [x] Review existing kaiin demo documentation
 
 ## Phase 1: Core Structure
 
@@ -33,8 +32,6 @@ Create comprehensive CLAUDE.md documentation for the tsain project covering the 
 
 - [x] TWK (Datastar) patterns section
 - [x] Sfere (connections) patterns section
-- [x] Kaiin declarative routing section
-- [x] Complete working example
 
 ## Phase 5: Documentation & Cleanup
 

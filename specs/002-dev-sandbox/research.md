@@ -52,5 +52,4 @@ Component development requires rapid iteration. The traditional edit-save-reload
 ## References
 
 - Datastar documentation
-- kaiin demo pattern
 - browser-sync for multi-device inspiration

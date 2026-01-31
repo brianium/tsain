@@ -23,7 +23,7 @@ Claude needs comprehensive documentation to work effectively with the sandestin 
 
 ### Option A: Separate docs per library
 
-**Description:** Create separate CLAUDE.md sections for each library (sandestin, twk, sfere, kaiin)
+**Description:** Create separate CLAUDE.md sections for each library (sandestin, twk, sfere)
 
 **Pros:**
 - Clear separation of concerns
@@ -50,6 +50,5 @@ Claude needs comprehensive documentation to work effectively with the sandestin 
 
 ## References
 
-- kaiin demo project (reference implementation)
 - sandestin README
 - twk API documentation

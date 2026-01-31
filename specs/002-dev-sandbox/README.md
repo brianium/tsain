@@ -19,7 +19,7 @@ This enables a tight feedback loop for component development:
 
 ## Goals
 
-1. Set up a reloadable dev environment following the kaiin demo pattern
+1. Set up a reloadable dev environment
 2. Establish a persistent SSE connection for REPL-driven UI updates
 3. Create a minimal component sandbox page
 4. Use standard sandestin dispatch for all REPL interactions

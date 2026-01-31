@@ -9,7 +9,7 @@ priority: 10
 
 ## Overview
 
-This spec defines the comprehensive CLAUDE.md documentation for the tsain project. The documentation enables Claude to effectively work with the sandestin ecosystem: creating registries, building dispatch functions, using kaiin for declarative routing, and leveraging REPL-driven discovery.
+This spec defines the comprehensive CLAUDE.md documentation for the tsain project. The documentation enables Claude to effectively work with the sandestin ecosystem: creating registries, building dispatch functions, and leveraging REPL-driven discovery.
 
 ## Goals
 
@@ -17,8 +17,7 @@ This spec defines the comprehensive CLAUDE.md documentation for the tsain projec
 2. Document registry authoring patterns with concrete examples
 3. Explain dispatch creation and the execution flow
 4. Teach REPL-based discovery using sandestin's introspection API
-5. Document kaiin's declarative routing approach
-6. Show complete working patterns for twk (Datastar) and sfere (connections)
+5. Show complete working patterns for twk (Datastar) and sfere (connections)
 
 ## Non-Goals
 

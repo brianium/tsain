@@ -16,7 +16,7 @@ Create a deps-new template for scaffolding web applications powered by the sande
 1. Quick scaffold - `clj -Tnew create :template brianium/ascolais` produces working app
 2. Effect-driven architecture - Sandestin effects as primary abstraction
 3. Database-ready - Manse integration with PostgreSQL and ragtime
-4. Datastar frontend - TWK for SSE reactivity, kaiin for route generation
+4. Datastar frontend - TWK for SSE reactivity
 5. Component sandbox - Tsain integration for REPL-driven UI development
 6. Claude-optimized - Comprehensive CLAUDE.md, skills, conventions
 7. Production path - Dev extends production
