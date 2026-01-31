@@ -1,6 +1,6 @@
 ---
 title: "Html Yeah Component Writing Actions"
-status: planned
+status: completed
 date: 2026-01-31
 priority: 40
 ---
@@ -46,11 +46,11 @@ Summarize important decisions made during research. See [research.md](research.m
 
 See [implementation-plan.md](implementation-plan.md) for detailed task breakdown.
 
-- [ ] Phase 1: Research namespace patterns and phandaal integration
-- [ ] Phase 2: Clojure formatter detection (cljfmt)
-- [ ] Phase 3: `::tsain/write-component` action
-- [ ] Phase 4: Component hints interceptor
-- [ ] Phase 5: `::tsain/split-namespace` effect
-- [ ] Phase 6: Update SKILL.md to remove prose-based file size guidance
-- [ ] Phase 7: Update CLAUDE.md for tsain's own development
-- [ ] Phase 8: Testing & polish
+- [x] Phase 1: Research namespace patterns and phandaal integration
+- [x] Phase 2: Clojure formatter detection (cljfmt)
+- [x] Phase 3: `::tsain/write-component` action
+- [x] Phase 4: Component hints interceptor
+- [x] Phase 5: `::tsain/split-namespace` effect
+- [x] Phase 6: Update SKILL.md to remove prose-based file size guidance
+- [x] Phase 7: Update CLAUDE.md for tsain's own development
+- [x] Phase 8: Testing & polish

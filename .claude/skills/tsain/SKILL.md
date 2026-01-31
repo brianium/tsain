@@ -187,16 +187,19 @@ clj-nrepl-eval -p <PORT> "(dispatch [[::tsain/preview
 3. **Re-preview** to see changes
 4. **Add CSS** to the stylesheet (from `:stylesheet`) - hot-reloads automatically
 
-#### Step 4: Check File Sizes (Before Commit)
+#### Step 4: Use Effect-Based Writes
 
-Before committing, check if files are approaching the split threshold:
+Instead of manually editing files, use the phandaal-based write effects. They automatically track line counts and return hints when thresholds are exceeded:
 
-```bash
-wc -l <stylesheet-path>   # e.g., dev/resources/public/styles.css
-wc -l <ui-namespace-path> # e.g., dev/src/clj/sandbox/ui.clj
+```clojure
+;; CSS - use ::tsain/write-css instead of editing files directly
+(dispatch [[::tsain/write-css ".my-card { ... }" {:category "cards"}]])
+
+;; Components - use ::tsain/write-component instead of editing files directly
+(dispatch [[::tsain/write-component "(hy/defelem my-card ...)"]])
 ```
 
-If either file exceeds or approaches `:split-threshold` (default 1500 lines), consider splitting before adding more components. See the **File Size Management** section for split procedures.
+If the result contains `:hints` with `:type :split-suggested`, respond by dispatching the suggested split effect. See the **Effect Reference** section for details.
 
 #### Step 5: Commit to Library
 
@@ -290,6 +293,57 @@ These effects provide tracked CSS writes with threshold detection and actionable
 ;;  :target-path "/project/dev/resources/public/components/cards.css"
 ;;  :import-added? true}
 ```
+
+### Component Write Effects (Phandaal-Based)
+
+These effects provide tracked component code writes with threshold detection:
+
+| Effect | Purpose |
+|--------|---------|
+| `[::tsain/write-component code opts]` | Append defelem to UI namespace with LOC tracking |
+| `[::tsain/write-component-to ns code]` | Write to specific namespace (for barrel imports) |
+| `[::tsain/split-namespace category]` | Extract category components to sub-namespace |
+
+**Example: Write component with hints**
+```clojure
+;; Write component - category inferred from name (game-card -> "cards")
+(dispatch [[::tsain/write-component "(hy/defelem game-card ...)"]])
+
+;; Or with explicit category
+(dispatch [[::tsain/write-component "(hy/defelem my-widget ...)"
+            {:category "controls"}]])
+
+;; Result when threshold exceeded:
+;; {:results [{:res {:hints [{:type :split-suggested
+;;                            :category "cards"
+;;                            :target "sandbox/ui/cards.clj"
+;;                            :action {:effect ::tsain/split-namespace
+;;                                     :args ["cards"]}}]}}]}
+```
+
+**Example: Split by category**
+```clojure
+;; Extract all card-related components to sub-namespace
+(dispatch [[::tsain/split-namespace "cards"]])
+
+;; Result:
+;; {:category "cards"
+;;  :extracted 3
+;;  :components ["game-card" "profile-card" "stats-card"]
+;;  :target-namespace "sandbox.ui.cards"
+;;  :target-path "/project/src/clj/sandbox/ui/cards.clj"}
+```
+
+**Category inference from component names:**
+
+| Component Name | Inferred Category |
+|----------------|-------------------|
+| `*-card`, `*-tile`, `*-panel` | cards |
+| `*-btn`, `*-button`, `*-input` | controls |
+| `*-toast`, `*-alert`, `*-loader` | feedback |
+| `*-nav`, `*-menu`, `*-tab` | navigation |
+| `*-badge`, `*-avatar`, `*-indicator` | display |
+| `*-modal`, `*-popover`, `*-tooltip` | overlays |
 
 ---
 

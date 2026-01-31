@@ -1,10 +1,6 @@
 # Specifications
 
-*Auto-generated on 2026-01-31 10:02*
-
-## Planned
-
-- [Html Yeah Component Writing Actions](html-yeah-component-writing-actions/README.md)
+*Auto-generated on 2026-01-31 10:40*
 
 ## Completed
 
@@ -21,6 +17,7 @@
 - [Storybook Sidebar](009-storybook-sidebar/README.md)
 - [Chassis Alias Workflow](010-chassis-alias-workflow/README.md)
 - [Barrel Imports In Skill](barrel-imports-in-skill/README.md)
+- [Html Yeah Component Writing Actions](html-yeah-component-writing-actions/README.md)
 - [Discoverable Dev Registry](011-discoverable-dev-registry/README.md)
 - [Portable Library](012-portable-library/README.md)
 - [Schema Cleanup](013-schema-cleanup/README.md)

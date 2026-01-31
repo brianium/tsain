@@ -24,6 +24,7 @@
   (:require [ascolais.phandaal :as phandaal]
             [ascolais.sandestin :as s]
             [ascolais.sfere :as sfere]
+            [ascolais.tsain.clj :as clj]
             [ascolais.tsain.css :as css]
             [ascolais.tsain.db :as db]
             [ascolais.tsain.discovery :as discovery]
@@ -33,6 +34,7 @@
             [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.pprint :as pprint]
+            [clojure.string :as str]
             [malli.util :as mu]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -404,6 +406,195 @@ Examples:
              :import-added? needs-import?}))))}})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Component Action Builders
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- make-component-actions
+  "Create component write actions that return phandaal effect vectors."
+  [{:keys [ui-namespace split-threshold source-paths project-root]}]
+  (let [ns-path (clj/find-namespace-file ui-namespace source-paths project-root)]
+    {::write-component
+     {::s/description
+      "Append a hy/defelem component to the UI namespace with threshold-aware hints.
+
+Writes the component code to the configured :ui-namespace file.
+When the file exceeds :split-threshold, the result includes hints
+suggesting which category to extract via ::split-namespace.
+
+Category is inferred from component name (e.g., game-card -> \"cards\")
+or can be specified explicitly.
+
+Examples:
+  [::tsain/write-component \"(hy/defelem my-card ...)\"]
+  [::tsain/write-component \"(hy/defelem my-btn ...)\" {:category \"controls\"}]"
+
+      ::s/schema [:tuple
+                  [:= ::write-component]
+                  [:string {:description "Complete hy/defelem form as a string"}]
+                  [:map {:optional true :description "Options"}
+                   [:category {:optional true} [:string {:description "Component category for split hints"}]]]]
+
+      ::s/handler
+      (fn
+        ([_state code] ; 2-arity for when opts not provided
+         (let [component-name (clj/extract-defelem-name code)
+               category (clj/infer-category-from-name component-name)
+               content (str "\n" code "\n")]
+           [[::phandaal/append
+             {:path ns-path
+              :content content
+              :threshold split-threshold
+              ::category category
+              ::component-name component-name}]]))
+        ([_state code opts] ; 3-arity with opts
+         (let [component-name (clj/extract-defelem-name code)
+               category (or (:category opts)
+                            (clj/infer-category-from-name component-name))
+               content (str "\n" code "\n")]
+           [[::phandaal/append
+             {:path ns-path
+              :content content
+              :threshold split-threshold
+              ::category category
+              ::component-name component-name}]])))}
+
+     ::write-component-to
+     {::s/description
+      "Write component code to a specific namespace file (for barrel imports).
+
+Use this when writing to sub-namespace files like sandbox/ui/cards.clj
+after a split operation.
+
+Examples:
+  [::tsain/write-component-to \"sandbox.ui.cards\" \"(hy/defelem my-card ...)\"]"
+
+      ::s/schema [:tuple
+                  [:= ::write-component-to]
+                  [:symbol {:description "Target namespace symbol"}]
+                  [:string {:description "Complete hy/defelem form as a string"}]]
+
+      ::s/handler
+      (fn [_state target-ns code]
+        (let [target-path (clj/find-namespace-file target-ns source-paths project-root)
+              content (str "\n" code "\n")]
+          [[::phandaal/append
+            {:path (or target-path (str project-root "/" (clj/namespace->path target-ns)))
+             :content content
+             :create-dirs? true
+             :threshold split-threshold}]]))}}))
+
+(defn- make-component-effects
+  "Create component manipulation effects."
+  [{:keys [ui-namespace split-threshold source-paths project-root]}]
+  (let [ns-path (clj/find-namespace-file ui-namespace source-paths project-root)]
+    {::split-namespace
+     {::s/description
+      "Extract category components to a sub-namespace.
+
+Finds all hy/defelem forms matching the category's patterns and moves them
+to a new namespace file (e.g., sandbox.ui.cards). Adds a require to the
+parent namespace so aliases continue to resolve.
+
+Categories map to patterns:
+- 'cards' -> *-card, *-tile, *-panel
+- 'controls' -> *-btn, *-button, *-input, etc.
+- Custom categories -> matches *-<category>
+
+Examples:
+  [::tsain/split-namespace \"cards\"]"
+
+      ::s/schema [:tuple
+                  [:= ::split-namespace]
+                  [:string {:description "Category name (e.g., 'cards', 'controls')"}]]
+
+      ::s/handler
+      (fn [{:keys [dispatch]} _system category]
+        (let [source (slurp ns-path)
+              all-forms (clj/find-defelem-forms source)
+              matched-forms (clj/filter-forms-by-category all-forms category)
+              matched-names (mapv :name matched-forms)]
+          (if (empty? matched-forms)
+            {:category category
+             :extracted 0
+             :message "No matching components found"}
+
+            (let [;; Generate sub-namespace content
+                  sub-ns-content (clj/generate-sub-namespace ui-namespace category matched-forms)
+                  sub-ns-sym (symbol (str ui-namespace "." category))
+                  sub-ns-path (str project-root "/" (first source-paths) "/" (clj/namespace->path sub-ns-sym))
+
+                  ;; Remove forms from parent
+                  remaining-source (clj/remove-forms-from-source source matched-forms)
+
+                  ;; Add require if needed
+                  updated-source (or (clj/add-require-to-source remaining-source sub-ns-sym)
+                                     remaining-source)
+
+                  ;; Clean up excessive blank lines
+                  cleaned-source (str/replace updated-source #"\n{3,}" "\n\n")]
+
+              ;; Write both files via phandaal
+              (dispatch {} {}
+                        [[::phandaal/write
+                          {:path sub-ns-path
+                           :content sub-ns-content
+                           :create-dirs? true}]
+                         [::phandaal/write
+                          {:path ns-path
+                           :content cleaned-source
+                           :threshold split-threshold}]])
+              {:category category
+               :extracted (count matched-forms)
+               :components matched-names
+               :target-namespace (str sub-ns-sym)
+               :target-path sub-ns-path}))))}}))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Component Hints Interceptor
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- component-hints-interceptor
+  "Interceptor that inspects phandaal results for component writes and adds hints.
+   When a Clojure file exceeds the threshold, adds hints with category and suggested action."
+  [{:keys [split-threshold ui-namespace]}]
+  (let [ui-ns-path-suffix (clj/namespace->path ui-namespace)]
+    {:id ::component-hints
+     :after-dispatch
+     (fn [ctx]
+       (update ctx :results
+               (fn [results]
+                 (mapv (fn [{:keys [effect res] :as result}]
+                         (let [effect-key (first effect)
+                               effect-args (second effect)
+                               path (:path effect-args)
+                               is-clj-write? (and (#{::phandaal/append ::phandaal/write} effect-key)
+                                                  (some-> path (str/ends-with? ".clj")))
+                               is-ui-namespace? (and is-clj-write?
+                                                     (some-> path (str/ends-with? ui-ns-path-suffix)))
+                               threshold-exceeded? (get-in res [:threshold :exceeded?])]
+                           (if (and is-ui-namespace? threshold-exceeded?)
+                             (let [category (::category effect-args)
+                                   target (when category
+                                            (str (str/replace ui-ns-path-suffix ".clj" "")
+                                                 "/" category ".clj"))
+                                   hint {:type :split-suggested
+                                         :severity :warning
+                                         :category category
+                                         :target target
+                                         :loc (:loc res)
+                                         :message (if category
+                                                    (format "UI namespace exceeds %d lines. Extract %s components to %s"
+                                                            split-threshold category target)
+                                                    (format "UI namespace exceeds %d lines. Consider categorizing and splitting."
+                                                            split-threshold))
+                                         :action (when category
+                                                   {:effect ::split-namespace
+                                                    :args [category]})}]
+                               (assoc result :res (update res :hints conj hint)))
+                             result)))
+                       results))))}))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Registry Factory
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -433,7 +624,9 @@ Examples:
          components-file (:components-file config)
          stylesheet (:stylesheet config)
          split-threshold (:split-threshold config)
+         ui-namespace (:ui-namespace config)
          project-root (css/infer-project-root)
+         source-paths ["src/clj" "dev/src/clj"]
 
          ;; Initialize database if configured
          datasource (when database-file
@@ -791,16 +984,28 @@ Examples:
                                      :source path}))}}
                               ;; Merge CSS effects into ::s/effects
                               (make-css-effects {:stylesheet (str project-root "/" stylesheet)
-                                                 :split-threshold split-threshold}))
+                                                 :split-threshold split-threshold})
+                              ;; Merge component effects
+                              (make-component-effects {:ui-namespace ui-namespace
+                                                       :split-threshold split-threshold
+                                                       :source-paths source-paths
+                                                       :project-root project-root}))
 
-                             ;; CSS actions (phandaal-based)
+                             ;; Actions (phandaal-based)
                              ::s/actions
-                             (make-css-actions {:stylesheet (str project-root "/" stylesheet)
-                                                :split-threshold split-threshold})
+                             (merge
+                              (make-css-actions {:stylesheet (str project-root "/" stylesheet)
+                                                 :split-threshold split-threshold})
+                              (make-component-actions {:ui-namespace ui-namespace
+                                                       :split-threshold split-threshold
+                                                       :source-paths source-paths
+                                                       :project-root project-root}))
 
                              ::s/interceptors
                              [(css-hints-interceptor {:split-threshold split-threshold
-                                                      :stylesheet (str project-root "/" stylesheet)})]})]
+                                                      :stylesheet (str project-root "/" stylesheet)})
+                              (component-hints-interceptor {:split-threshold split-threshold
+                                                            :ui-namespace ui-namespace})]})]
      registry)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

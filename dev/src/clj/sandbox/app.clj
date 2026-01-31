@@ -11,6 +11,7 @@
             [ascolais.twk :as twk]
             [ascolais.sfere :as sfere]
             [ascolais.tsain :as tsain]
+            [ascolais.tsain.clj :as clj]
             [ascolais.tsain.css :as css]
             [ascolais.tsain.routes :as tsain.routes]
             [clojure.string :as str]
@@ -31,11 +32,14 @@
 
 (defn- create-phandaal-registry []
   (let [project-root (css/infer-project-root)
-        css-formatter (css/detect-css-formatter)]
+        css-formatter (css/detect-css-formatter)
+        clj-formatter (clj/detect-clj-formatter)]
     (phandaal/registry
      {:project-root project-root
       :source-paths ["src/clj" "dev/src/clj"]
-      :formatters {".css" css-formatter}
+      :formatters {".css" css-formatter
+                   ".clj" clj-formatter
+                   ".cljc" clj-formatter}
       :default-threshold 1500})))
 
 (defn- create-dispatch [store tsain-registry]

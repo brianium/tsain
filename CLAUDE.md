@@ -1061,6 +1061,54 @@ When building UI components for the sandbox:
 ;; Finds all .game-card* rules, removes them, appends new content
 ```
 
+### Component Authoring via Effects (Required)
+
+**All component code modifications must go through the tsain effect system via REPL dispatch.** Never use file editing tools (Edit, Write) directly on the UI namespace file.
+
+```clojure
+;; CORRECT - use effects via dispatch
+(dispatch [[::tsain/write-component "(hy/defelem my-card
+  [:map {:doc \"My card component\"}
+   [:my-card/title :string]]
+  [:div.my-card my-card/title])"]])
+
+;; WRONG - never edit UI namespace directly
+;; (Edit tool on sandbox/ui.clj) ← DON'T DO THIS
+```
+
+**Why effects?** The `::tsain/write-component` action:
+- Tracks line counts automatically
+- Runs cljfmt formatting (if available on classpath)
+- Infers category from component name (e.g., `game-card` → "cards")
+- Returns actionable hints when the UI namespace exceeds threshold
+
+**Category inference:**
+
+| Component Suffix | Inferred Category |
+|------------------|-------------------|
+| `*-card`, `*-tile`, `*-panel` | cards |
+| `*-btn`, `*-button`, `*-input` | controls |
+| `*-toast`, `*-alert`, `*-loader` | feedback |
+| `*-nav`, `*-menu`, `*-tab` | navigation |
+| `*-badge`, `*-indicator` | display |
+| `*-modal`, `*-popover` | overlays |
+
+**Check results for hints.** When threshold is exceeded, the result includes a hint:
+
+```clojure
+{:results [{:res {:hints [{:type :split-suggested
+                           :category "cards"
+                           :target "sandbox/ui/cards.clj"
+                           :action {:effect ::tsain/split-namespace :args ["cards"]}}]}}]}
+```
+
+**Act on split hints immediately:**
+
+```clojure
+(dispatch [[::tsain/split-namespace "cards"]])
+;; Extracts card* components to sandbox.ui.cards and adds require
+```
+
 ### Development Workflow
 
 1. **Exploration phase** - Use inline styles for rapid iteration with `preview!`
