@@ -40,14 +40,17 @@ Summarize important decisions made during research. See [research.md](research.m
 | Category detection | From component name | `::game-card` → category "cards"; explicit `:category` override supported |
 | Split trigger | Threshold exceeded | Hints appear only when action needed |
 | Namespace structure | Barrel imports | `sandbox.ui` requires `sandbox.ui.cards`, etc. |
+| Clojure formatting | Detect cljfmt | Check classpath at runtime; use if available with project's `.cljfmt.edn`; no-op otherwise |
 
 ## Implementation Status
 
 See [implementation-plan.md](implementation-plan.md) for detailed task breakdown.
 
 - [ ] Phase 1: Research namespace patterns and phandaal integration
-- [ ] Phase 2: `::tsain/write-component` action
-- [ ] Phase 3: Component hints interceptor
-- [ ] Phase 4: `::tsain/split-namespace` effect
-- [ ] Phase 5: Update SKILL.md to remove prose-based file size guidance
-- [ ] Phase 6: Update CLAUDE.md for tsain's own development
+- [ ] Phase 2: Clojure formatter detection (cljfmt)
+- [ ] Phase 3: `::tsain/write-component` action
+- [ ] Phase 4: Component hints interceptor
+- [ ] Phase 5: `::tsain/split-namespace` effect
+- [ ] Phase 6: Update SKILL.md to remove prose-based file size guidance
+- [ ] Phase 7: Update CLAUDE.md for tsain's own development
+- [ ] Phase 8: Testing & polish

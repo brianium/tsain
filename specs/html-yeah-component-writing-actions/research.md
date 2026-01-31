@@ -129,9 +129,72 @@ Map component name suffixes/patterns to categories:
           :args ["cards"]}}
 ```
 
+## Clojure Formatting
+
+### Problem
+
+CSS writes use prettier/biome for formatting. Should Clojure writes be formatted? If so, how?
+
+### Options
+
+**Option A: Detect & Delegate (Recommended)**
+- Check if cljfmt is on the classpath at runtime
+- Use project's `.cljfmt.edn` if present
+- No formatting if cljfmt unavailable
+- Same pattern as CSS formatter detection
+
+**Option B: Bundle cljfmt**
+- Add cljfmt as a tsain dependency
+- Projects get formatting automatically
+- Risk: version conflicts, imposed style
+
+**Option C: Explicit config**
+- `:clj-formatter :cljfmt` in tsain.edn
+- Projects opt-in explicitly
+- Most verbose, least magical
+
+### Recommendation
+
+**Option A: Detect & Delegate** - Consistent with CSS pattern. Key insight: cljfmt is a library, not a CLI. We can:
+
+1. Check if `cljfmt.core` namespace is available (try-require)
+2. If available, call `(cljfmt.core/reformat-string code config)`
+3. Load config from `.cljfmt.edn` if present, else use defaults
+4. If cljfmt unavailable, write unformatted (Clojure is readable either way)
+
+Projects that want formatting add cljfmt to `:dev` deps:
+
+```clojure
+;; deps.edn
+{:aliases
+ {:dev {:extra-deps {dev.weavejester/cljfmt {:mvn/version "0.13.0"}}}}}
+```
+
+Tsain doesn't impose anything—it respects project conventions.
+
+### Implementation
+
+Add to phandaal registry formatters map:
+
+```clojure
+(defn detect-clj-formatter []
+  (if (try (require 'cljfmt.core) true (catch Exception _ false))
+    (fn [path]
+      (let [config (load-cljfmt-config)
+            reformat (resolve 'cljfmt.core/reformat-string)]
+        (spit path (reformat (slurp path) config))))
+    identity))  ;; No-op if cljfmt unavailable
+
+;; In phandaal registry creation
+{:formatters {".css" (detect-css-formatter)
+              ".clj" (detect-clj-formatter)
+              ".cljc" (detect-clj-formatter)}}
+```
+
 ## Open Questions
 
 - [x] Should we validate Clojure syntax before writing? → No, rely on reload errors
+- [x] How should Clojure files be formatted? → Detect cljfmt on classpath, use if available
 - [ ] How to handle components that span multiple categories? → Allow explicit `:category` override
 - [ ] Should split preserve order of components? → Yes, maintain definition order
 

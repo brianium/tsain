@@ -17,9 +17,28 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 - [ ] Design category inference function (component name → category)
 - [ ] Document the action/effect schemas in research.md
 
-## Phase 2: `::tsain/write-component` Action
+## Phase 2: Clojure Formatter Detection
 
-- [ ] Create `infer-category-from-name` function
+- [ ] Implement `detect-clj-formatter` function in `ascolais.tsain.css` (or new ns)
+  - Try-require `cljfmt.core` to check availability
+  - If available, return formatter fn that calls `cljfmt.core/reformat-string`
+  - If unavailable, return `identity` (no-op)
+- [ ] Implement `load-cljfmt-config` function
+  - Look for `.cljfmt.edn` in project root
+  - Fall back to cljfmt defaults if not found
+- [ ] Update `create-phandaal-registry` in `sandbox/app.clj`
+  - Add `.clj` and `.cljc` to formatters map
+  ```clojure
+  {:formatters {".css" css-formatter
+                ".clj" clj-formatter
+                ".cljc" clj-formatter}}
+  ```
+- [ ] Add cljfmt to tsain's own `:dev` deps for testing
+- [ ] Test: write a .clj file via phandaal, verify formatting applied
+
+## Phase 3: `::tsain/write-component` Action
+
+- [ ] Create `infer-category-from-component-name` function
   - Map patterns like `*-card` → "cards", `*-btn` → "controls"
   - Return nil for unknown patterns (requires explicit category)
 - [ ] Define `::tsain/write-component` action
@@ -33,7 +52,7 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   (dispatch [[::tsain/write-component "(hy/defelem test-card ...)" {:category "cards"}]])
   ```
 
-## Phase 3: Component Hints Interceptor
+## Phase 4: Component Hints Interceptor
 
 - [ ] Extend `css-hints-interceptor` or create `component-hints-interceptor`
   - Filter for phandaal writes to `.clj` files in UI namespace path
@@ -48,7 +67,7 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   ;; Verify :hints contains split suggestion
   ```
 
-## Phase 4: `::tsain/split-namespace` Effect
+## Phase 5: `::tsain/split-namespace` Effect
 
 - [ ] Create `find-defelem-forms` function
   - Read Clojure file
@@ -75,7 +94,7 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   ;; Verify sandbox/ui.clj has require
   ```
 
-## Phase 5: Update SKILL.md
+## Phase 6: Update SKILL.md
 
 - [ ] Remove "File Size Management" prose about manual `wc -l` checks
 - [ ] Add "Component Writing Effects" section (parallel to CSS Write Effects)
@@ -89,7 +108,7 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   - Step 4: Commit to library
 - [ ] Remove manual threshold checking instructions
 
-## Phase 6: Update CLAUDE.md
+## Phase 7: Update CLAUDE.md
 
 - [ ] Add "Component Authoring via Effects (Required)" section
   - Parallel structure to "CSS Authoring via Effects"
@@ -98,7 +117,7 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
   - Always check results for hints and act on them
 - [ ] Update Development Workflow to reference effect-based authoring
 
-## Phase 7: Testing & Polish
+## Phase 8: Testing & Polish
 
 - [ ] Unit tests for category inference
 - [ ] Unit tests for defelem form extraction
@@ -108,9 +127,9 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 
 ## Rollout Plan
 
-1. Implement phases 1-4 (core functionality)
+1. Implement phases 1-5 (core functionality)
 2. Test in tsain development for 1-2 sessions
-3. Update documentation (phases 5-6)
+3. Update documentation (phases 6-7)
 4. Commit with feature flag if needed
 
 ## Rollback Plan
