@@ -3247,3 +3247,74 @@
 .theme-light .status-indicator--error {
 	color: #cc2244;
 }
+
+/* Data chip component */
+.data-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 12px;
+	background: linear-gradient(
+		135deg,
+		rgba(0, 240, 255, 0.1),
+		rgba(0, 240, 255, 0.05)
+	);
+	border: 1px solid var(--accent-cyan);
+	clip-path: polygon(
+		8px 0,
+		100% 0,
+		100% calc(100% - 8px),
+		calc(100% - 8px) 100%,
+		0 100%,
+		0 8px
+	);
+}
+
+.data-chip-label {
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--text-muted);
+}
+
+.data-chip-value {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--accent-cyan);
+}
+
+.data-chip--magenta {
+	background: linear-gradient(
+		135deg,
+		rgba(255, 0, 200, 0.1),
+		rgba(255, 0, 200, 0.05)
+	);
+	border-color: var(--accent-magenta);
+}
+.data-chip--magenta .data-chip-value {
+	color: var(--accent-magenta);
+}
+
+.data-chip--green {
+	background: linear-gradient(
+		135deg,
+		rgba(0, 255, 136, 0.1),
+		rgba(0, 255, 136, 0.05)
+	);
+	border-color: #00ff88;
+}
+.data-chip--green .data-chip-value {
+	color: #00ff88;
+}
+
+.data-chip--red {
+	background: linear-gradient(
+		135deg,
+		rgba(255, 77, 77, 0.1),
+		rgba(255, 77, 77, 0.05)
+	);
+	border-color: var(--accent-red);
+}
+.data-chip--red .data-chip-value {
+	color: var(--accent-red);
+}

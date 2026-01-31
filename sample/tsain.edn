@@ -1,15 +1,23 @@
-{;; Namespace where chassis aliases are defined
- ;; Claude will add new `defmethod c/resolve-alias` entries here
- ;; during component iteration
+{;; Namespace where html.yeah defelem components are defined
+ ;; Components are written here via ::tsain/write-component effect
  :ui-namespace myapp.ui
 
- ;; Where the component library is persisted
- ;; This file stores lean alias invocations with config props
- :components-file "resources/components.edn"
+ ;; Paths to search for namespace files
+ ;; Used by ::tsain/write-component and ::tsain/split-namespace
+ :source-paths ["src/clj" "dev/src/clj"]
+
+ ;; Where the component library is persisted (SQLite)
+ ;; Stores examples, categories, and metadata
+ :database-file "tsain.db"
 
  ;; CSS file for component styles (watched for hot reload)
- ;; Add component classes here during CSS extraction phase
+ ;; Written via ::tsain/write-css effect
  :stylesheet "dev/resources/public/styles.css"
+
+ ;; Line count threshold for split suggestions
+ ;; When files exceed this, effects return hints suggesting splits
+ ;; Set to nil to disable threshold checking
+ :split-threshold 1500
 
  ;; Port for sandbox server
  :port 3000}

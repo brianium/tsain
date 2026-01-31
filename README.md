@@ -8,7 +8,7 @@ A REPL-driven component sandbox for Clojure + Datastar applications. Design, ite
 
 ```clojure
 ;; deps.edn
-{:deps {io.github.brianium/tsain {:git/tag "v0.4.0" :git/sha "3d9bcc9"}}}
+{:deps {io.github.brianium/tsain {:git/tag "v0.5.0" :git/sha "5017064"}}}
 ```
 
 ### 2. Create Configuration
@@ -16,9 +16,11 @@ A REPL-driven component sandbox for Clojure + Datastar applications. Design, ite
 Create `tsain.edn` at your project root:
 
 ```clojure
-{:ui-namespace myapp.ui                        ;; Where chassis aliases live
+{:ui-namespace myapp.ui                        ;; Where defelem components live
  :database-file "tsain.db"                     ;; Component library (SQLite)
  :stylesheet "dev/resources/public/styles.css" ;; CSS for hot reload
+ :source-paths ["src/clj" "dev/src/clj"]       ;; For finding namespace files
+ :split-threshold 1500                         ;; LOC threshold for split hints
  :port 3000}
 ```
 
@@ -29,19 +31,25 @@ Legacy EDN storage is also supported:
 
 ### 3. Create UI Namespace
 
-Create your UI namespace for chassis aliases:
+Create your UI namespace for components using html.yeah:
 
 ```clojure
 (ns myapp.ui
-  (:require [dev.onionpancakes.chassis.core :as c]))
+  (:require [html.yeah :as hy]))
 
-;; Define component structure with aliases
-(defmethod c/resolve-alias ::card [_ attrs _]
-  (let [{:card/keys [title body]} attrs]
-    [:div.card attrs
-     [:h2.card-title title]
-     [:p.card-body body]]))
+;; Define components with schema-driven defelem
+(hy/defelem card
+  [:map {:doc "A simple card component"
+         :keys [card/title card/body]}
+   [:card/title :string]
+   [:card/body :string]]
+  [:div.card
+   [:h2.card-title card/title]
+   [:p.card-body card/body]
+   (hy/children)])
 ```
+
+Components defined with `defelem` are discoverable via `tsain/describe` and `tsain/grep`.
 
 ### 4. Wire Up the System
 
@@ -149,16 +157,22 @@ Effects are also discoverable via sandestin:
 ### CSS Hot Reload
 Edit your stylesheet, save → browser updates automatically (requires file watcher).
 
-### Chassis Aliases
-Component structure lives in code, configuration in data:
+### Schema-Driven Components
+
+Use html.yeah's `defelem` for discoverable, schema-validated components:
 
 ```clojure
-;; Structure in myapp/ui.clj
-(defmethod c/resolve-alias ::game-card [_ attrs _]
-  (let [{:game-card/keys [title cost attack]} attrs]
-    [:div.game-card
-     [:div.game-card-cost cost]
-     [:div.game-card-title title]]))
+(hy/defelem game-card
+  [:map {:doc "Cyberpunk-styled game card"
+         :keys [game-card/title game-card/cost game-card/attack]}
+   [:game-card/title :string]
+   [:game-card/cost :string]
+   [:game-card/attack {:optional true} :string]]
+  [:div.game-card
+   [:div.game-card-cost game-card/cost]
+   [:div.game-card-title game-card/title]
+   (when game-card/attack
+     [:div.game-card-attack game-card/attack])])
 
 ;; Usage - lean config props
 [:myapp.ui/game-card
@@ -167,9 +181,43 @@ Component structure lives in code, configuration in data:
   :game-card/attack "3"}]
 ```
 
-Namespaced attributes (`:game-card/title`) are elided from HTML output - they're config for the alias, not HTML attributes.
+Namespaced attributes (`:game-card/title`) are elided from HTML output - they're config for the component, not HTML attributes.
+
+### Effect-Based Authoring
+
+Write components and CSS through effects that track line counts and return split hints:
+
+```clojure
+;; Write a component - auto-formats with cljfmt if available
+(dispatch [[::tsain/write-component
+            "(hy/defelem my-button
+               [:map {:doc \"Action button\"}
+                [:my-button/label :string]]
+               [:button.btn my-button/label])"]])
+;; => {:hints [...] :loc 45}
+
+;; Write CSS - auto-formats with prettier
+(dispatch [[::tsain/write-css
+            ".btn { background: var(--accent-cyan); }"
+            {:category "controls"}]])
+```
+
+When files exceed `:split-threshold`, results include actionable hints:
+
+```clojure
+;; Result includes hint when threshold exceeded
+{:hints [{:type :split-suggested
+          :category "controls"
+          :action [::tsain/split-namespace "controls"]}]}
+
+;; Act on hint to extract category to sub-namespace
+(dispatch [[::tsain/split-namespace "controls"]])
+;; Creates myapp.ui.controls, adds require to myapp.ui
+```
 
 ## Effect Reference
+
+### Preview & Library
 
 | Effect | Purpose |
 |--------|---------|
@@ -181,6 +229,23 @@ Namespaced attributes (`:game-card/title`) are elided from HTML output - they're
 | `[::tsain/show-components :name]` | View component with sidebar |
 | `[::tsain/show-preview]` | Return to preview view |
 | `[::tsain/patch-signals {:key val}]` | Test Datastar signals |
+
+### Component Authoring
+
+| Effect | Purpose |
+|--------|---------|
+| `[::tsain/write-component code]` | Write defelem to UI namespace |
+| `[::tsain/write-component code {:category "cards"}]` | Write with explicit category |
+| `[::tsain/write-component-to ns-sym code]` | Write to specific namespace |
+| `[::tsain/split-namespace "category"]` | Extract category to sub-namespace |
+
+### CSS Authoring
+
+| Effect | Purpose |
+|--------|---------|
+| `[::tsain/write-css css {:category "cards"}]` | Append CSS with category |
+| `[::tsain/replace-css ".selector" new-css]` | Replace existing CSS rules |
+| `[::tsain/split-css "category"]` | Extract category to sub-file |
 
 ## Sample Files
 
@@ -212,7 +277,9 @@ cp -r path/to/tsain/.claude/skills/tsain .claude/skills/
 | [sandestin](https://github.com/brianium/sandestin) | Effect dispatch with schema-driven discoverability |
 | [twk](https://github.com/brianium/twk) | Datastar SSE integration |
 | [sfere](https://github.com/brianium/sfere) | Connection management and broadcasting |
-| [chassis](https://github.com/onionpancakes/chassis) | Hiccup aliases for component structure |
+| [html.yeah](https://github.com/brianium/html.yeah) | Schema-driven components with malli |
+| [chassis](https://github.com/onionpancakes/chassis) | Hiccup aliases (html.yeah compiles to these) |
+| [phandaal](https://github.com/brianium/phandaal) | File I/O with LOC tracking and formatters |
 | [Datastar](https://data-star.dev/) | Frontend reactivity via HTML attributes |
 
 ## Development (Contributing to tsain)
@@ -254,7 +321,9 @@ clj -X:test
 
 ```
 tsain.edn                           # Configuration
-src/clj/ascolais/tsain.clj          # Registry factory
+src/clj/ascolais/tsain.clj          # Registry factory with effects
+src/clj/ascolais/tsain/clj.clj      # Clojure utilities (cljfmt, namespace ops)
+src/clj/ascolais/tsain/css.clj      # CSS utilities (prettier, split ops)
 src/clj/ascolais/tsain/routes.clj   # Route factory
 src/clj/ascolais/tsain/views.clj    # View rendering
 resources/tsain/sandbox.css         # Sandbox chrome (classpath)

@@ -52,8 +52,8 @@ The `dev` namespace provides:
 
 ```
 tsain.edn                           # Tsain configuration
-myapp/ui.clj                        # Chassis aliases (component structure)
-resources/components.edn            # Component library (lean alias invocations)
+myapp/ui.clj                        # html.yeah components (defelem)
+tsain.db                            # Component library (SQLite)
 dev/resources/public/styles.css     # Component CSS (hot-reloadable)
 ```
 
@@ -81,40 +81,59 @@ Tsain provides REPL-driven component development with live preview across all co
 (grep (dispatch) "component")
 ```
 
-## Alias-First Workflow
+## Effect-Based Component Workflow
 
-### Step 1: Define Chassis Alias
+### Step 1: Preview with Inline Styles
 
-Add to your UI namespace (see `:ui-namespace` in tsain.edn):
+Start with hiccup directly in preview for rapid iteration:
 
 ```clojure
-(defmethod c/resolve-alias ::my-card [_ attrs _]
-  (let [{:my-card/keys [title body]} attrs]
-    [:div.my-card attrs
-     [:h2.my-card-title title]
-     [:p.my-card-body body]]))
+(dispatch [[::tsain/preview
+            [:div {:style {:background "#1a1a2e" :padding "1rem"}}
+             [:h2 "My Card"]
+             [:p "Card content"]]]])
 ```
 
-### Step 2: Preview
+### Step 2: Define Component via Effect
+
+Write the component through the effect system (auto-formats with cljfmt):
 
 ```clojure
+(dispatch [[::tsain/write-component
+            "(hy/defelem my-card
+               [:map {:doc \"A simple card component\"
+                      :keys [my-card/title my-card/body]}
+                [:my-card/title :string]
+                [:my-card/body :string]]
+               [:div.my-card
+                [:h2.my-card-title my-card/title]
+                [:p.my-card-body my-card/body]
+                (hy/children)])"]])
+```
+
+Reload and preview:
+
+```clojure
+(reload)
 (dispatch [[::tsain/preview
             [:myapp.ui/my-card
              {:my-card/title "Hello"
               :my-card/body "World"}]]])
 ```
 
-### Step 3: Add CSS
+### Step 3: Add CSS via Effect
 
-Add classes to `styles.css` (hot-reloads automatically):
+Write CSS through the effect system (auto-formats with prettier):
 
-```css
-.my-card { ... }
-.my-card-title { ... }
-.my-card-body { ... }
+```clojure
+(dispatch [[::tsain/write-css
+            ".my-card { background: var(--bg-secondary); padding: 1rem; }
+             .my-card-title { color: var(--accent-cyan); }
+             .my-card-body { color: var(--text-primary); }"
+            {:category "cards"}]])
 ```
 
-### Step 4: Commit
+### Step 4: Commit to Library
 
 ```clojure
 (dispatch [[::tsain/commit :my-card
@@ -125,7 +144,24 @@ Add classes to `styles.css` (hot-reloads automatically):
                                    :my-card/body "World"}]}]}]])
 ```
 
+### Responding to Split Hints
+
+When files exceed `:split-threshold`, effects return hints:
+
+```clojure
+;; Result includes hint
+{:hints [{:type :split-suggested
+          :category "cards"
+          :action [::tsain/split-namespace "cards"]}]}
+
+;; Act on the hint
+(dispatch [[::tsain/split-namespace "cards"]])
+;; Creates myapp.ui.cards, adds require to myapp.ui
+```
+
 ## Tsain Effects Reference
+
+### Preview & Library
 
 | Effect | Purpose |
 |--------|---------|
@@ -137,6 +173,23 @@ Add classes to `styles.css` (hot-reloads automatically):
 | `[::tsain/show-components :name]` | View component |
 | `[::tsain/show-preview]` | Return to preview |
 | `[::tsain/patch-signals {:key val}]` | Test Datastar signals |
+
+### Component Authoring
+
+| Effect | Purpose |
+|--------|---------|
+| `[::tsain/write-component code]` | Write defelem to UI namespace |
+| `[::tsain/write-component code {:category "cards"}]` | Write with explicit category |
+| `[::tsain/write-component-to ns-sym code]` | Write to specific namespace |
+| `[::tsain/split-namespace "category"]` | Extract category to sub-namespace |
+
+### CSS Authoring
+
+| Effect | Purpose |
+|--------|---------|
+| `[::tsain/write-css css {:category "cards"}]` | Append CSS with category |
+| `[::tsain/replace-css ".selector" new-css]` | Replace existing CSS rules |
+| `[::tsain/split-css "category"]` | Extract category to sub-file |
 
 ---
 
@@ -340,14 +393,26 @@ Light theme: wrap with `.theme-light`:
 [:div.theme-light [:my-component]]
 ```
 
-## Chassis Alias Conventions
+## Component Conventions
+
+Components are defined with html.yeah `defelem` (compiles to Chassis aliases):
 
 - **Namespaced attrs** (`:card/title`) = config props, elided from HTML
 - **Regular attrs** (`:class`, `:data-on:click`) = pass through
 
 ```clojure
+;; Definition
+(hy/defelem card
+  [:map {:doc "A card component"
+         :keys [card/title]}
+   [:card/title :string]]
+  [:div.card card/title (hy/children)])
+
+;; Usage
 [:myapp.ui/card
  {:card/title "Hello"      ;; Config - elided
   :class "highlighted"      ;; HTML - preserved
   :data-on:click "..."}]    ;; Datastar - preserved
 ```
+
+Components defined with `defelem` are discoverable via `tsain/describe` and `tsain/grep`.

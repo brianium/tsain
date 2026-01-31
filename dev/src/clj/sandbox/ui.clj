@@ -512,3 +512,17 @@
     [:div.status-indicator {:class [status-class pulse-class]}
      [:div.status-indicator-light]
      [:span.status-indicator-label label]]))
+
+(hy/defelem data-chip
+  [:map {:doc "Compact data display chip for stats, counts, and values.
+               Shows a label and value with optional color variant.
+               Use for displaying key metrics in dashboards or profiles."
+         :as attrs}
+   [:data-chip/label :string]
+   [:data-chip/value :string]
+   [:data-chip/variant {:optional true} [:maybe [:enum :cyan :magenta :green :red]]]]
+  (let [{:data-chip/keys [label value variant]} attrs
+        variant-class (when variant (str "data-chip--" (name variant)))]
+    [:div.data-chip {:class variant-class}
+     [:span.data-chip-label label]
+     [:span.data-chip-value value]]))
