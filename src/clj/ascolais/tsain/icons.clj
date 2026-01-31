@@ -79,7 +79,36 @@
     [:path {:d "M3 9h18"}]
     [:path {:d "M3 15h18"}]
     [:path {:d "M9 3v18"}]
-    [:path {:d "M15 3v18"}]]})
+    [:path {:d "M15 3v18"}]]
+
+   :sun
+   [[:circle {:cx 12 :cy 12 :r 4}]
+    [:path {:d "M12 2v2"}]
+    [:path {:d "M12 20v2"}]
+    [:path {:d "m4.93 4.93 1.41 1.41"}]
+    [:path {:d "m17.66 17.66 1.41 1.41"}]
+    [:path {:d "M2 12h2"}]
+    [:path {:d "M20 12h2"}]
+    [:path {:d "m6.34 17.66-1.41 1.41"}]
+    [:path {:d "m19.07 4.93-1.41 1.41"}]]
+
+   :moon
+   [[:path {:d "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"}]]
+
+   :code
+   [[:polyline {:points "16 18 22 12 16 6"}]
+    [:polyline {:points "8 6 2 12 8 18"}]]
+
+   :list
+   [[:line {:x1 8 :x2 21 :y1 6 :y2 6}]
+    [:line {:x1 8 :x2 21 :y1 12 :y2 12}]
+    [:line {:x1 8 :x2 21 :y1 18 :y2 18}]
+    [:line {:x1 3 :x2 3.01 :y1 6 :y2 6}]
+    [:line {:x1 3 :x2 3.01 :y1 12 :y2 12}]
+    [:line {:x1 3 :x2 3.01 :y1 18 :y2 18}]]
+
+   :chevron-down
+   [[:path {:d "m6 9 6 6 6-6"}]]})
 
 (defn icon
   "Get icon hiccup by name. Optionally override attrs.

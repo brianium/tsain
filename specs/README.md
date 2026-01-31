@@ -1,10 +1,6 @@
 # Specifications
 
-*Auto-generated on 2026-01-31 10:59*
-
-## Planned
-
-- [Sandbox Theme System](sandbox-theme-system/README.md)
+*Auto-generated on 2026-01-31 11:39*
 
 ## Completed
 
@@ -30,4 +26,5 @@
 - [Better Component Storage](better-component-storage/README.md)
 - [Better Component View Header](better-component-view-header/README.md)
 - [Migrate Existing Component Library](migrate-existing-component-library/README.md)
+- [Sandbox Theme System](sandbox-theme-system/README.md)
 - [Sandbox UI Enhancements](sandbox-ui-enhancements/README.md)

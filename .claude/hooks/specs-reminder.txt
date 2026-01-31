@@ -1,1 +1,9 @@
-Resuming after compaction - run /specs implement to continue in-progress specifications
+Resuming after compaction. Context:
+
+- REPL is connected and ready on port 7888
+- Run /specs implement to continue in-progress specifications
+
+Workflow tools:
+- Use clojure-eval skill for REPL evaluation
+- Use frontend-design skill for UI component implementation
+- Use Chrome extension (mcp__claude-in-chrome__*) to preview components in browser

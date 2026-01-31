@@ -1,6 +1,6 @@
 ---
 title: "Sandbox Theme System"
-status: planned
+status: completed
 date: 2026-01-31
 priority: 50
 ---
@@ -31,19 +31,19 @@ Summarize important decisions made during research. See [research.md](research.m
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Scoping strategy | TBD | Must prevent sandbox styles from leaking into component preview |
-| Theme storage | TBD | localStorage vs cookie vs Datastar signal |
-| CSS architecture | TBD | CSS custom properties, separate stylesheets, or both |
+| Scoping strategy | `[data-sandbox-theme]` attribute selector | Clean separation without Shadow DOM complexity, integrates with Datastar |
+| Theme storage | localStorage + Datastar signal | localStorage for persistence, signal for reactive binding |
+| CSS architecture | CSS custom properties with `--sandbox-` prefix | Standard theming approach, all variables prefixed to avoid conflicts |
 
 ## Implementation Status
 
 See [implementation-plan.md](implementation-plan.md) for detailed task breakdown.
 
-- [ ] Phase 1: Research scoping strategies and current CSS architecture
-- [ ] Phase 2: Design and implement theme infrastructure
-- [ ] Phase 3: Create light and dark themes with frontend-design skill
-- [ ] Phase 4: Visual validation with chrome extension
-- [ ] Phase 5: Testing & polish
+- [x] Phase 1: CSS Architecture Refactor - scoped with `[data-sandbox-theme]`, prefixed variables
+- [x] Phase 2: Theme Infrastructure - dropdown, signals, localStorage persistence
+- [x] Phase 3: Dark Theme Design - polished dark theme with amber accents
+- [x] Phase 4: Light Theme Design - cohesive light theme
+- [x] Phase 5: Polish & Edge Cases - smooth transitions, persistence verified
 
 ## Development Approach
 

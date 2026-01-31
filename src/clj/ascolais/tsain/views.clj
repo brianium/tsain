@@ -125,6 +125,15 @@
                  :data-bind "bgColor"
                  :data-on:change "localStorage.setItem('sandbox-bg-color', $bgColor)"
                  :title "Preview background color"}]])
+     ;; Theme selector
+     [:div.theme-selector
+      (icons/icon :sun {:class "theme-icon" :data-show "$sandboxTheme === 'light'"})
+      (icons/icon :moon {:class "theme-icon" :data-show "$sandboxTheme === 'dark'"})
+      [:select.theme-select
+       {:data-bind "sandboxTheme"
+        :title "UI Theme"}
+       [:option {:value "dark"} "Dark"]
+       [:option {:value "light"} "Light"]]]
      (when (and (= view-type :preview) has-preview?)
        [[:span {:class (if committed? "commit-badge committed" "commit-badge uncommitted")}
          (if committed? "committed" "uncommitted")]
@@ -542,6 +551,10 @@
         [:script {:src twk/CDN-url :type "module"}]
         [:link {:rel "stylesheet" :href "/sandbox.css"}]
         [:link {:rel "stylesheet" :href "/styles.css"}]]
-       [:body {:data-init (str "@post('" sse-url "')")}
+       [:body {:data-sandbox-theme "dark"
+               :data-attr:data-sandbox-theme "$sandboxTheme"
+               :data-signals "{sandboxTheme: localStorage.getItem('sandbox-theme') || 'dark'}"
+               :data-effect "localStorage.setItem('sandbox-theme', $sandboxTheme)"
+               :data-init (str "@post('" sse-url "')")}
         [:div#app
          [:p {:style "padding: 2rem; color: #999"} "Connecting..."]]]]])))

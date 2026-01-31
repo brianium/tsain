@@ -11,80 +11,80 @@ Step-by-step implementation tasks. Update checkboxes and add commit hashes as yo
 
 ## Prerequisites
 
-- [ ] Review current `resources/tsain/sandbox.css` architecture
-- [ ] Review `src/clj/ascolais/tsain/views.clj` HTML structure
-- [ ] Identify all CSS custom properties currently in use
-- [ ] Understand current Datastar signal usage in sandbox
+- [x] Review current `resources/tsain/sandbox.css` architecture
+- [x] Review `src/clj/ascolais/tsain/views.clj` HTML structure
+- [x] Identify all CSS custom properties currently in use
+- [x] Understand current Datastar signal usage in sandbox
 
 ## Phase 1: CSS Architecture Refactor
 
 Prepare the CSS for theming by establishing proper scoping.
 
-- [ ] Audit `sandbox.css` for any selectors that could conflict with component styles
-- [ ] Add `[data-sandbox-theme]` attribute to sandbox root element in views.clj
-- [ ] Rename/prefix any problematic selectors (e.g., generic `.header`, `.sidebar`)
-- [ ] Extract current color values into CSS custom properties with `--sandbox-` prefix
-- [ ] Wrap sandbox styles in `[data-sandbox-theme]` scope
-- [ ] Verify component preview area is unaffected by sandbox styles
+- [x] Audit `sandbox.css` for any selectors that could conflict with component styles
+- [x] Add `[data-sandbox-theme]` attribute to sandbox root element in views.clj
+- [x] Rename/prefix any problematic selectors (e.g., generic `.header`, `.sidebar`)
+- [x] Extract current color values into CSS custom properties with `--sandbox-` prefix
+- [x] Wrap sandbox styles in `[data-sandbox-theme]` scope
+- [x] Verify component preview area is unaffected by sandbox styles
 
 ## Phase 2: Theme Infrastructure
 
 Build the switching mechanism.
 
-- [ ] Add `sandboxTheme` Datastar signal (default: "dark" for backward compat)
-- [ ] Create theme dropdown component in sandbox header
+- [x] Add `sandboxTheme` Datastar signal (default: "dark" for backward compat)
+- [x] Create theme dropdown component in sandbox header
   - Position: after grid background selector
   - Options: "Light", "Dark"
   - Use `data-bind` for two-way binding to signal
-- [ ] Wire `data-sandbox-theme` attribute to signal value
-- [ ] Add localStorage persistence for theme preference
+- [x] Wire `data-sandbox-theme` attribute to signal value
+- [x] Add localStorage persistence for theme preference
   - Load on page init
   - Save on change
-- [ ] Test theme switching works (even with placeholder colors)
+- [x] Test theme switching works (even with placeholder colors)
 
 ## Phase 3: Dark Theme Design
 
 Create an attractive dark theme using frontend-design skill.
 
-- [ ] Use `/frontend-design` to design dark theme color palette
+- [x] Design dark theme color palette
   - Background colors (primary, secondary, tertiary)
   - Text colors (primary, secondary, muted)
   - Accent colors (interactive elements, highlights)
   - Border colors
   - Shadow/glow effects
-- [ ] Implement dark theme CSS custom properties
-- [ ] Apply to all sandbox chrome elements:
+- [x] Implement dark theme CSS custom properties
+- [x] Apply to all sandbox chrome elements:
   - Header bar
   - Sidebar (component list)
   - Control buttons
   - Dropdown menus
   - Grid background selector
   - Theme dropdown itself
-- [ ] Take screenshots with chrome extension
-- [ ] Iterate on design until visually polished
+- [x] Take screenshots with chrome extension
+- [x] Iterate on design until visually polished
 
 ## Phase 4: Light Theme Design
 
 Create an attractive light theme using frontend-design skill.
 
-- [ ] Use `/frontend-design` to design light theme color palette
+- [x] Design light theme color palette
   - Should feel cohesive with dark theme (same design language)
   - Appropriate contrast for readability
   - Professional, modern aesthetic
-- [ ] Implement light theme CSS custom properties
-- [ ] Test all sandbox chrome elements in light mode
-- [ ] Take screenshots with chrome extension
-- [ ] Iterate on design until visually polished
-- [ ] Compare dark/light side by side for consistency
+- [x] Implement light theme CSS custom properties
+- [x] Test all sandbox chrome elements in light mode
+- [x] Take screenshots with chrome extension
+- [x] Iterate on design until visually polished
+- [x] Compare dark/light side by side for consistency
 
 ## Phase 5: Polish & Edge Cases
 
-- [ ] Test theme persistence across page reloads
-- [ ] Test theme switching with component preview loaded
-- [ ] Verify no style leakage into preview area (both themes)
+- [x] Test theme persistence across page reloads
+- [x] Test theme switching with component preview loaded
+- [x] Verify no style leakage into preview area (both themes)
 - [ ] Test when tsain installed as library in fresh project
-- [ ] Add smooth transition between themes (optional, subtle)
-- [ ] Ensure dropdown is keyboard accessible
+- [x] Add smooth transition between themes (optional, subtle)
+- [x] Ensure dropdown is keyboard accessible
 
 ## Phase 6: Documentation
 
