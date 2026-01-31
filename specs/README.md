@@ -1,6 +1,10 @@
 # Specifications
 
-*Auto-generated on 2026-01-25 17:47*
+*Auto-generated on 2026-01-31 08:16*
+
+## Planned
+
+- [Phandaal Based CSS Actions And Effects](phandaal-based-css-actions-and-effects/README.md)
 
 ## Completed
 
