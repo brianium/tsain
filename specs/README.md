@@ -1,6 +1,10 @@
 # Specifications
 
-*Auto-generated on 2026-01-31 09:39*
+*Auto-generated on 2026-01-31 10:02*
+
+## Planned
+
+- [Html Yeah Component Writing Actions](html-yeah-component-writing-actions/README.md)
 
 ## Completed
 
