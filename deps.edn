@@ -37,6 +37,7 @@
                 metosin/reitit {:mvn/version "0.10.0"}
                 metosin/malli {:mvn/version "0.20.0"}
                 ring/ring-core {:mvn/version "1.12.2"}
+                dev.weavejester/cljfmt {:mvn/version "0.15.6"}
 
                 ;; File watching
                 com.nextjournal/beholder {:mvn/version "1.0.3"}}
